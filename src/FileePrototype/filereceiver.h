@@ -1,5 +1,5 @@
-#ifndef FILESENDER_H
-#define FILESENDER_H
+#ifndef FILERECEIVER_H
+#define FILERECEIVER_H
 
 #include <QObject>
 #include <QTcpSocket>
@@ -10,37 +10,38 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 
-#define BUFFER_SIZE 1024*1024  // 1MB
-
-class FileSender : public QObject
+class FileReceiver : public QObject
 {
     Q_OBJECT
 public:
-    explicit FileSender(QString filePath, QHostAddress receiverAddress, QObject *parent = nullptr);
-    void resume();
-    void pause();
-    void cancel();
+    explicit FileReceiver(QTcpSocket *socket, QObject *parent = nullptr);
 
 private:
     QTcpSocket* tcpSocket;
-    QString fileDir;
+    QString fileName;
     QFile *file;
     qint64 fileSize = -1;
-    qint64 remainingSize = -1;
+    qint64 downloadedSize = 0;
 
     QByteArray fileBuffer;
     qint32 fileBufferSize = -1;
 
+    int packetCount = 0;
+
     void sendData();
     void sendMeta();
+    void metaParser(QByteArray& data);
+    void writeData(QByteArray& data);
+
+
 
 signals:
 
 private slots:
-    void socketBytesWritten();
     void socketConnected();
     void socketDisconnected();
+    void readPacket();
 
 };
 
-#endif // FILESENDER_H
+#endif // FILERECEIVER_H

@@ -26,6 +26,10 @@ MainWindow::MainWindow(QWidget *parent)
         qDebug() << fileName;
         ui->fileNameLineEdit->setText(fileName);
     });
+
+    connect(ui->fileSendButton, &QPushButton::clicked, [this]() {
+        FileSender *fileSender = new FileSender(fileName, QHostAddress(ui->IpLineEdit->text()));
+    });
 }
 
 MainWindow::~MainWindow()

@@ -4,9 +4,12 @@
 #include <QMainWindow>
 #include <QFile>
 #include <QFileDialog>
+#include <QHostAddress>
 
 #include "broadcaster.h"
 #include "broadcastreceiver.h"
+#include "filesender.h"
+#include "filereceiveserver.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -25,6 +28,7 @@ private:
     Broadcaster broadcaster;
     BroadcastReceiver broadcastReceiver;
     QString fileName;
+    FileReceiveServer fileReceiveServer;
 
 };
 #endif // MAINWINDOW_H
