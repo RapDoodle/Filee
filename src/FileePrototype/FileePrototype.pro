@@ -11,6 +11,8 @@ CONFIG += c++14
 SOURCES += \
     broadcaster.cpp \
     broadcastreceiver.cpp \
+    filereceiver.cpp \
+    filereceiveserver.cpp \
     filesender.cpp \
     main.cpp \
     mainwindow.cpp
@@ -18,6 +20,8 @@ SOURCES += \
 HEADERS += \
     broadcaster.h \
     broadcastreceiver.h \
+    filereceiver.h \
+    filereceiveserver.h \
     filesender.h \
     mainwindow.h
 
