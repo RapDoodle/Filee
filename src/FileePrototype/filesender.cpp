@@ -1,10 +1,11 @@
 #include "filesender.h"
 
 FileSender::FileSender(QString filePath, QHostAddress receiverAddress, QObject *parent)
-    : QObject(parent), fileDir(filePath)
+    : FileTransferPeer(parent), fileDir(filePath)
 {
     fileBufferSize = BUFFER_SIZE;
-    fileBuffer.resize(fileBufferSize);
+//    fileBuffer.resize(fileBufferSize);
+    fileBuffer.resize(1024);
 
     file = new QFile(fileDir, this);
     bool opened = file->open(QIODevice::ReadOnly);
@@ -16,71 +17,124 @@ FileSender::FileSender(QString filePath, QHostAddress receiverAddress, QObject *
         return;
 
     fileSize = file->size();
-    remainingSize = fileSize;
+    sizeProcessed = 0;
 
-    tcpSocket = new QTcpSocket(this);
-    tcpSocket->connectToHost(receiverAddress, 3800, QAbstractSocket::ReadWrite);
+    socket = new QTcpSocket(this);
+    socket->connectToHost(receiverAddress, 3800, QAbstractSocket::ReadWrite);
 
-    connect(tcpSocket, &QTcpSocket::bytesWritten, this, &FileSender::socketBytesWritten);
-    connect(tcpSocket, &QTcpSocket::connected, this, &FileSender::socketConnected);
-    connect(tcpSocket, &QTcpSocket::disconnected, this, &FileSender::socketDisconnected);
-
-    qDebug() << "Constrct()";
+    activateSocket();
+    connect(socket, &QTcpSocket::readyRead, this, &FileSender::readPacket);
 
     // Send meta info
-    sendMeta();
+
 }
 
-void FileSender::socketBytesWritten()
+void FileSender::sendRequest()
 {
-//    qDebug() << "Write";
-    sendData();
-}
-
-void FileSender::socketConnected()
-{
-//    qDebug() << "Connected";
-    sendData();
-}
-
-void FileSender::socketDisconnected()
-{
-//    qDebug() << "Disconnected.";
+    sendPacket(PacketType::Request);
 }
 
 void FileSender::sendMeta() {
     QString fileName = QDir(file->fileName()).dirName();
     QJsonObject obj(QJsonObject::
-                    fromVariantMap({{"name", fileName},{"size", fileSize},}));
-    QByteArray packet(QJsonDocument(obj).toJson());
-    tcpSocket->write(packet, 255);
+                    fromVariantMap(
+                        {
+                            {"name", fileName},
+                            {"size", fileSize},
+                        }));
+    QByteArray payload(QJsonDocument(obj).toJson());
+    sendPacket(PacketType::Meta, payload);
 }
 
 void FileSender::sendData()
 {
-    if (remainingSize < fileBufferSize) {
-        fileBufferSize = remainingSize;
-        fileBuffer.resize(remainingSize);
+    if (status != SenderStatus::Transferring)
+        return;
+
+//    if (fileSize - sizeProcessed < fileBufferSize) {
+    if (fileSize - sizeProcessed < 1024) {
+        fileBufferSize = fileSize - sizeProcessed;
+        fileBuffer.resize(fileBufferSize);
     }
-    qDebug() << "Reading...";
-    qint64 bytesRead = file->read(fileBuffer.data(), fileBufferSize);
+
+//    qint64 bytesRead = file->read(fileBuffer.data(), fileBufferSize);
+    qint64 bytesRead = file->read(fileBuffer.data(), 1024);
+//    qDebug() << bytesRead;
     if (bytesRead == -1)
         return;
 
-    remainingSize -= bytesRead;
-    if (remainingSize < 0)
-        remainingSize = 0;
+    sizeProcessed += bytesRead;
 
     // Emit progress change
-//    qDebug() << (int) ((fileSize-remainingSize)/ fileSize * 100);
-    tcpSocket->write(fileBuffer);
+//    qDebug() << (int) (sizeProcessed / fileSize) * 100;
 
-    remainingSize -= bytesRead;
-    if (remainingSize <= 0) {
-        remainingSize = 0;
+    sendPacket(PacketType::Data, fileBuffer);
+
+    if (fileSize - sizeProcessed <= 0) {
+        sizeProcessed = fileSize;
         file->close();
-        tcpSocket->close();
+        fileBuffer.clear();
+        sendPacket(PacketType::Complete);
     }
 }
 
+void FileSender::readPacket()
+{
+    QByteArray buffer;
+    buffer.append(socket->readAll());
 
+    while (buffer.size() > 0) {
+        qDebug() << buffer;
+        PacketType type = static_cast<PacketType>(buffer.at(0));
+        qint32 payloadSize = 0;
+
+        switch (type) {
+            case PacketType::Accepted: {
+                status = SenderStatus::Transferring;
+                sendData();
+                break;
+            }
+            default: {
+                qDebug() << "Sender: Default case";
+                break;
+            }
+        }
+
+        if (payloadSize == 0) {
+            buffer.remove(0, sizeof(type));
+        } else {
+            buffer.remove(0, sizeof(type) + sizeof(qint32) + payloadSize);
+        }
+
+    }
+}
+
+void FileSender::socketBytesWritten()
+{
+    sendData();
+}
+
+void FileSender::socketConnected()
+{
+    sendPacket(PacketType::Request);
+}
+
+void FileSender::socketDisconnected()
+{
+    qDebug() << "Disconnected.";
+}
+
+void FileSender::pause()
+{
+
+}
+
+void FileSender::resume()
+{
+
+}
+
+void FileSender::cancel()
+{
+
+}

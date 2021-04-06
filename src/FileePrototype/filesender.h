@@ -1,45 +1,47 @@
 #ifndef FILESENDER_H
 #define FILESENDER_H
 
-#include <QObject>
-#include <QTcpSocket>
-#include <QFile>
-#include <QDir>
-#include <QDebug>
-#include <QHostAddress>
-#include <QJsonObject>
-#include <QJsonDocument>
+#include "filetransferpeer.h"
 
 #define BUFFER_SIZE 1024*1024  // 1MB
 
-class FileSender : public QObject
+enum class SenderStatus : char
 {
-    Q_OBJECT
+    Initialized     = 0x00,
+    RequestSent     = 0x01,
+    Transferring    = 0x02,
+    Completed       = 0x03,
+    Paused          = 0x04,
+    Cancelled       = 0x05
+};
+
+class FileSender : public FileTransferPeer
+{
 public:
     explicit FileSender(QString filePath, QHostAddress receiverAddress, QObject *parent = nullptr);
-    void resume();
-    void pause();
-    void cancel();
+
+    void pause() override;
+    void resume() override;
+    void cancel() override;
 
 private:
-    QTcpSocket* tcpSocket;
-    QString fileDir;
-    QFile *file;
-    qint64 fileSize = -1;
-    qint64 remainingSize = -1;
-
     QByteArray fileBuffer;
-    qint32 fileBufferSize = -1;
+    qint64 fileBufferSize = -1;
+    QString fileDir;
 
-    void sendData();
+    void sendRequest();
     void sendMeta();
+    void sendData();
+
+    SenderStatus status = SenderStatus::Initialized;
 
 signals:
 
 private slots:
-    void socketBytesWritten();
-    void socketConnected();
-    void socketDisconnected();
+    void socketBytesWritten() override;
+    void socketConnected() override;
+    void socketDisconnected() override;
+    void readPacket();
 
 };
 
