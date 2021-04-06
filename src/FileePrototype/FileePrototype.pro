@@ -14,6 +14,7 @@ SOURCES += \
     filereceiver.cpp \
     filereceiveserver.cpp \
     filesender.cpp \
+    filetransferpeer.cpp \
     main.cpp \
     mainwindow.cpp
 
@@ -23,6 +24,7 @@ HEADERS += \
     filereceiver.h \
     filereceiveserver.h \
     filesender.h \
+    filetransferpeer.h \
     mainwindow.h
 
 FORMS += \
