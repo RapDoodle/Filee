@@ -32,6 +32,8 @@ void FileReceiver::readPacket()
                 if (status != ReceiverStatus::Transferring)
                     return;
                 memcpy(&payloadSize, socketBuffer.mid(sizeof(type), sizeof(qint32)), sizeof(qint32));
+                if (payloadSize > (qint32)socketBuffer.size() + (qint32)(sizeof(type) + sizeof(sizeof(qint32))))
+                    return;
                 QByteArray data = socketBuffer.mid(sizeof(type) + sizeof(qint32), payloadSize);
                 writeData(data);
                 break;
@@ -55,7 +57,6 @@ void FileReceiver::readPacket()
                 if (!dir.exists()) {
                     QDir().mkdir(env.value("USERPROFILE") + "\\Downloads\\Filee");
                 }
-                qDebug() << dir;
 
                 file = new QFile(env.value("USERPROFILE") + "\\Downloads\\Filee\\" + fileName, this);
                 if (file->open(QIODevice::WriteOnly)) {
@@ -67,8 +68,8 @@ void FileReceiver::readPacket()
                 break;
             }
             case PacketType::Complete: {
-                emit statusUpdate(100);
-                qDebug() << "[Receiver] Complete!!";
+                emit statusUpdate(10000);
+                qDebug() << "[Receiver] Complete!";
                 file->close();
                 break;
             }
@@ -85,7 +86,7 @@ void FileReceiver::readPacket()
                 break;
             }
             default: {
-                qDebug() << "Receiver: Default case";
+                qDebug() << "Receiver: Default case: " << socketBuffer;
                 break;
             }
         }
@@ -103,5 +104,5 @@ void FileReceiver::writeData(QByteArray& data)
 {
     file->write(data);
     sizeProcessed += data.size();
-    emit statusUpdate((int)((double)sizeProcessed * 100 / fileSize));
+    emit statusUpdate((int)((double)sizeProcessed * 10000 / fileSize));
 }

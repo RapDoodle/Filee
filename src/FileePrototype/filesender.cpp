@@ -66,7 +66,7 @@ void FileSender::sendData()
     sizeProcessed += bytesRead;
 
     // Emit progress change
-    emit statusUpdate((int)((double)sizeProcessed * 100 / fileSize));
+    emit statusUpdate((int)((double)sizeProcessed * 10000 / fileSize));
 
     sendPacket(PacketType::Data, fileBuffer);
 
@@ -74,6 +74,7 @@ void FileSender::sendData()
         sizeProcessed = fileSize;
         file->close();
         fileBuffer.clear();
+        status = SenderStatus::Completed;
         sendPacket(PacketType::Complete);
     }
 }
