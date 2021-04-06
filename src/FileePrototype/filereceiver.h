@@ -13,13 +13,17 @@ enum class ReceiverStatus : char
     Transferring    = 0x03,
     Completed       = 0x04,
     Paused          = 0x05,
-    Cancelled       = 0x06
+    Canceled        = 0x06
 };
 
 class FileReceiver : public FileTransferPeer
 {
 public:
     explicit FileReceiver(QTcpSocket *tcpSocket, QObject *parent = nullptr);
+
+    void pause() override;
+    void resume() override;
+    void cancel() override;
 
 private:
     void sendData();

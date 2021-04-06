@@ -3,8 +3,11 @@
 
 #include <QMainWindow>
 #include <QFile>
+#include <QVector>
 #include <QFileDialog>
 #include <QHostAddress>
+#include <QProcessEnvironment>
+#include <QNetworkInterface>
 
 #include "broadcaster.h"
 #include "broadcastreceiver.h"
@@ -34,5 +37,9 @@ private:
     QString fileName;
     FileReceiveServer fileReceiveServer;
 
+    QVector<FileSender*> senders;
+    QVector<FileReceiver*> receivers;
+
+    QDir dir;
 };
 #endif // MAINWINDOW_H

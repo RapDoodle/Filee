@@ -3,7 +3,7 @@
 
 #include "filetransferpeer.h"
 
-#define BUFFER_SIZE 1024*1024  // 1MB
+#define DEFAULT_BUFFER_SIZE 1024
 
 enum class SenderStatus : char
 {
@@ -12,7 +12,7 @@ enum class SenderStatus : char
     Transferring    = 0x02,
     Completed       = 0x03,
     Paused          = 0x04,
-    Cancelled       = 0x05
+    Canceled        = 0x05
 };
 
 class FileSender : public FileTransferPeer

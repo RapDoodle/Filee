@@ -167,14 +167,14 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_3">
         <item>
-         <widget class="QPushButton" name="fileStopButton">
+         <widget class="QPushButton" name="senderCancelButton">
           <property name="text">
-           <string>Stop</string>
+           <string>Cancel</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="filePauseButton">
+         <widget class="QPushButton" name="senderPauseButton">
           <property name="text">
            <string>Pause</string>
           </property>
@@ -236,14 +236,14 @@
       <item>
        <layout class="QHBoxLayout" name="horizontalLayout_5">
         <item>
-         <widget class="QPushButton" name="fileStopButton_3">
+         <widget class="QPushButton" name="receiverCancelButton">
           <property name="text">
-           <string>Stop</string>
+           <string>Cancel</string>
           </property>
          </widget>
         </item>
         <item>
-         <widget class="QPushButton" name="filePauseButton_3">
+         <widget class="QPushButton" name="receiverPauseButton">
           <property name="text">
            <string>Pause</string>
           </property>
