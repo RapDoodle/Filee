@@ -10,7 +10,7 @@ Window {
     title: qsTr("Filee")
 
     property Component transferPanelView: TransferPanelView {}
-    property Component test: Tset {}
+    property Component test: Test {}
     property var componentMap: {
         "TransferPanelView": transferPanelView
     }
@@ -126,7 +126,16 @@ Window {
                     }
 
                 }
-
+///////////////////////////////////////////////
+                //you are debu, I am not.
+                Test{
+                    id:test
+                    text: "foolish debu"
+                    anchors{
+                        top: menuButton.bottom
+                    }
+                }
+/////////////////////////////////////////////////
             Text {
                 text: "Click me to go to the next page";
                 font.pointSize: 14;
@@ -151,3 +160,9 @@ Window {
     }
 
 }
+
+/*##^##
+Designer {
+    D{i:4;invisible:true}
+}
+##^##*/

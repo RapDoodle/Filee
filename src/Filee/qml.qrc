@@ -2,7 +2,7 @@
     <qresource prefix="/">
         <file>main.qml</file>
         <file>TransferPanelView.qml</file>
-        <file>Tset.qml</file>
+        <file>Test.qml</file>
         <file>ReceiveBubble.qml</file>
         <file>SendBubble.qml</file>
     </qresource>

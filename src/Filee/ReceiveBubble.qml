@@ -63,10 +63,10 @@ Rectangle {
         height:15
         width:height
         radius: height
-        text: "\u23F8"
+        text: "\u003D"
         //text: U+2713
-
-
+        font.pointSize: 15
+        rotation: 90
         anchors{
             top: parent.top
             left: receiveBubbleImage.right
@@ -79,7 +79,7 @@ Rectangle {
         height:15
         width:height
         radius: height
-        text: "\u2715"
+        text: "\u00D7"
         anchors{
             top: receivePause.bottom
             topMargin: 1
