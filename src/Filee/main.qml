@@ -10,12 +10,8 @@ Window {
     title: qsTr("Filee")
 
     property Component transferPanelView: TransferPanelView {}
-    property Component test: Tset {}
     property var componentMap: {
         "TransferPanelView": transferPanelView
-    }
-    property var componentMap1: {
-        "Test": test
     }
 
     StackView {
@@ -28,130 +24,104 @@ Window {
             color: "lightblue"
 
             Rectangle {
-                id: userInfo
-                width: root.width
-                height: root.height*0.27
-                color: "#ffff7f"
+                    id: userInfo
+                    width: root.width
+                    height: root.height*0.27
+                    color: "#ffff7f"
 
                     anchors {
-                    left: root.left
-                    top: root.top
-                }
+                        left: root.left
+                        top: root.top
+                    }
 
-                Rectangle {
-                    id: userPic
-                    z: 1
-                    width: userInfo.height*0.5
-                    height: userInfo.height*0.5
-                    color: "#55aaff"
+                    Rectangle {
+                        id: userPic
+                        z: 1
+                        width: userInfo.height*0.5
+                        height: userInfo.height*0.5
+                        color: "#55aaff"
 
-                    anchors {
-                        left: userInfo.left
-                        leftMargin: userInfo.width*0.10
-                        top: userInfo.top
-                        topMargin: userInfo.height*0.25
+                        anchors {
+                            left: userInfo.left
+                            leftMargin: userInfo.width*0.10
+                            top: userInfo.top
+                            topMargin: userInfo.height*0.25
+                        }
+
+                        Text {
+                            id: userShortName
+                            width: userPic.width*0.6
+                            height: userPic.width*0.6
+                            text: qsTr("ST")
+                            font.pixelSize: 36
+                            horizontalAlignment: Text.AlignHCenter
+                            verticalAlignment: Text.AlignVCenter
+                            font.family: "Verdana"
+
+                            anchors {
+                                left: userPic.left
+                                leftMargin: userPic.width*0.2
+                                top: userPic.top
+                                topMargin: userPic.height*0.2
+                            }
+                        }
                     }
 
                     Text {
-                        id: userShortName
-                        width: userPic.width*0.6
-                        height: userPic.width*0.6
-                        text: qsTr("ST")
-                        font.pixelSize: 36
-                        horizontalAlignment: Text.AlignHCenter
+                        id: userName
+                        z: 1
+                        width: userPic.width*1.8
+                        height: userPic.height*0.5
+                        text: qsTr("I am Scared Termite")
+                        font.pixelSize: 18
+                        horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
+                        lineHeightMode: Text.FixedHeight
+                        minimumPixelSize: 12
                         font.family: "Verdana"
 
                         anchors {
-                            left: userPic.left
-                            leftMargin: userPic.width*0.2
+                            left: userPic.right
+                            leftMargin: userPic.width*0.3
                             top: userPic.top
-                            topMargin: userPic.height*0.2
                         }
+
                     }
+
+                    Text {
+                        id: userStatus
+                        z: 1
+                        width: userPic.width*1.8
+                        height: userPic.height*0.5
+                        text: qsTr("Not connected To WI-FI")
+                        font.pixelSize: 16
+                        horizontalAlignment: Text.AlignLeft
+                        verticalAlignment: Text.AlignVCenter
+                        minimumPixelSize: 12
+                        font.family: "Verdana"
+
+                        anchors {
+                            left: userPic.right
+                            leftMargin: userPic.width*0.3
+                            top: userName.bottom
+                        }
+
+                    }
+
                 }
 
-                Text {
-                    id: userName
-                    z: 1
-                    width: userPic.width*1.8
-                    height: userPic.height*0.5
-                    text: qsTr("I am Scared Termite")
-                    font.pixelSize: 18
-                    horizontalAlignment: Text.AlignLeft
-                    verticalAlignment: Text.AlignVCenter
-                    lineHeightMode: Text.FixedHeight
-                    minimumPixelSize: 12
-                    font.family: "Verdana"
+                Rectangle {
+                    id: menuButton
+                    width: root.width
+                    height: root.height*0.06
+                    color: "#aaff7f"
 
                     anchors {
-                        left: userPic.right
-                        leftMargin: userPic.width*0.3
-                        top: userPic.top
+                        left: root.left
+                        top: userInfo.bottom
                     }
 
                 }
-
-                Text {
-                    id: userStatus
-                    z: 1
-                    width: userPic.width*1.8
-                    height: userPic.height*0.5
-                    text: qsTr("Not connected To WI-FI")
-                    font.pixelSize: 16
-                    horizontalAlignment: Text.AlignLeft
-                    verticalAlignment: Text.AlignVCenter
-                    minimumPixelSize: 12
-                    font.family: "Verdana"
-
-                    anchors {
-                        left: userPic.right
-                        leftMargin: userPic.width*0.3
-                        top: userName.bottom
-                    }
-
-                }
-
-            }
-
-            Rectangle {
-                id: menuButton
-                width: root.width
-                height: root.height*0.06
-                color: "#aaff7f"
-
-                anchors {
-                    left: root.left
-                    top: userInfo.bottom
-                }
-
-            }
-
-            Rectangle {
-                id: ableUserList
-                width: root.width
-                height: root.height*0.67
-                color: "black"
-                anchors {
-                    left: root.left
-                    top: menuButton.bottom
-                }
-
-                Tset{
-                    x: ableUserList.width*0.1
-                    y: ableUserList.height*0.02
-                }
-
-//                property Component transferPanelView: TransferPanelView {}
-//                property Component test: Tset {}
-//                property var componentMap: {
-//                    "TransferPanelView": transferPanelView
-//                }
-//                property var componentMap1: {
-//                    "Test": test
-//                }
-
-            }
 
             Text {
                 text: "Click me to go to the next page";
@@ -171,25 +141,9 @@ Window {
                     }
                 }
             }
-        }
-
-//        Tset{
-//            x: ableUserList.width*0.1
-//            y: ableUserList.height*0.02
-//        }
-
-        Tset{
-            anchors {
-                left: root.left
-                leftMargin: root.width*0.1
-            }
-        }
-
-    }
-
-
 
             // The home page ends here
-
+        }
+    }
 
 }
