@@ -21,15 +21,25 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->fileSelectButton, &QPushButton::clicked, [this]() {
         fileName = QFileDialog::getOpenFileName(this,
                                                 tr("Open file"),
-                                                "/home/jana");
-//                                                tr("Image Files (*.png *.jpg *.bmp)"));
+                                                "C:\\");
         qDebug() << fileName;
         ui->fileNameLineEdit->setText(fileName);
     });
 
     connect(ui->fileSendButton, &QPushButton::clicked, [this]() {
         FileSender *fileSender = new FileSender(fileName, QHostAddress(ui->IpLineEdit->text()));
+        connect(fileSender, SIGNAL(statusUpdate(int)), ui->senderProgressBar, SLOT(setValue(int)));
     });
+
+    connect(&fileReceiveServer, QOverload<FileReceiver*>::of(&FileReceiveServer::receiverInitialized),
+            [this](FileReceiver *receiver) {
+        connect(receiver, SIGNAL(statusUpdate(int)), ui->receiverProgressBar, SLOT(setValue(int)));
+    });
+}
+
+void MainWindow::newConnectionReceived(FileReceiver *receiver)
+{
+    connect(receiver, SIGNAL(statusUpdate(int)), ui->receiverProgressBar, SLOT(setValue(int)));
 }
 
 MainWindow::~MainWindow()

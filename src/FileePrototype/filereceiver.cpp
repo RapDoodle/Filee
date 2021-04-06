@@ -7,25 +7,6 @@ FileReceiver::FileReceiver(QTcpSocket *tcpSocket, QObject *parent)
 
     connect(socket, &QTcpSocket::disconnected, this, &FileReceiver::socketConnected);
     connect(socket, &QTcpSocket::readyRead, this, &FileReceiver::readPacket);
-
-    file = new QFile("C:\\Downloads\\test.txt", this);
-    if (file->open(QIODevice::WriteOnly)) {
-        qDebug() << "Sender: File opened successfully.";
-    } else {
-        qDebug() << "Sender: Failed to write ";
-    }
-}
-
-void FileReceiver::metaParser(QByteArray& data)
-{
-//    int stop = 0;
-//    while(data.at(stop) != '\0') {
-//        stop++;
-//    }
-//    QJsonObject obj = QJsonDocument::fromJson(data.mid(0, stop-1)).object();
-    QJsonObject obj = QJsonDocument::fromJson(data).object();
-    fileSize = obj.value("size").toVariant().value<qint64>();
-    fileName = obj.value("name").toString();
 }
 
 void FileReceiver::socketConnected()
@@ -48,13 +29,10 @@ void FileReceiver::readPacket()
 
         switch (type) {
             case PacketType::Data: {
-//                qDebug() << "Type: data";
+                if (status != ReceiverStatus::Transferring)
+                    return;
                 memcpy(&payloadSize, socketBuffer.mid(sizeof(type), sizeof(qint32)), sizeof(qint32));
-//                qDebug() << "Payload size test: " << socketBuffer.mid(sizeof(type), sizeof(qint32));
-//                payloadSize = static_cast<qint32>(socketBuffer.at(1));
-//                qDebug() << "Payload size: " << payloadSize;
                 QByteArray data = socketBuffer.mid(sizeof(type) + sizeof(qint32), payloadSize);
-//                qDebug() << "Data: " << data;
                 writeData(data);
                 break;
             }
@@ -67,10 +45,29 @@ void FileReceiver::readPacket()
                 qDebug() << "Type: meta";
                 payloadSize = socketBuffer.at(1);
                 QByteArray data = socketBuffer.mid(sizeof(type) + sizeof(qint32), payloadSize);
-                metaParser(data);
+                QJsonObject obj = QJsonDocument::fromJson(data).object();
+                fileSize = obj.value("size").toVariant().value<qint64>();
+                fileName = obj.value("name").toString();
+
+                QProcessEnvironment env(QProcessEnvironment::systemEnvironment());
+
+                QDir dir(env.value("USERPROFILE") + "\\Downloads\\Filee");
+                if (!dir.exists()) {
+                    QDir().mkdir(env.value("USERPROFILE") + "\\Downloads\\Filee");
+                }
+                qDebug() << dir;
+
+                file = new QFile(env.value("USERPROFILE") + "\\Downloads\\Filee\\" + fileName, this);
+                if (file->open(QIODevice::WriteOnly)) {
+                    qDebug() << "Sender: File opened successfully.";
+                    status = ReceiverStatus::Transferring;
+                } else {
+                    qDebug() << "Sender: Failed to write ";
+                }
                 break;
             }
             case PacketType::Complete: {
+                emit statusUpdate(100);
                 qDebug() << "[Receiver] Complete!!";
                 file->close();
                 break;
@@ -106,4 +103,5 @@ void FileReceiver::writeData(QByteArray& data)
 {
     file->write(data);
     sizeProcessed += data.size();
+    emit statusUpdate((int)((double)sizeProcessed * 100 / fileSize));
 }

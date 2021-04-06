@@ -149,7 +149,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QProgressBar" name="progressBar">
+       <widget class="QProgressBar" name="senderProgressBar">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>
@@ -215,7 +215,7 @@
        </widget>
       </item>
       <item>
-       <widget class="QProgressBar" name="progressBar_3">
+       <widget class="QProgressBar" name="receiverProgressBar">
         <property name="sizePolicy">
          <sizepolicy hsizetype="Expanding" vsizetype="Fixed">
           <horstretch>0</horstretch>

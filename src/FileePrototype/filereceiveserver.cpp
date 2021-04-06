@@ -13,5 +13,6 @@ void FileReceiveServer::newConnection()
     if (socket) {
         FileReceiver* receiver = new FileReceiver(socket);
         receivers.push_back(receiver);
+        emit receiverInitialized(receiver);
     }
 }

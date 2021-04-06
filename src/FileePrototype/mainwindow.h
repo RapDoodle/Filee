@@ -10,6 +10,7 @@
 #include "broadcastreceiver.h"
 #include "filesender.h"
 #include "filereceiveserver.h"
+#include "filereceiver.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -22,6 +23,9 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
+
+private slots:
+    void newConnectionReceived(FileReceiver*);
 
 private:
     Ui::MainWindow *ui;
