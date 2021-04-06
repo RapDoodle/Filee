@@ -2,7 +2,7 @@
 import QtQuick 2.0
 
 Rectangle {
-    id: tset
+    id: test
 
     property alias text: ableUserName.text
 
@@ -20,15 +20,15 @@ Rectangle {
 
     Rectangle{
         id: ableUserPic
-        width: tset.height*0.75
-        height: tset.height*0.75
+        width: test.height*0.75
+        height: test.height*0.75
         color: "pink"
         radius: 10
         anchors {
-            left: tset.left
-            leftMargin: tset.width*0.1
-            top: tset.top
-            topMargin: tset.height*0.125
+            left: test.left
+            leftMargin: test.width*0.1
+            top: test.top
+            topMargin: test.height*0.125
 
         }
         TextInput {
@@ -52,11 +52,11 @@ Rectangle {
 
     Text {
         id: ableUserName
-        width: tset.width*0.6
+        width: test.width*0.6
         height: ableUserPic.height*0.5
         anchors {
             left: ableUserPic.right
-            leftMargin: tset.width*0.02
+            leftMargin: test.width*0.02
             top: ableUserPic.top
         }
         color: "#000000"
@@ -67,11 +67,11 @@ Rectangle {
     }
     Text {
         id: ableUserNetworkStatus
-        width: tset.width*0.6
+        width: test.width*0.6
         height: ableUserPic.height*0.5
         anchors {
             left: ableUserPic.right
-            leftMargin: tset.width*0.02
+            leftMargin: test.width*0.02
             top: ableUserName.bottom
         }
         color: "#000000"

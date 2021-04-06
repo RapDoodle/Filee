@@ -64,10 +64,9 @@ Rectangle {
         height:15
         width:height
         radius: height
-        text: "\u23F8"
-        //text: U+2713
-
-
+        text: "\u003D"
+        font.pointSize: 15
+        rotation: 90
         anchors{
             top: parent.top
             right: sendBubbleImage.left
@@ -76,7 +75,7 @@ Rectangle {
     }
     RoundButton{
         id:sendCancel
-        text: "\u2715"
+        text: "\u00D7"
         height:15
         width:height
         radius: height
