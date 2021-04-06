@@ -65,12 +65,25 @@ Rectangle {
         width:height
         radius: height
         text: "\u003D"
+        font.weight: Font.Light
+        wheelEnabled: false
         font.pointSize: 15
         rotation: 90
         anchors{
             top: parent.top
             right: sendBubbleImage.left
             rightMargin: 5
+        }
+        onClicked: {
+            if(sendPause.text==="\u003D"){
+                sendPause.text = "\u25B6"
+                sendPause.rotation = 0
+                sendPause.font.pointSize = 14
+            }else{
+                sendPause.text = "\u003D"
+                sendPause.rotation = 90
+                sendPause.font.pointSize = 15
+            }
         }
     }
     RoundButton{

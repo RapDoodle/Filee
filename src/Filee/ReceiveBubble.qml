@@ -72,6 +72,17 @@ Rectangle {
             left: receiveBubbleImage.right
             leftMargin: 5
         }
+        onClicked: {
+            if(receivePause.text==="\u003D"){
+                receivePause.text = "\u25B6"
+                receivePause.rotation = 0
+                receivePause.font.pointSize = 14
+            }else{
+                receivePause.text = "\u003D"
+                receivePause.rotation = 90
+                receivePause.font.pointSize = 15
+            }
+        }
     }
     RoundButton{
         id:receiveCancel
