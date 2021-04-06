@@ -59,6 +59,33 @@ void FileReceiver::readPacket()
                 }
 
                 file = new QFile(env.value("USERPROFILE") + "\\Downloads\\Filee\\" + fileName, this);
+
+                // Handle file conficts (already exists)
+                if (file->exists()) {
+                    QStringList filePath = file->fileName().split('.');
+                    if (filePath.size() == 1) {
+                        // File without suffix
+                        QString fileNameTemp = filePath.at(0);
+                        for (int i = 2; i <= INT_MAX; i++) {
+                            if (QFile::exists(fileNameTemp + " (" + QString::number(i) + ")"))
+                                continue;
+                            // Override the existing
+                            file = new QFile(fileNameTemp + " (" + QString::number(i) + ")");
+                            break;
+                        }
+                    } else {
+                        for (int i = 2; i <= INT_MAX; i++) {
+                            filePath = file->fileName().split('.');
+                            filePath[filePath.size() - 2] = filePath[filePath.size() - 2] + " (" + QString::number(i) + ")";
+                            QString compiledPath = filePath.join('.');
+                            if (QFile::exists(compiledPath))
+                                continue;
+                            // Override the existing
+                            file = new QFile(compiledPath);
+                            break;
+                        }
+                    }
+                }
                 if (file->open(QIODevice::WriteOnly)) {
                     qDebug() << "Sender: File opened successfully.";
                     status = ReceiverStatus::Transferring;
@@ -83,6 +110,7 @@ void FileReceiver::readPacket()
             }
             case PacketType::Cancel: {
                 qDebug() << "Type: cancel";
+                cancel();
                 break;
             }
             default: {
@@ -96,7 +124,6 @@ void FileReceiver::readPacket()
         } else {
             socketBuffer.remove(0, sizeof(type) + sizeof(qint32) + payloadSize);
         }
-
     }
 }
 
@@ -105,4 +132,26 @@ void FileReceiver::writeData(QByteArray& data)
     file->write(data);
     sizeProcessed += data.size();
     emit statusUpdate((int)((double)sizeProcessed * 10000 / fileSize));
+}
+
+void FileReceiver::pause()
+{
+    sendPacket(PacketType::Pause);
+    status = ReceiverStatus::Paused;
+}
+
+void FileReceiver::resume()
+{
+    sendPacket(PacketType::Resume);
+    status = ReceiverStatus::Transferring;
+}
+
+void FileReceiver::cancel()
+{
+    qDebug() << "[Receiver] Cancel.";
+    sendPacket(PacketType::Cancel);
+    status = ReceiverStatus::Canceled;
+    file->close();
+    socket->close();
+    emit statusUpdate(0);
 }

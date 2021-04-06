@@ -3,9 +3,8 @@
 FileSender::FileSender(QString filePath, QHostAddress receiverAddress, QObject *parent)
     : FileTransferPeer(parent), fileDir(filePath)
 {
-    fileBufferSize = BUFFER_SIZE;
-//    fileBuffer.resize(fileBufferSize);
-    fileBuffer.resize(1024);
+    fileBufferSize = DEFAULT_BUFFER_SIZE;
+    fileBuffer.resize(fileBufferSize);
 
     file = new QFile(fileDir, this);
     bool opened = file->open(QIODevice::ReadOnly);
@@ -51,15 +50,12 @@ void FileSender::sendData()
     if (status != SenderStatus::Transferring)
         return;
 
-//    if (fileSize - sizeProcessed < fileBufferSize) {
-    if (fileSize - sizeProcessed < 1024) {
+    if (fileSize - sizeProcessed < fileBufferSize) {
         fileBufferSize = fileSize - sizeProcessed;
         fileBuffer.resize(fileBufferSize);
     }
 
-//    qint64 bytesRead = file->read(fileBuffer.data(), fileBufferSize);
-    qint64 bytesRead = file->read(fileBuffer.data(), 1024);
-//    qDebug() << bytesRead;
+    qint64 bytesRead = file->read(fileBuffer.data(), fileBufferSize);
     if (bytesRead == -1)
         return;
 
@@ -96,8 +92,29 @@ void FileSender::readPacket()
 //                sendData();
                 break;
             }
+            case PacketType::Deny: {
+                // Denied by receiver
+                break;
+            }
+            case PacketType::Pause: {
+                qDebug() << "[Sender] Pause";
+                pause();
+                break;
+            }
+            case PacketType::Resume: {
+                qDebug() << "[Sender] Resume";
+                resume();
+                break;
+            }
+            case PacketType::Cancel: {
+                qDebug() << "[Sender] Cancel";
+                if (status == SenderStatus::Transferring || status == SenderStatus::Paused)
+                    status = SenderStatus::Canceled;
+                emit statusUpdate(0);
+                break;
+            }
             default: {
-                qDebug() << "Sender: Default case";
+                qDebug() << "[Sender] Default case. Could be a serious error!";
                 break;
             }
         }
@@ -124,20 +141,30 @@ void FileSender::socketConnected()
 
 void FileSender::socketDisconnected()
 {
+    // Cancel when the receiver has disconnected.
+    status = SenderStatus::Canceled;
     qDebug() << "Disconnected.";
 }
 
 void FileSender::pause()
 {
-
+    if (status == SenderStatus::Transferring)
+        status = SenderStatus::Paused;
 }
 
 void FileSender::resume()
 {
-
+    if (status == SenderStatus::Paused) {
+        status = SenderStatus::Transferring;
+        sendData();
+    }
 }
 
 void FileSender::cancel()
 {
+    if (status == SenderStatus::Transferring || status == SenderStatus::Paused)
+        status = SenderStatus::Canceled;
+    emit statusUpdate(0);
+    sendPacket(PacketType::Cancel);
 
 }
