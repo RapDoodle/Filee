@@ -10,8 +10,12 @@ Window {
     title: qsTr("Filee")
 
     property Component transferPanelView: TransferPanelView {}
+    property Component test: Tset {}
     property var componentMap: {
         "TransferPanelView": transferPanelView
+    }
+    property var componentMap1: {
+            "Test": test
     }
 
     StackView {
