@@ -66,7 +66,7 @@ void FileSender::sendData()
     sizeProcessed += bytesRead;
 
     // Emit progress change
-//    qDebug() << (int) (sizeProcessed / fileSize) * 100;
+    emit statusUpdate((int)((double)sizeProcessed * 100 / fileSize));
 
     sendPacket(PacketType::Data, fileBuffer);
 
@@ -91,7 +91,8 @@ void FileSender::readPacket()
         switch (type) {
             case PacketType::Accepted: {
                 status = SenderStatus::Transferring;
-                sendData();
+                sendMeta();
+//                sendData();
                 break;
             }
             default: {
@@ -111,7 +112,8 @@ void FileSender::readPacket()
 
 void FileSender::socketBytesWritten()
 {
-    sendData();
+    if (status == SenderStatus::Transferring)
+        sendData();
 }
 
 void FileSender::socketConnected()

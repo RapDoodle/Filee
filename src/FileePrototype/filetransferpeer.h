@@ -47,6 +47,7 @@ protected:
     void sendPacket(PacketType type, const QByteArray& payload);
 
 signals:
+    void statusUpdate(int);
 
 protected slots:
     virtual void socketBytesWritten();
