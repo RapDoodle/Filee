@@ -11,6 +11,10 @@ MainWindow::MainWindow(QWidget *parent)
     QProcessEnvironment env(QProcessEnvironment::systemEnvironment());
     dir.setPath(env.value("USERPROFILE"));
 
+    // Create OnlineDevicesModel
+    onlineDevicesModel = new OnlineDevicesModel(broadcastReceiver);
+    ui->onlineDevicesTableView->setModel(onlineDevicesModel);
+
     // Start broadcasting
     connect(ui->startBroadcastButton, &QPushButton::clicked, [this]() {
         broadcaster.startBroadcaster();
@@ -21,11 +25,11 @@ MainWindow::MainWindow(QWidget *parent)
         broadcaster.stopBroadcaster();
     });
 
-    // Define actions when receiving broadcast message
-    connect(&broadcastReceiver, QOverload<QString>::of(&BroadcastReceiver::broadcastMessageReceived),
-            [this](QString message) {
-        ui->receivedBroadcastMessage->appendPlainText(message);
-    });
+//    // Define actions when receiving broadcast message
+//    connect(&broadcastReceiver, QOverload<QString>::of(&BroadcastReceiver::broadcastMessageReceived),
+//            [this](QString message) {
+//        ui->receivedBroadcastMessage->appendPlainText(message);
+//    });
 
     // Define actions when the "Select file" button was clicked
     connect(ui->fileSelectButton, &QPushButton::clicked, [this]() {
@@ -49,15 +53,7 @@ MainWindow::MainWindow(QWidget *parent)
         receivers.push_back(receiver);
     });
 
-    // Retrive all loop back interfaces
-    QList<QHostAddress> list = QNetworkInterface::allAddresses();
 
-    for (int i = 0; i < list.count(); i++)
-    {
-        if(!list[i].isLoopback())
-            if (list[i].protocol() == QAbstractSocket::IPv4Protocol)
-                qDebug() << list[i].toString();
-    }
 
     // Actions of the sender's pause/resume button
     connect(ui->senderPauseButton, &QPushButton::clicked, [&]() {

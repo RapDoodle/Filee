@@ -10,7 +10,6 @@ Broadcaster::Broadcaster(QObject *parent) : QObject(parent)
 
 bool Broadcaster::startBroadcaster()
 {
-    qDebug() << "Running";
     timer.start(1000);
     return true;
 }
@@ -23,8 +22,7 @@ bool Broadcaster::stopBroadcaster()
 
 void Broadcaster::broadcastUdpDatagram()
 {
-    QByteArray datagram = "Hi NO." + QByteArray::number(count);
+    QByteArray datagram = "Stupid Bird";
     count++;
     int res = udpSocket->writeDatagram(datagram, QHostAddress::Broadcast, 3456);
-    qDebug() << res;
 }

@@ -7,13 +7,13 @@
 #include <QFileDialog>
 #include <QHostAddress>
 #include <QProcessEnvironment>
-#include <QNetworkInterface>
 
 #include "broadcaster.h"
 #include "broadcastreceiver.h"
 #include "filesender.h"
 #include "filereceiveserver.h"
 #include "filereceiver.h"
+#include "onlinedevicesmodel.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -39,6 +39,7 @@ private:
 
     QVector<FileSender*> senders;
     QVector<FileReceiver*> receivers;
+    OnlineDevicesModel *onlineDevicesModel = nullptr;
 
     QDir dir;
 };
