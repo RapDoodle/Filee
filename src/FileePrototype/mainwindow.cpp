@@ -7,6 +7,9 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
 
+    // Start broadcaster
+    broadcaster.startBroadcaster();
+
     // Start the file dialog at the user's directory
     QProcessEnvironment env(QProcessEnvironment::systemEnvironment());
     dir.setPath(env.value("USERPROFILE"));
@@ -14,6 +17,9 @@ MainWindow::MainWindow(QWidget *parent)
     // Create OnlineDevicesModel
     onlineDevicesModel = new OnlineDevicesModel(broadcastReceiver);
     ui->onlineDevicesTableView->setModel(onlineDevicesModel);
+    connect(ui->onlineDevicesTableView, QOverload<const QModelIndex &>::of(&QTableView::doubleClicked), [this](const QModelIndex &index) {
+        ui->IpLineEdit->setText(onlineDevicesModel->getSelectedIp(index.row()));
+    });
 
     // Start broadcasting
     connect(ui->startBroadcastButton, &QPushButton::clicked, [this]() {

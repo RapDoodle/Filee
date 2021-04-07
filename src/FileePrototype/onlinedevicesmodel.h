@@ -35,6 +35,7 @@ public:
     QVariant data(const QModelIndex &, int role) const override;
     QVariant headerData(int section, Qt::Orientation orientation, int role) const override;
     bool insertRows(int position, int rows, const QModelIndex &index = QModelIndex()) override;
+    QString getSelectedIp(int row);
 
 private:
     BroadcastReceiver &receiver;

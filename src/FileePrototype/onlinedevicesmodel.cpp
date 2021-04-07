@@ -44,7 +44,6 @@ QVariant OnlineDevicesModel::data(const QModelIndex &index, int role) const
 
         } else if (index.column() == 1) {
             return devices.at(index.row()).name;
-
         } else {
             // Column 2, display the status
             switch(devices.at(index.row()).status) {
@@ -102,12 +101,12 @@ void OnlineDevicesModel::statusUpdate(QHostAddress senderAddress, QString name)
         // Set status to online if it is offline
         if (device.status == DeviceStatus::Offline) {
             // Set to online
-            device.status = DeviceStatus::Online;
+            devices[i].status = DeviceStatus::Online;
             emit dataChanged(index(i, 2), index(i, 2));
         }
 
         // Update lastReceivedTime to current time
-        device.lastReceivedTime = QTime::currentTime();
+        devices[i].lastReceivedTime = QTime::currentTime();
 
         return;
     }
@@ -128,6 +127,17 @@ void OnlineDevicesModel::OnlineDevicesModel::onlineCheck()
     QTime currentTime = QTime::currentTime();
     for (int i = 0; i < devices.size(); i++) {
         Device currentDevice = devices.at(i);
-//        qDebug() << currentDevice.lastReceivedTime.secsTo(currentTime);
+        if (currentDevice.status == DeviceStatus::Offline)
+            continue;
+        qint64 timeInterval = currentDevice.lastReceivedTime.secsTo(currentTime);
+        if (timeInterval > 5) {
+            // Set status to offline
+            devices[i].status = DeviceStatus::Offline;
+            emit dataChanged(index(i, 2), index(i, 2));
+        }
     }
+}
+
+QString OnlineDevicesModel::getSelectedIp(int row) {
+    return devices.at(row).address.toString();
 }
