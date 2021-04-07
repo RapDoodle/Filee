@@ -51,14 +51,12 @@ void FileReceiver::readPacket()
                 fileSize = obj.value("size").toVariant().value<qint64>();
                 fileName = obj.value("name").toString();
 
-                QProcessEnvironment env(QProcessEnvironment::systemEnvironment());
-
-                QDir dir(env.value("USERPROFILE") + "\\Downloads\\Filee");
+                QDir dir(QStandardPaths::writableLocation(QStandardPaths::DownloadLocation) + "/Filee");
                 if (!dir.exists()) {
-                    QDir().mkdir(env.value("USERPROFILE") + "\\Downloads\\Filee");
+                    QDir().mkdir(dir.absolutePath());
                 }
 
-                file = new QFile(env.value("USERPROFILE") + "\\Downloads\\Filee\\" + fileName, this);
+                file = new QFile(dir.absolutePath() + "/" + fileName, this);
 
                 // Handle file conficts (already exists)
                 if (file->exists()) {
