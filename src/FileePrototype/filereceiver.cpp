@@ -64,7 +64,7 @@ void FileReceiver::readPacket()
                 if (file->exists()) {
                     QStringList filePath = file->fileName().split('.');
                     if (filePath.size() == 1) {
-                        // File without suffix
+                        // File without suffix. For example, ./READEME
                         QString fileNameTemp = filePath.at(0);
                         for (int i = 2; i <= INT_MAX; i++) {
                             if (QFile::exists(fileNameTemp + " (" + QString::number(i) + ")"))
@@ -74,9 +74,10 @@ void FileReceiver::readPacket()
                             break;
                         }
                     } else {
+                        // File with suffix. For example, ./README.md
+                        QString fileNameBase = filePath[filePath.size() - 2];
                         for (int i = 2; i <= INT_MAX; i++) {
-                            filePath = file->fileName().split('.');
-                            filePath[filePath.size() - 2] = filePath[filePath.size() - 2] + " (" + QString::number(i) + ")";
+                            filePath[filePath.size() - 2] = fileNameBase + " (" + QString::number(i) + ")";
                             QString compiledPath = filePath.join('.');
                             if (QFile::exists(compiledPath))
                                 continue;
