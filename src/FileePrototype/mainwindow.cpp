@@ -11,13 +11,12 @@ MainWindow::MainWindow(QWidget *parent)
     broadcaster.startBroadcaster();
 
     // Start the file dialog at the user's directory
-    QProcessEnvironment env(QProcessEnvironment::systemEnvironment());
-    dir.setPath(env.value("USERPROFILE"));
+    dir.setPath(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation));
 
     // Create OnlineDevicesModel
     onlineDevicesModel = new OnlineDevicesModel(broadcastReceiver);
     ui->onlineDevicesTableView->setModel(onlineDevicesModel);
-    connect(ui->onlineDevicesTableView, QOverload<const QModelIndex &>::of(&QTableView::doubleClicked), [this](const QModelIndex &index) {
+    connect(ui->onlineDevicesTableView, QOverload<const QModelIndex &>::of(&QTableView::clicked), [this](const QModelIndex &index) {
         ui->IpLineEdit->setText(onlineDevicesModel->getSelectedIp(index.row()));
     });
 
@@ -30,12 +29,6 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->stopBroadcastButton, &QPushButton::clicked, [this]() {
         broadcaster.stopBroadcaster();
     });
-
-//    // Define actions when receiving broadcast message
-//    connect(&broadcastReceiver, QOverload<QString>::of(&BroadcastReceiver::broadcastMessageReceived),
-//            [this](QString message) {
-//        ui->receivedBroadcastMessage->appendPlainText(message);
-//    });
 
     // Define actions when the "Select file" button was clicked
     connect(ui->fileSelectButton, &QPushButton::clicked, [this]() {
@@ -58,8 +51,6 @@ MainWindow::MainWindow(QWidget *parent)
         connect(receiver, SIGNAL(statusUpdate(int)), ui->receiverProgressBar, SLOT(setValue(int)));
         receivers.push_back(receiver);
     });
-
-
 
     // Actions of the sender's pause/resume button
     connect(ui->senderPauseButton, &QPushButton::clicked, [&]() {

@@ -1,7 +1,7 @@
 #ifndef FILERECEIVER_H
 #define FILERECEIVER_H
 
-#include <QProcessEnvironment>
+#include <QStandardPaths>
 
 #include "filetransferpeer.h"
 
