@@ -18,7 +18,7 @@ private:
     QUdpSocket *udpSocket = nullptr;
 
 signals:
-    void broadcastMessageReceived(QString message);
+    void broadcastMessageReceived(QHostAddress, QString);
 
 private slots:
     void readUdpPacket();

@@ -16,7 +16,8 @@ SOURCES += \
     filesender.cpp \
     filetransferpeer.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    onlinedevicesmodel.cpp
 
 HEADERS += \
     broadcaster.h \
@@ -25,7 +26,8 @@ HEADERS += \
     filereceiveserver.h \
     filesender.h \
     filetransferpeer.h \
-    mainwindow.h
+    mainwindow.h \
+    onlinedevicesmodel.h
 
 FORMS += \
     mainwindow.ui
