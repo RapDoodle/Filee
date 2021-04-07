@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>280</width>
+    <width>405</width>
     <height>635</height>
    </rect>
   </property>
@@ -125,7 +125,7 @@
       <item>
        <widget class="QLineEdit" name="IpLineEdit">
         <property name="text">
-         <string>127.0.0.1</string>
+         <string/>
         </property>
        </widget>
       </item>
@@ -260,7 +260,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>280</width>
+     <width>405</width>
      <height>25</height>
     </rect>
    </property>
