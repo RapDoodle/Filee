@@ -9,14 +9,10 @@ Window {
     visible: true
     title: qsTr("Filee")
 
-    property Component transferPanelView: TransferPanelView {}
-    property Component test: Test {}
-    property var componentMap: {
-        "TransferPanelView": transferPanelView
-    }
-    property var componentMap1: {
-            "Test": test
-    }
+//    property Component transferPanelView: TransferPanelView {}
+//    property var componentMap: {
+//        "TransferPanelView": transferPanelView
+//    }
 
     StackView {
         id: stackView
@@ -30,7 +26,7 @@ Window {
             Rectangle {
                     id: userInfo
                     width: root.width
-                    height: root.height*0.27
+                    height: root.height*0.25
                     color: "#ffff7f"
 
                     anchors {
@@ -41,15 +37,15 @@ Window {
                     Rectangle {
                         id: userPic
                         z: 1
-                        width: userInfo.height*0.5
-                        height: userInfo.height*0.5
+                        width: userInfo.height*0.6
+                        height: userInfo.height*0.6
                         color: "#55aaff"
 
                         anchors {
                             left: userInfo.left
                             leftMargin: userInfo.width*0.10
                             top: userInfo.top
-                            topMargin: userInfo.height*0.25
+                            topMargin: userInfo.height*0.2
                         }
 
                         Text {
@@ -64,7 +60,7 @@ Window {
 
                             anchors {
                                 left: userPic.left
-                                leftMargin: userPic.width*0.2
+                                leftMargin: userPic.width*0.16
                                 top: userPic.top
                                 topMargin: userPic.height*0.2
                             }
@@ -75,7 +71,7 @@ Window {
                         id: userName
                         z: 1
                         width: userPic.width*1.8
-                        height: userPic.height*0.5
+                        height: userPic.height*0.4
                         text: qsTr("I am Scared Termite")
                         font.pixelSize: 18
                         horizontalAlignment: Text.AlignLeft
@@ -96,7 +92,7 @@ Window {
                         id: userStatus
                         z: 1
                         width: userPic.width*1.8
-                        height: userPic.height*0.5
+                        height: userPic.height*0.3
                         text: qsTr("Not connected To WI-FI")
                         font.pixelSize: 16
                         horizontalAlignment: Text.AlignLeft
@@ -112,12 +108,32 @@ Window {
 
                     }
 
+                    Text {
+                        id: ipAddress
+                        z: 1
+                        width: userPic.width*1.8
+                        height: userPic.height*0.3
+                        text: qsTr("IP Address: 127.0.0.1")
+                        font.pixelSize: 16
+                        horizontalAlignment: Text.AlignLeft
+                        verticalAlignment: Text.AlignVCenter
+                        minimumPixelSize: 12
+                        font.family: "Verdana"
+
+                        anchors {
+                            left: userPic.right
+                            leftMargin: userPic.width*0.3
+                            top: userStatus.bottom
+                        }
+
+                    }
+
                 }
 
                 Rectangle {
                     id: menuButton
                     width: root.width
-                    height: root.height*0.06
+                    height: root.height*0.02
                     color: "#aaff7f"
 
                     anchors {
@@ -126,43 +142,9 @@ Window {
                     }
 
                 }
-///////////////////////////////////////////////
-                //you are debu, I am not.
-                Test{
-                    id:test
-                    text: "foolish debu"
-                    anchors{
-                        top: menuButton.bottom
-                    }
-                }
-/////////////////////////////////////////////////
-            Text {
-                text: "Click me to go to the next page";
-                font.pointSize: 14;
-                font.bold: true;
-                color: "#2D6A4F";
-                anchors.centerIn: parent;
-
-                MouseArea {
-                    anchors.fill: parent;
-                    onClicked: {
-                        if (stackView.depth == 0) {
-                            // Only push the control view if we haven't pushed it
-                            stackView.push(transferPanelView);
-                            stackView.currentItem.forceActiveFocus();
-                        }
-                    }
-                }
-            }
 
             // The home page ends here
         }
     }
 
 }
-
-/*##^##
-Designer {
-    D{i:4;invisible:true}
-}
-##^##*/
