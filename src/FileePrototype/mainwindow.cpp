@@ -30,6 +30,8 @@ MainWindow::MainWindow(QWidget *parent)
         broadcaster.stopBroadcaster();
     });
 
+
+    /* File sender */
     // Define actions when the "Select file" button was clicked
     connect(ui->fileSelectButton, &QPushButton::clicked, [this]() {
         fileName = QFileDialog::getOpenFileName(this, tr("Open file"), dir.absolutePath());
@@ -40,39 +42,24 @@ MainWindow::MainWindow(QWidget *parent)
 
     // Define actions when instantiating a file sender
     connect(ui->fileSendButton, &QPushButton::clicked, [this]() {
-        FileSender *fileSender = new FileSender(fileName, QHostAddress(ui->IpLineEdit->text()));
-        connect(fileSender, SIGNAL(statusUpdate(int)), ui->senderProgressBar, SLOT(setValue(int)));
-        senders.push_back(fileSender);
+        session = new TransferSession(fileName, QHostAddress(ui->IpLineEdit->text()));
+        connect(session, SIGNAL(progressUpdate(int)), ui->senderProgressBar, SLOT(setValue(int)));
+
+        // Actions of the sender's pause/resume button
+        connect(ui->senderPauseButton, &QPushButton::clicked, this, &MainWindow::senderPauseButtonPressed);
+
+        // Actions of the sender's cancel button
+        connect(ui->senderCancelButton, &QPushButton::clicked, [&]() {
+            session->cancel();
+        });
     });
 
+
+    /* For file receivers */
     // Define actions when new file receiver is created
-    connect(&fileReceiveServer, QOverload<FileReceiver*>::of(&FileReceiveServer::receiverInitialized),
-            [this](FileReceiver *receiver) {
-        connect(receiver, SIGNAL(statusUpdate(int)), ui->receiverProgressBar, SLOT(setValue(int)));
-        receivers.push_back(receiver);
-    });
-
-    // Actions of the sender's pause/resume button
-    connect(ui->senderPauseButton, &QPushButton::clicked, [&]() {
-        if (ui->senderPauseButton->text() == "Pause") {
-            for (int i = 0; i < senders.size(); i++) {
-                senders.at(i)->pause();
-            }
-            ui->senderPauseButton->setText("Resume");
-        } else {
-            for (int i = 0; i < senders.size(); i++) {
-                senders.at(i)->resume();
-            }
-            ui->senderPauseButton->setText("Pause");
-        }
-    });
-
-    // Actions of the sender's cancel button
-    connect(ui->senderCancelButton, &QPushButton::clicked, [&]() {
-        for (int i = 0; i < senders.size(); i++) {
-            senders.at(i)->cancel();
-        }
-    });
+    connect(&fileReceiveServer,
+            QOverload<FileReceiver*>::of(&FileReceiveServer::receiverInitialized),
+            this, QOverload<FileReceiver*>::of(&MainWindow::newConnectionReceived));
 
     // Actions of the receiver's pause/resume button
     connect(ui->receiverPauseButton, &QPushButton::clicked, [&]() {
@@ -99,7 +86,23 @@ MainWindow::MainWindow(QWidget *parent)
 
 void MainWindow::newConnectionReceived(FileReceiver *receiver)
 {
+    qDebug() << "New connection";
+    if (receivers.size() > 0) {
+        disconnect(receivers[receivers.size() - 1], SIGNAL(statusUpdate(int)), ui->receiverProgressBar, SLOT(setValue(int)));
+    }
     connect(receiver, SIGNAL(statusUpdate(int)), ui->receiverProgressBar, SLOT(setValue(int)));
+    receivers.push_back(receiver);
+}
+
+void MainWindow::senderPauseButtonPressed()
+{
+    if (ui->senderPauseButton->text() == "Pause") {
+        session->pause();
+        ui->senderPauseButton->setText("Resume");
+    } else {
+        session->resume();
+        ui->senderPauseButton->setText("Pause");
+    }
 }
 
 MainWindow::~MainWindow()

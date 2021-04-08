@@ -5,13 +5,6 @@ FileTransferPeer::FileTransferPeer(QObject *parent) : QObject(parent)
 
 }
 
-void FileTransferPeer::activateSocket()
-{
-    connect(socket, &QTcpSocket::bytesWritten, this, &FileTransferPeer::socketBytesWritten);
-    connect(socket, &QTcpSocket::connected, this, &FileTransferPeer::socketConnected);
-    connect(socket, &QTcpSocket::disconnected, this, &FileTransferPeer::socketDisconnected);
-}
-
 void FileTransferPeer::sendPacket(PacketType type)
 {
     if (!socket)

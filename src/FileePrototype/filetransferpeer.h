@@ -13,14 +13,16 @@
 enum class PacketType : char
 {
     Data        = 0x00,
-    Request     = 0x01,
-    Accepted    = 0x02,
-    Deny        = 0x03,
-    Meta        = 0x04,
-    Complete    = 0x05,
-    Pause       = 0x06,
-    Resume      = 0x07,
-    Cancel      = 0x08
+    ACK         = 0x01,
+    Request     = 0x02,
+    Accepted    = 0x03,
+    Deny        = 0x04,
+    Meta        = 0x05,
+    Complete    = 0x06,
+    Pause       = 0x07,
+    Resume      = 0x08,
+    Cancel      = 0x09,
+    Error       = 0x0A
 };
 
 class FileTransferPeer : public QObject
@@ -42,7 +44,6 @@ protected:
     qint64 fileSize = -1;
     qint64 sizeProcessed = -1;
 
-    void activateSocket();
     void sendPacket(PacketType type);
     void sendPacket(PacketType type, const QByteArray& payload);
 

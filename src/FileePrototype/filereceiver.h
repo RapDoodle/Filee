@@ -13,7 +13,8 @@ enum class ReceiverStatus : char
     Transferring    = 0x03,
     Completed       = 0x04,
     Paused          = 0x05,
-    Canceled        = 0x06
+    Canceled        = 0x06,
+    Error           = 0x07
 };
 
 class FileReceiver : public FileTransferPeer
@@ -28,13 +29,11 @@ public:
 private:
     void sendData();
     void sendMeta();
-//    void metaParser(QByteArray& data);
     void writeData(QByteArray& data);
-    ReceiverStatus status = ReceiverStatus::Initialized;
-
     QString fileName;
-
-
+    ReceiverStatus status = ReceiverStatus::Initialized;
+    bool metaProcessed = false;
+    void error();
 
 signals:
 

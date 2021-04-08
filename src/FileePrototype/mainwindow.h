@@ -14,6 +14,7 @@
 #include "filereceiveserver.h"
 #include "filereceiver.h"
 #include "onlinedevicesmodel.h"
+#include "transfersession.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -29,6 +30,7 @@ public:
 
 private slots:
     void newConnectionReceived(FileReceiver*);
+    void senderPauseButtonPressed();
 
 private:
     Ui::MainWindow *ui;
@@ -36,8 +38,8 @@ private:
     BroadcastReceiver broadcastReceiver;
     QString fileName;
     FileReceiveServer fileReceiveServer;
+    TransferSession *session = nullptr;
 
-    QVector<FileSender*> senders;
     QVector<FileReceiver*> receivers;
     OnlineDevicesModel *onlineDevicesModel = nullptr;
 
