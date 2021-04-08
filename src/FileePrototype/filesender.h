@@ -1,6 +1,8 @@
 #ifndef FILESENDER_H
 #define FILESENDER_H
 
+#include <QObject>
+
 #include "filetransferpeer.h"
 
 #define DEFAULT_BUFFER_SIZE 1024
@@ -17,8 +19,11 @@ enum class SenderStatus : char
 
 class FileSender : public FileTransferPeer
 {
+    Q_OBJECT
 public:
-    explicit FileSender(QString filePath, QHostAddress receiverAddress, QObject *parent = nullptr);
+    explicit FileSender(QString filePath, QHostAddress receiverAddress,
+                        qint64 bufferSize, QObject *parent = nullptr);
+    ~FileSender();
 
     void pause() override;
     void resume() override;
@@ -36,6 +41,8 @@ private:
     SenderStatus status = SenderStatus::Initialized;
 
 signals:
+    void transferComplete();
+    void transferAborted();
 
 private slots:
     void socketBytesWritten() override;

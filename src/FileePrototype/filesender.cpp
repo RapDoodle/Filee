@@ -1,9 +1,8 @@
 #include "filesender.h"
 
-FileSender::FileSender(QString filePath, QHostAddress receiverAddress, QObject *parent)
-    : FileTransferPeer(parent), fileDir(filePath)
+FileSender::FileSender(QString filePath, QHostAddress receiverAddress, qint64 bufferSize, QObject *parent)
+    : FileTransferPeer(parent), fileBufferSize(bufferSize), fileDir(filePath)
 {
-    fileBufferSize = DEFAULT_BUFFER_SIZE;
     fileBuffer.resize(fileBufferSize);
 
     file = new QFile(fileDir, this);
@@ -21,12 +20,24 @@ FileSender::FileSender(QString filePath, QHostAddress receiverAddress, QObject *
     socket = new QTcpSocket(this);
     socket->connectToHost(receiverAddress, 3800, QAbstractSocket::ReadWrite);
 
-    activateSocket();
+    connect(socket, &QTcpSocket::bytesWritten, this, &FileSender::socketBytesWritten);
+    connect(socket, &QTcpSocket::connected, this, &FileSender::socketConnected);
+    connect(socket, &QTcpSocket::disconnected, this, &FileSender::socketDisconnected);
     connect(socket, &QTcpSocket::readyRead, this, &FileSender::readPacket);
 
     // Send meta info
 
 }
+
+FileSender::~FileSender()
+{
+    qDebug() << "FileSender destcutor called";
+    disconnect(socket, &QTcpSocket::bytesWritten, this, &FileSender::socketBytesWritten);
+    disconnect(socket, &QTcpSocket::connected, this, &FileSender::socketConnected);
+    disconnect(socket, &QTcpSocket::disconnected, this, &FileSender::socketDisconnected);
+    disconnect(socket, &QTcpSocket::readyRead, this, &FileSender::readPacket);
+}
+
 
 void FileSender::sendRequest()
 {
@@ -77,12 +88,10 @@ void FileSender::sendData()
 
 void FileSender::readPacket()
 {
-    QByteArray buffer;
-    buffer.append(socket->readAll());
+    socketBuffer.append(socket->readAll());
 
-    while (buffer.size() > 0) {
-        qDebug() << buffer;
-        PacketType type = static_cast<PacketType>(buffer.at(0));
+    while (socketBuffer.size() > 0) {
+        PacketType type = static_cast<PacketType>(socketBuffer.at(0));
         qint32 payloadSize = 0;
 
         switch (type) {
@@ -90,6 +99,10 @@ void FileSender::readPacket()
                 status = SenderStatus::Transferring;
                 sendMeta();
 //                sendData();
+                break;
+            }
+            case PacketType::ACK: {
+                sendData();
                 break;
             }
             case PacketType::Deny: {
@@ -113,16 +126,23 @@ void FileSender::readPacket()
                 emit statusUpdate(0);
                 break;
             }
+            case PacketType::Error: {
+                qDebug() << "Error signal received";
+                socket->close();
+                file->close();
+                emit transferAborted();
+                return;
+            }
             default: {
-                qDebug() << "[Sender] Default case. Could be a serious error!";
+                qDebug() << "[Sender] Default case. Could be a serious error!" << socketBuffer.constData();
                 break;
             }
         }
 
         if (payloadSize == 0) {
-            buffer.remove(0, sizeof(type));
+            socketBuffer.remove(0, sizeof(type));
         } else {
-            buffer.remove(0, sizeof(type) + sizeof(qint32) + payloadSize);
+            socketBuffer.remove(0, sizeof(type) + sizeof(qint32) + payloadSize);
         }
 
     }
@@ -130,8 +150,7 @@ void FileSender::readPacket()
 
 void FileSender::socketBytesWritten()
 {
-    if (status == SenderStatus::Transferring)
-        sendData();
+
 }
 
 void FileSender::socketConnected()

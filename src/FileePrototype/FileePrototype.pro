@@ -21,7 +21,8 @@ SOURCES += \
     filetransferpeer.cpp \
     main.cpp \
     mainwindow.cpp \
-    onlinedevicesmodel.cpp
+    onlinedevicesmodel.cpp \
+    transfersession.cpp
 
 HEADERS += \
     broadcaster.h \
@@ -31,7 +32,8 @@ HEADERS += \
     filesender.h \
     filetransferpeer.h \
     mainwindow.h \
-    onlinedevicesmodel.h
+    onlinedevicesmodel.h \
+    transfersession.h
 
 FORMS += \
     mainwindow.ui
@@ -41,4 +43,4 @@ qnx: target.path = /tmp/$${TARGET}/bin
 else: unix:!android: target.path = /opt/$${TARGET}/bin
 !isEmpty(target.path): INSTALLS += target
 
-ANDROID_ABIS = armeabi-v7a
+ANDROID_ABIS = armeabi-v7a arm64-v8a
