@@ -222,6 +222,6 @@ Rectangle {
 
 /*##^##
 Designer {
-    D{i:0;autoSize:true;formeditorZoom:0.66;height:480;width:640}D{i:15}
+    D{i:0;autoSize:true;formeditorZoom:0.6600000262260437;height:480;width:640}
 }
 ##^##*/

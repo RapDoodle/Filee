@@ -5,5 +5,8 @@
         <file>Test.qml</file>
         <file>ReceiveBubble.qml</file>
         <file>SendBubble.qml</file>
+        <file>SwipeControl.qml</file>
+        <file>SendPage.qml</file>
+        <file>ReceivePage.qml</file>
     </qresource>
 </RCC>

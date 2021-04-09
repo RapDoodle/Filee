@@ -1,8 +1,8 @@
 import QtQuick 2.12
 import QtQuick.Window 2.12
-import QtQuick.Controls 1.4
+import QtQuick.Controls 2.5
 
-Window {
+ApplicationWindow {
     id: root
     width: 405
     height: 720
@@ -143,8 +143,57 @@ Window {
 
                 }
 
+                //swipe view starts here
+                SwipeControl{
+                    id:swipeControl
+                    //width: parent.width
+                    anchors{
+                        top: menuButton.bottom
+                    }
+                    currentIndex: tabBar.currentIndex
+                }
+//                SwipeView{
+//                    id:swipeView
+//                    width: parent.width
+//                    height: parent.height*0.3
+//                    anchors{
+//                        top: menuButton.bottom
+//                    }
+//                    currentIndex: tabBar.currentIndex
+//                    SendPage{
+//                        width: parent.width
+//                    }
+//                    ReceivePage{
+//                        width: parent.width
+//                    }
+//                }
+                TabBar{
+                    id: tabBar
+                    width: parent.width
+                    anchors{
+                        top: swipeControl.bottom
+                    }
+                    currentIndex: swipeControl.currentIndex
+
+
+                    TabButton {
+                        text: qsTr("Page 1")
+                        onClicked: {
+                            console.log(tabBar.currentIndex)
+                            console.log(swipeControl.currentIndex)
+                        }
+                    }
+                    TabButton {
+                        text: qsTr("Page 2")
+                        onClicked: {
+                            console.log(tabBar.currentIndex)
+                            console.log(swipeControl.currentIndex)
+                        }
+                    }
+                }
+                //swipe view ends here
+
             // The home page ends here
         }
     }
-
 }
