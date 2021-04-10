@@ -6,7 +6,7 @@ import QtQuick.Controls.Styles 1.2
 
 Page{
     Rectangle{
-        color: "lightblue"
+        color: "#525252"
         anchors.fill: parent
 
         Rectangle{
@@ -28,7 +28,8 @@ Page{
                     //horizontalCenter: parent.horizontalCenter
                 }
                 font{
-                    pointSize: 20
+                    pointSize: 15
+                    family: "Verdana"
                 }
                 text: "H:\\mobile computing"
                 persistentSelection: false
@@ -47,12 +48,16 @@ Page{
                     leftMargin: 10
 
                     right: parent.right
+
                 }
-                text: "select"
+                text: "Select"
+
                 font{
-                    pointSize: 15
+                    pointSize: 10
+                    family: "Verdana"
                 }
-                palette.button: "salmon"// change button color
+                palette.button: "#323232"// change button color
+                palette.buttonText: "#cea392"
             }
         }
 
@@ -97,14 +102,14 @@ Page{
             id:progressBackground
             width: parent.width
             height: 20
-            color: "lightgray"
+            color: "lightgrey"
             radius: 4
         }
         Rectangle{
             id:progress
             width: parent.width*slider.value
             height: 20
-            color: "lightsteelblue"
+            color: "#d6845a"
             radius: 4
             //ColorAnimation on color { to: "yellow";duration:1000}
         }
@@ -138,7 +143,7 @@ Page{
                 radius: height
                 text: "\u003D"
                 //text: U+2713
-                font.pointSize: 45
+                font.pointSize: 30
                 rotation: 90
                 anchors{
                     top: parent.top
@@ -149,11 +154,11 @@ Page{
                     if(receivePause.text==="\u003D"){
                         receivePause.text = "\u25B2"
                         //receivePause.rotation = 0
-                        receivePause.font.pointSize = 30
+                        receivePause.font.pointSize = 20
                     }else{
                         receivePause.text = "\u003D"
                         receivePause.rotation = 90
-                        receivePause.font.pointSize = 45
+                        receivePause.font.pointSize = 30
                     }
                 }
             }
@@ -164,7 +169,7 @@ Page{
                 width:height
                 radius: height
                 text: "\u00D7"
-                font.pointSize: 35
+                font.pointSize: 25
                 anchors{
                     right: parent.right
                     topMargin: 1
@@ -184,10 +189,12 @@ Page{
             Button{
                 id:send
                 width: parent.width
-                text: "send"
+                text: "SEND"
                 font{
                     pointSize: 15
+                    family: "Verdana"
                 }
+                palette.buttonText: "#323232"
             }
         }
     }
