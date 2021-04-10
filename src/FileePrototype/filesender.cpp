@@ -41,7 +41,7 @@ FileSender::~FileSender()
 
 void FileSender::sendRequest()
 {
-    sendPacket(PacketType::Request);
+    sendPacket(PacketType::RequestSend);
 }
 
 void FileSender::sendMeta() {
@@ -95,13 +95,13 @@ void FileSender::readPacket()
         qint32 payloadSize = 0;
 
         switch (type) {
-            case PacketType::Accepted: {
+            case PacketType::Accept: {
                 status = SenderStatus::Transferring;
                 sendMeta();
 //                sendData();
                 break;
             }
-            case PacketType::ACK: {
+            case PacketType::RequestData: {
                 sendData();
                 break;
             }
@@ -133,6 +133,33 @@ void FileSender::readPacket()
                 emit transferAborted();
                 return;
             }
+            case PacketType::SyncRequest: {
+                qDebug() << "[Sender] Request to sync received";
+                status = SenderStatus::Syncing;
+                try {
+                    memcpy(&payloadSize, socketBuffer.mid(sizeof(type), sizeof(qint32)), sizeof(qint32));
+                } catch (...) {
+                    return;
+                }
+                if (payloadSize + (qint64)(sizeof(type) + sizeof(qint32)) > socketBuffer.size()) {
+//                    sendPacket(PacketType::RequestData);
+                    return;
+                }
+                qint64 pos = 0;
+                memcpy(&pos, socketBuffer.mid(sizeof(type) + sizeof(qint32), sizeof(qint64)), sizeof(qint64));
+                qDebug() << "[Sender] Received SYNC to position " << pos;
+                sizeProcessed = pos;
+                file->seek(sizeProcessed);
+                // Confirm the position
+                pos = file->pos();
+                QByteArray packet(reinterpret_cast<const char *>(&pos), sizeof(pos));
+                sendPacket(PacketType::ConfirmSync, packet);
+                break;
+            }
+            case PacketType::SyncDone: {
+                qDebug() << "Sync done";
+                status = SenderStatus::Transferring;
+            }
             default: {
                 qDebug() << "[Sender] Default case. Could be a serious error!" << socketBuffer.constData();
                 break;
@@ -155,7 +182,7 @@ void FileSender::socketBytesWritten()
 
 void FileSender::socketConnected()
 {
-    sendPacket(PacketType::Request);
+    sendPacket(PacketType::RequestSend);
 }
 
 void FileSender::socketDisconnected()

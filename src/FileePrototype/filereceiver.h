@@ -14,7 +14,8 @@ enum class ReceiverStatus : char
     Completed       = 0x04,
     Paused          = 0x05,
     Canceled        = 0x06,
-    Error           = 0x07
+    Error           = 0x07,
+    Syncing         = 0x08
 };
 
 class FileReceiver : public FileTransferPeer
@@ -34,6 +35,7 @@ private:
     ReceiverStatus status = ReceiverStatus::Initialized;
     bool metaProcessed = false;
     void error();
+    void overloaded();
 
 signals:
 
