@@ -26,7 +26,7 @@ void FileReceiver::readPacket()
 
     while (socketBuffer.size() > 0) {
         PacketType type = static_cast<PacketType>(socketBuffer.at(0));
-        qint32 payloadSize = 0;
+        qint64 payloadSize = 0;
 
         switch (type) {
             case PacketType::Data: {
@@ -34,18 +34,24 @@ void FileReceiver::readPacket()
                     return;
                 if (status != ReceiverStatus::Transferring)
                     return;
-                memcpy(&payloadSize, socketBuffer.mid(sizeof(type), sizeof(qint32)), sizeof(qint32));
-                if (payloadSize > (qint32)socketBuffer.size() + (qint32)(sizeof(type) + sizeof(sizeof(qint32)))) {
-                    sendPacket(PacketType::ACK);
+                try {
+                    memcpy(&payloadSize, socketBuffer.mid(sizeof(type), sizeof(qint32)), sizeof(qint32));
+                } catch (...) {
                     return;
                 }
-                QByteArray data = socketBuffer.mid(sizeof(type) + sizeof(qint32), payloadSize);
-                writeData(data);
+                if (payloadSize + (qint64)(sizeof(type) + sizeof(qint32)) > socketBuffer.size()) {
+//                    sendPacket(PacketType::RequestData);
+                    return;
+                }
+                if (status != ReceiverStatus::Syncing) {
+                    QByteArray data = socketBuffer.mid(sizeof(type) + sizeof(qint32), payloadSize);
+                    writeData(data);
+                }
                 break;
             }
-            case PacketType::Request: {
+            case PacketType::RequestSend: {
                 qDebug() << "Type: request";
-                sendPacket(PacketType::Accepted);
+                sendPacket(PacketType::Accept);
                 break;
             }
             case PacketType::Meta: {
@@ -121,8 +127,37 @@ void FileReceiver::readPacket()
                 qDebug() << "Type: cancel";
                 return cancel();
             }
+            case PacketType::ConfirmSync: {
+                qDebug() << "Type: ConfirmSync";
+                if (status != ReceiverStatus::Syncing) {
+                    qDebug() << "Syncing packet received while not syncing, could be serious congestion, aborting";
+                    return error();
+                }
+                try {
+                    memcpy(&payloadSize, socketBuffer.mid(sizeof(type), sizeof(qint32)), sizeof(qint32));
+                } catch (...) {
+                    return;
+                }
+
+                if (payloadSize + (qint64)(sizeof(type) + sizeof(qint32)) > socketBuffer.size()) {
+//                    sendPacket(PacketType::RequestData);
+                    return;
+                }
+                // The packet now contains valid data
+                qint64 pos = 0;
+                memcpy(&pos, socketBuffer.mid(sizeof(type) + sizeof(qint32), sizeof(qint64)), sizeof(qint64));
+                qDebug() << "[Receiver] Received SYNC to position " << pos;
+                if (pos != sizeProcessed) {
+                    qDebug() << "Wrong pos rewinded, aborting...";
+                    return error();
+                }
+                sendPacket(PacketType::SyncDone);
+                status = ReceiverStatus::Transferring;
+                sendPacket(PacketType::RequestData);
+            }
             default: {
-                return error();
+                return overloaded();
+//                return error();
                 qDebug() << "Receiver: Default case: " << socketBuffer;
                 break;
             }
@@ -135,7 +170,7 @@ void FileReceiver::readPacket()
         }
 
         if (socketBuffer.size() < payloadSize && status == ReceiverStatus::Transferring) {
-            sendPacket(PacketType::ACK);
+            sendPacket(PacketType::RequestData);
         }
     }
 }
@@ -168,6 +203,16 @@ void FileReceiver::error()
     if (file)
         file->close();
     file->remove();
+}
+
+void FileReceiver::overloaded()
+{
+    qDebug() << "[Receiver] Overloaded! Need to rewind to " << sizeProcessed;
+    if (status == ReceiverStatus::Syncing)
+        return;
+    status = ReceiverStatus::Syncing;
+    QByteArray packet(reinterpret_cast<const char *>(&sizeProcessed), sizeof(sizeProcessed));
+    sendPacket(PacketType::SyncRequest, packet);
 }
 
 void FileReceiver::cancel()

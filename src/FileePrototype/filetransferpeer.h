@@ -13,16 +13,20 @@
 enum class PacketType : char
 {
     Data        = 0x00,
-    ACK         = 0x01,
-    Request     = 0x02,
-    Accepted    = 0x03,
-    Deny        = 0x04,
-    Meta        = 0x05,
-    Complete    = 0x06,
-    Pause       = 0x07,
-    Resume      = 0x08,
-    Cancel      = 0x09,
-    Error       = 0x0A
+    RequestData = 0x01,
+    RequestSend = 0x02,
+    KeepAlive   = 0x03,  // To be implemented
+    Accept      = 0x04,
+    Deny        = 0x05,
+    Meta        = 0x06,
+    Complete    = 0x07,
+    Pause       = 0x08,
+    Resume      = 0x09,
+    Cancel      = 0x0A,
+    Error       = 0x0B,
+    SyncRequest = 0x0C,  // Sent by receiver on overload
+    ConfirmSync = 0x0D,  // Sent by sender on overload
+    SyncDone    = 0x0E
 };
 
 class FileTransferPeer : public QObject

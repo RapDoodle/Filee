@@ -14,7 +14,8 @@ enum class SenderStatus : char
     Transferring    = 0x02,
     Completed       = 0x03,
     Paused          = 0x04,
-    Canceled        = 0x05
+    Canceled        = 0x05,
+    Syncing         = 0x06
 };
 
 class FileSender : public FileTransferPeer
