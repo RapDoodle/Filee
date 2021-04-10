@@ -5,12 +5,12 @@ SwipeView{
 
     id:swipeView
     width: parent.width
-    height: parent.height*0.3
-    interactive: false
-    ReceivePage{
+    height: parent.height*0.4
+    //interactive: false
+    SendPage{
 
     }
-    SendPage{
+    ReceivePage{
 
     }
 }

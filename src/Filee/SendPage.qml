@@ -1,16 +1,200 @@
-import QtQuick 2.0
+import QtQuick 2.9
 import QtQuick.Controls 2.5
+import QtQuick.Controls.Styles 1.2
+//import QtQuick.Controls 1.2
 
-Page {
+
+Page{
     Rectangle{
         color: "lightblue"
         anchors.fill: parent
-        Text{
-            id:filePath
+
+        Rectangle{
+            id:fileNamePlace
+            width: parent.width-40
+            height: fileName.height
+            color: parent.color
             anchors{
-                horizontalCenter: centerIn
+                top: parent.top
+                topMargin: parent.height*0.1
+                leftMargin: parent.width*0.01
+                rightMargin: leftMargin
+                horizontalCenter: parent.horizontalCenter
             }
-            text: "testetstestetsettsetste"
+            TextEdit{
+                id:fileName
+                width: parent.width-selectButton.width*2
+                anchors{
+                    //horizontalCenter: parent.horizontalCenter
+                }
+                font{
+                    pointSize: 20
+                }
+                text: "H:\\mobile computing"
+                persistentSelection: false
+                selectByMouse: true
+                readOnly: true
+                //wrapMode: "WordWrap"
+                function textwidth(){
+
+                }
+            }
+            RoundButton{
+                id: selectButton
+                width: parent.width*0.2
+                height: parent.height
+                anchors{
+                    leftMargin: 10
+
+                    right: parent.right
+                }
+                text: "select"
+                font{
+                    pointSize: 15
+                }
+                palette.button: "salmon"// change button color
+            }
+        }
+
+        Rectangle{
+            id: progressField
+            width: parent.width-40
+            anchors{
+                top: fileNamePlace.bottom
+
+                topMargin: 35
+                horizontalCenter: parent.horizontalCenter
+            }
+//            ProgressBar {
+//                id: progressBar
+//                width: parent.width
+//                height: 24
+//                anchors{
+//                    //top: fileNamePlace.bottom
+//                }
+//                antialiasing: true
+//                //hoverEnabled: true
+//                indeterminate: false
+//                //value: 0.5
+//                value:slider.value
+
+////                ProgressBarStyle{
+////                    background: Rectangle{
+////                        radius: 2
+////                        color: "lightgray"
+////                        border.color: "gray"
+////                        border.width: 1
+////                        implicitWidth: 200
+////                        implicitHeight: 24
+////                    }
+////                    progress: Rectangle {
+////                        color: "lightsteelblue"
+////                        border.color: "steelblue"
+////                    }
+////                }
+        //var progressValue = 0
+        Rectangle{
+            id:progressBackground
+            width: parent.width
+            height: 20
+            color: "lightgray"
+            radius: 4
+        }
+        Rectangle{
+            id:progress
+            width: parent.width*slider.value
+            height: 20
+            color: "lightsteelblue"
+            radius: 4
+            //ColorAnimation on color { to: "yellow";duration:1000}
+        }
+
+            Slider {
+                id: slider
+                width: progressBackground.width
+                anchors{
+                    top: progress.bottom
+                }
+                value: 0.5
+                visible: false
+            }
+        }
+
+
+        Rectangle{
+            id:buttonArea
+            width:parent.width-40
+            height:50
+            color: parent.color
+            anchors{
+                top: progressField.bottom
+                topMargin: 60
+                horizontalCenter: parent.horizontalCenter
+            }
+            RoundButton{
+                id:receivePause
+                height:parent.height
+                width:height
+                radius: height
+                text: "\u003D"
+                //text: U+2713
+                font.pointSize: 45
+                rotation: 90
+                anchors{
+                    top: parent.top
+                    left: parent.left
+                    leftMargin: 0.2*parent.width
+                }
+                onClicked: {
+                    if(receivePause.text==="\u003D"){
+                        receivePause.text = "\u25B2"
+                        //receivePause.rotation = 0
+                        receivePause.font.pointSize = 30
+                    }else{
+                        receivePause.text = "\u003D"
+                        receivePause.rotation = 90
+                        receivePause.font.pointSize = 45
+                    }
+                }
+            }
+            RoundButton{
+                id:receiveCancel
+
+                height:parent.height
+                width:height
+                radius: height
+                text: "\u00D7"
+                font.pointSize: 35
+                anchors{
+                    right: parent.right
+                    topMargin: 1
+
+                    rightMargin: 0.2*parent.width
+                }
+
+            }
+        }
+        Rectangle{
+            id:sendField
+            width: parent.width
+            height:0.125*parent.height
+            anchors{
+                bottom: parent.bottom
+            }
+            Button{
+                id:send
+                width: parent.width
+                text: "send"
+                font{
+                    pointSize: 15
+                }
+            }
         }
     }
 }
+
+/*##^##
+Designer {
+    D{i:0;autoSize:true;height:480;width:640}
+}
+##^##*/
