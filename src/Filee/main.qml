@@ -3,6 +3,7 @@ import QtQuick.Window 2.12
 import QtQuick.Controls 2.5
 import QtQuick.Controls 1.4
 
+
 ApplicationWindow {
     id: root
     width: 405
@@ -22,13 +23,13 @@ ApplicationWindow {
         Rectangle {
             // The home page starts here
             anchors.fill: parent
-            color: "lightblue"
+            color: "#a5a5a5"
 
             Rectangle {
                     id: userInfo
                     width: root.width
                     height: root.height*0.25
-                    color: "#ffff7f"
+                    color: "#525252"
 
                     anchors {
                         left: root.left
@@ -40,7 +41,7 @@ ApplicationWindow {
                         z: 1
                         width: userInfo.height*0.6
                         height: userInfo.height*0.6
-                        color: "#55aaff"
+                        color: "#cea392"
 
                         anchors {
                             left: userInfo.left
@@ -75,6 +76,7 @@ ApplicationWindow {
                         height: userPic.height*0.4
                         text: qsTr("I am Scared Termite")
                         font.pixelSize: 18
+                        color: "#f4eeeb"
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
                         lineHeightMode: Text.FixedHeight
@@ -96,6 +98,7 @@ ApplicationWindow {
                         height: userPic.height*0.3
                         text: qsTr("Not connected To WI-FI")
                         font.pixelSize: 16
+                        color: "#d6845a"
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
                         minimumPixelSize: 12
@@ -116,6 +119,7 @@ ApplicationWindow {
                         height: userPic.height*0.3
                         text: qsTr("IP Address: 127.0.0.1")
                         font.pixelSize: 16
+                        color: "#f4eeeb"
                         horizontalAlignment: Text.AlignLeft
                         verticalAlignment: Text.AlignVCenter
                         minimumPixelSize: 12
@@ -135,7 +139,7 @@ ApplicationWindow {
                     id: menuButton
                     width: root.width
                     height: root.height*0.02
-                    color: "#aaff7f"
+                    color: "#282828"
 
                     anchors {
                         left: root.left
@@ -182,9 +186,8 @@ ApplicationWindow {
                                             color: styleData.selected?"#cb8862":"#c5aba8"
                                             elide: styleData.elideMode
                                             text: styleData.value
-                                            font.family: webFont.name
-                                            font.pointSize: 12
-                                            font.bold: true
+                                            font.family: "Verdana"
+                                            font.pointSize: 10
                                             horizontalAlignment: Text.AlignHCenter
                                             verticalAlignment: Text.AlignVCenter
                                             anchors.fill: parent
@@ -220,9 +223,9 @@ ApplicationWindow {
                                          Text {
                                             id: headerName
                                             text: styleData.value
-                                            color: "white"
-                                            font.pointSize: 15
-                                            font.bold: true
+                                            color: "lightgrey"
+                                            font.family: "Verdana"
+                                            font.pointSize: 10
                                             horizontalAlignment: Text.AlignHCenter
                                             verticalAlignment: Text.AlignVCenter
                                             anchors.fill: parent
@@ -231,23 +234,11 @@ ApplicationWindow {
 
                                      rowDelegate: Rectangle{
                                         id:rowRectangle
+
                                         property color rowColor: styleData.selected?"#f1eeeb":(styleData.alternate ? "#525252":"#323232")
                                         color:rowColor
                                         height: 30
 
-//                                        Rectangle{
-//                                            x:100
-//                                            height:parent.height
-//                                            width:1
-//                                            color:"black"
-//                                         }
-
-//                                         Rectangle{
-//                                            x:100
-//                                            height:parent.height
-//                                            width:1
-//                                            color:"black"
-//                                         }
                                       }
                                 }
 
@@ -260,7 +251,7 @@ ApplicationWindow {
                     anchors{
                         //top: usertable.bottom
                         bottom: parent.bottom
-                        bottomMargin: 2
+                        //bottomMargin: 1
                     }
                     currentIndex: tabBar.currentIndex
                 }

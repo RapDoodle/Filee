@@ -6,7 +6,7 @@ import QtQuick.Controls.Styles 1.2
 
 Page{
     Rectangle{
-        color: "lightblue"
+        color: "#282828"
         anchors.fill: parent
 
         Rectangle{
