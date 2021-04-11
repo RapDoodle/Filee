@@ -152,7 +152,8 @@ ApplicationWindow {
                                     id: usertable
                                     frameVisible: true
                                     width: parent.width
-                                    height: parent.height*0.3
+                                    height: parent.height
+
                                     anchors{
                                         top: menuButton.bottom
                                     }
