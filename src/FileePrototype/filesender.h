@@ -3,6 +3,7 @@
 
 #include <QObject>
 
+#include "utils.h"
 #include "filetransferpeer.h"
 
 #define DEFAULT_BUFFER_SIZE 1024

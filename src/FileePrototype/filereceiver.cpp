@@ -63,9 +63,9 @@ void FileReceiver::readPacket()
                 double fileSizeDisplay = fileSize;
                 int unitIdx = 0;
                 while (fileSizeDisplay > 1024) {
-                    fileSizeDisplay /= 1024;
                     if (unitIdx > sizeUnits.size())
                         break;
+                    fileSizeDisplay /= 1024;
                     unitIdx++;
                 }
                 QString fileSizeUnit = sizeUnits.at(unitIdx);

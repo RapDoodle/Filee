@@ -1,4 +1,5 @@
 #include "filesender.h"
+#include <QMessageBox>
 
 FileSender::FileSender(QString filePath, QHostAddress receiverAddress, qint64 bufferSize, QObject *parent)
     : FileTransferPeer(parent), fileBufferSize(bufferSize), fileDir(filePath)
@@ -43,6 +44,9 @@ FileSender::~FileSender()
 void FileSender::sendRequest()
 {
     QString fileName = QDir(file->fileName()).dirName();
+    #if defined (Q_OS_ANDROID)
+    fileName = Utils::androidFileNameParser(file->fileName());
+    #endif
     QJsonObject obj(QJsonObject::
                     fromVariantMap(
                         {
@@ -154,6 +158,7 @@ void FileSender::readPacket()
             case PacketType::SyncDone: {
                 qDebug() << "Sync done";
                 status = SenderStatus::Transferring;
+                break;
             }
             default: {
                 qDebug() << "[Sender] Default case. Could be a serious error!" << socketBuffer.constData();
@@ -207,5 +212,4 @@ void FileSender::cancel()
         status = SenderStatus::Canceled;
     emit statusUpdate(0);
     sendPacket(PacketType::Cancel);
-
 }

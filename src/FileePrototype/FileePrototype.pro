@@ -22,7 +22,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     onlinedevicesmodel.cpp \
-    transfersession.cpp
+    transfersession.cpp \
+    utils.cpp
 
 HEADERS += \
     broadcaster.h \
@@ -33,7 +34,8 @@ HEADERS += \
     filetransferpeer.h \
     mainwindow.h \
     onlinedevicesmodel.h \
-    transfersession.h
+    transfersession.h \
+    utils.h
 
 FORMS += \
     mainwindow.ui
