@@ -3,7 +3,12 @@
 
 #include <QStandardPaths>
 
+// Test only
+#include <QMessageBox>
+
 #include "filetransferpeer.h"
+
+const QStringList sizeUnits = { "bytes", "KB", "MB", "GB", "TB", "PB" };
 
 enum class ReceiverStatus : char
 {
