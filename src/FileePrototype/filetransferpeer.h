@@ -9,6 +9,7 @@
 #include <QHostAddress>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QNetworkProxyFactory>
 
 enum class PacketType : char
 {

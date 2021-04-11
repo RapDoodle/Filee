@@ -3,7 +3,7 @@
 BroadcastReceiver::BroadcastReceiver(QObject *parent) : QObject(parent)
 {
     udpSocket = new QUdpSocket(this);
-    udpSocket->bind(QHostAddress::AnyIPv4, 3456);
+    udpSocket->bind(QHostAddress::AnyIPv4, 6816);
     connect(udpSocket, SIGNAL(readyRead()), this, SLOT(readUdpPacket()));
 }
 
