@@ -36,7 +36,6 @@ private:
     QString fileDir;
 
     void sendRequest();
-    void sendMeta();
     void sendData();
 
     SenderStatus status = SenderStatus::Initialized;

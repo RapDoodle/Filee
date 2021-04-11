@@ -18,6 +18,7 @@ FileSender::FileSender(QString filePath, QHostAddress receiverAddress, qint64 bu
     sizeProcessed = 0;
 
     socket = new QTcpSocket(this);
+    socket->setProxy(QNetworkProxy::NoProxy);
     socket->connectToHost(receiverAddress, 3800, QAbstractSocket::ReadWrite);
 
     connect(socket, &QTcpSocket::bytesWritten, this, &FileSender::socketBytesWritten);
@@ -41,10 +42,6 @@ FileSender::~FileSender()
 
 void FileSender::sendRequest()
 {
-    sendPacket(PacketType::RequestSend);
-}
-
-void FileSender::sendMeta() {
     QString fileName = QDir(file->fileName()).dirName();
     QJsonObject obj(QJsonObject::
                     fromVariantMap(
@@ -53,7 +50,7 @@ void FileSender::sendMeta() {
                             {"size", fileSize},
                         }));
     QByteArray payload(QJsonDocument(obj).toJson());
-    sendPacket(PacketType::Meta, payload);
+    sendPacket(PacketType::SendRequest, payload);
 }
 
 void FileSender::sendData()
@@ -97,8 +94,6 @@ void FileSender::readPacket()
         switch (type) {
             case PacketType::Accept: {
                 status = SenderStatus::Transferring;
-                sendMeta();
-//                sendData();
                 break;
             }
             case PacketType::RequestData: {
@@ -182,7 +177,7 @@ void FileSender::socketBytesWritten()
 
 void FileSender::socketConnected()
 {
-    sendPacket(PacketType::RequestSend);
+    sendRequest();
 }
 
 void FileSender::socketDisconnected()
