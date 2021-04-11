@@ -35,7 +35,7 @@ ApplicationWindow {
             Rectangle {
                 id: userInfo
                 width: root.width
-                height: root.height*0.25
+                height: root.height*0.30
                 color: "#525252"
 
                 anchors {
@@ -43,18 +43,70 @@ ApplicationWindow {
                     top: root.top
                 }
 
+
+//                Rectangle {
+//                    id: boardcast
+//                    width: userInfo.width
+//                    height: userInfo.height*0.16
+
+//                    anchors {
+//                        left: root.left
+//                        top: root.top
+//                        topMargin: userInfo.height*0.1
+//                    }
+
+
+
+//                }
+
+//                Switch {
+//                    id: boardcastButton
+//                    property color checkedColor: "#0ACF97"
+
+//                    Rectangle {
+//                        width: userInfo.width*0.3
+//                        height: userInfo.height*0.16
+//                        radius: height / 2
+//                        color: root.checked ? checkedColor : "white"
+//                        border.width: 2
+//                        border.color: root.checked ? checkedColor : "#E5E5E5"
+
+//                        anchors {
+//                            left: root.left
+//                            top: root.top
+//                            topMargin: userInfo.height*0.1
+//                        }
+
+//                        Rectangle {
+//                            x: root.checked ? parent.width - width - 2 : 1
+//                            width: root.checked ? parent.height - 4 : parent.height - 2
+//                            height: width
+//                            radius: width / 2
+//                            anchors.verticalCenter: parent.verticalCenter
+//                            color: "white"
+//                            border.color: "#D5D5D5"
+
+//                            Behavior on x {
+//                                NumberAnimation { duration: 200 }
+//                            }
+//                        }
+//                    }
+//                }
+
+
                 Rectangle {
                     id: userPic
                     z: 1
-                    width: userInfo.height*0.6
-                    height: userInfo.height*0.6
+                    width: userInfo.height*0.50
+                    height: userInfo.height*0.50
+                    radius: 10
                     color: "#cea392"
 
                     anchors {
                         left: userInfo.left
-                        leftMargin: userInfo.width*0.10
+                        leftMargin: userInfo.width*0.08
                         top: userInfo.top
-                        topMargin: userInfo.height*0.2
+                        topMargin: userInfo.height*0.36
                     }
 
                     Text {
@@ -69,7 +121,7 @@ ApplicationWindow {
 
                         anchors {
                             left: userPic.left
-                            leftMargin: userPic.width*0.16
+                            leftMargin: userPic.width*0.2
                             top: userPic.top
                             topMargin: userPic.height*0.2
                         }
@@ -82,7 +134,7 @@ ApplicationWindow {
                     width: userPic.width*1.8
                     height: userPic.height*0.4
                     text: qsTr("I am Scared Termite")
-                    font.pixelSize: 18
+                    font.pixelSize: 22
                     color: "#f4eeeb"
                     horizontalAlignment: Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
@@ -92,8 +144,8 @@ ApplicationWindow {
 
                     anchors {
                         left: userPic.right
-                        leftMargin: userPic.width*0.3
-                        top: userPic.top
+                        leftMargin: userPic.width*0.2
+                        bottom: userStatus.top
                     }
 
                 }
@@ -102,9 +154,9 @@ ApplicationWindow {
                     id: userStatus
                     z: 1
                     width: userPic.width*1.8
-                    height: userPic.height*0.3
+                    height: userPic.height*0.4
                     text: qsTr("Not connected To WI-FI")
-                    font.pixelSize: 16
+                    font.pixelSize: 18
                     color: "#d6845a"
                     horizontalAlignment: Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
@@ -113,8 +165,8 @@ ApplicationWindow {
 
                     anchors {
                         left: userPic.right
-                        leftMargin: userPic.width*0.3
-                        top: userName.bottom
+                        leftMargin: userPic.width*0.2
+                        bottom: ipAddress.top
                     }
 
                 }
@@ -125,7 +177,7 @@ ApplicationWindow {
                     width: userPic.width*1.8
                     height: userPic.height*0.3
                     text: qsTr("IP Address: 127.0.0.1")
-                    font.pixelSize: 16
+                    font.pixelSize: 18
                     color: "#f4eeeb"
                     horizontalAlignment: Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
@@ -134,8 +186,8 @@ ApplicationWindow {
 
                     anchors {
                         left: userPic.right
-                        leftMargin: userPic.width*0.3
-                        top: userStatus.bottom
+                        leftMargin: userPic.width*0.2
+                        bottom: userPic.bottom
                     }
 
                 }
@@ -145,7 +197,7 @@ ApplicationWindow {
             Rectangle {
                 id: menuButton
                 width: root.width
-                height: root.height*0.02
+                height: root.height*0.05
                 color: "#282828"
 
                 anchors {
