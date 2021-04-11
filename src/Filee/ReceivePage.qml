@@ -6,7 +6,7 @@ import QtQuick.Controls.Styles 1.2
 
 Page{
     Rectangle{
-        color: "#282828"
+        color: "#525252"
         anchors.fill: parent
 
         Rectangle{
@@ -28,8 +28,10 @@ Page{
                     horizontalCenter: parent.horizontalCenter
                 }
                 font{
-                    pointSize: 20
+                    pointSize: 12
+                    family: "Verdana"
                 }
+                color: "#f4eeeb"
                 text: "H:\\mobile computing"
                 persistentSelection: false
                 selectByMouse: true
@@ -69,14 +71,14 @@ Page{
             id:progressBackground
             width: parent.width
             height: 20
-            color: "lightgray"
+            color: "lightgrey"
             radius: 4
         }
         Rectangle{
             id:progress
             width: parent.width*slider.value
             height: 20
-            color: "lightsteelblue"
+            color: "#d6845a"
             radius: 4
             //ColorAnimation on color { to: "yellow";duration:1000}
         }
@@ -110,7 +112,7 @@ Page{
                 radius: height
                 text: "\u003D"
                 //text: U+2713
-                font.pointSize: 45
+                font.pointSize: 30
                 rotation: 90
                 anchors{
                     top: parent.top
@@ -121,13 +123,16 @@ Page{
                     if(receivePause.text==="\u003D"){
                         receivePause.text = "\u25B2"
                         //receivePause.rotation = 0
-                        receivePause.font.pointSize = 30
+                        receivePause.font.pointSize = 15
                     }else{
                         receivePause.text = "\u003D"
                         receivePause.rotation = 90
-                        receivePause.font.pointSize = 45
+                        receivePause.font.pointSize = 30
+
                     }
                 }
+                palette.button: "#414141"
+                palette.buttonText: "#cea392"
             }
             RoundButton{
                 id:receiveCancel
@@ -136,14 +141,15 @@ Page{
                 width:height
                 radius: height
                 text: "\u00D7"
-                font.pointSize: 35
+                font.pointSize: 20
                 anchors{
                     right: parent.right
                     topMargin: 1
 
                     rightMargin: 0.2*parent.width
                 }
-
+                palette.button: "#414141"
+                palette.buttonText: "#cea392"
             }
         }
 //        Rectangle{
