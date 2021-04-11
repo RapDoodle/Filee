@@ -11,9 +11,8 @@ Page{
         anchors.fill: parent
 
         Rectangle{
-            id:fileNamePlace
+            id:ipField
             width: parent.width-40
-            height: fileName.height
             color: parent.color
             anchors{
                 top: parent.top
@@ -22,27 +21,95 @@ Page{
                 rightMargin: leftMargin
                 horizontalCenter: parent.horizontalCenter
             }
-            TextEdit{
-                id:fileName
-                width: parent.width-selectButton.width*2
+            TextEdit {
+                id: ipText
+                width: parent.width*0.3
                 anchors{
-                    horizontalCenter: parent.horizontalCenter
+                    //horizontalCenter: parent.horizontalCenter
+                    verticalCenter: parent.verticalCenter
                 }
                 font{
-                    pointSize: 12
+                    pointSize: 15
                     family: "Verdana"
                 }
                 color: "#f4eeeb"
-                text: "H:\\mobile computing"
+                text: "Sender    "
                 persistentSelection: false
                 selectByMouse: true
                 readOnly: true
                 //wrapMode: "WordWrap"
-                function textwidth(){
-
-                }
             }
-//            RoundButton{
+            TextEdit {
+                id: ipTextInfo
+                //width: parent.width*0.7
+                anchors{
+                    //horizontalCenter: parent.horizontalCenter
+                    verticalCenter: parent.verticalCenter
+                    left: ipText.right
+                }
+                font{
+                    pointSize: 15
+                    family: "Verdana"
+                }
+                color: "#f4eeeb"
+                text: "127.0.0.1"
+                persistentSelection: false
+                selectByMouse: true
+                readOnly: true
+                //wrapMode: "WordWrap"
+
+            }
+        }
+        Rectangle{
+            id:fileNamePlace
+            width: parent.width-40
+            height: fileNameLabel.height+10
+            color: parent.color
+            anchors{
+                top: ipField.bottom
+                topMargin: parent.height*0.1
+                leftMargin: parent.width*0.01
+                rightMargin: leftMargin
+                horizontalCenter: parent.horizontalCenter
+            }
+            TextEdit {
+                id: fileName
+                width: parent.width*0.3
+                anchors{
+                    //horizontalCenter: parent.horizontalCenter
+                    verticalCenter: parent.verticalCenter
+                }
+                font{
+                    pointSize: 15
+                    family: "Verdana"
+                }
+                color: "#f4eeeb"
+                text: "File Name   "
+                persistentSelection: false
+                selectByMouse: true
+                readOnly: true
+                //wrapMode: "WordWrap"
+            }
+            TextEdit {
+                id: fileNameLabel
+                width: parent.width-selectButton.width*2
+                anchors{
+                    //horizontalCenter: parent.horizontalCenter
+                    verticalCenter: parent.verticalCenter
+                    left: fileName.right
+                }
+                font{
+                    pointSize: 15
+                    family: "Verdana"
+                }
+                color: "#f4eeeb"
+                text: _guiController.qmlSenderFileName
+                persistentSelection: false
+                selectByMouse: true
+                readOnly: true
+                //wrapMode: "WordWrap"
+            }
+//            RoundButton {
 //                id: selectButton
 //                width: parent.width*0.2
 //                height: parent.height
@@ -50,12 +117,17 @@ Page{
 //                    leftMargin: 10
 
 //                    right: parent.right
+
 //                }
-//                text: "select"
+//                text: "Select"
+
 //                font{
-//                    pointSize: 15
+//                    pointSize: 13
+//                    family: "Verdana"
 //                }
-//                palette.button: "salmon"// change button color
+//                palette.button: "#323232"// change button color
+//                palette.buttonText: "#cea392"
+//                onClicked: fileDialog.open()
 //            }
         }
 
