@@ -12,7 +12,7 @@ Page{
         Rectangle{
             id:fileNamePlace
             width: parent.width-40
-            height: fileName.height
+            height: fileName.height+10
             color: parent.color
             anchors{
                 top: parent.top
@@ -26,6 +26,7 @@ Page{
                 width: parent.width-selectButton.width*2
                 anchors{
                     //horizontalCenter: parent.horizontalCenter
+                    verticalCenter: parent.verticalCenter
                 }
                 font{
                     pointSize: 15
@@ -54,7 +55,7 @@ Page{
                 text: "Select"
 
                 font{
-                    pointSize: 10
+                    pointSize: 13
                     family: "Verdana"
                 }
                 palette.button: "#323232"// change button color
