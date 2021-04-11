@@ -32,7 +32,6 @@ FileSender::FileSender(QString filePath, QHostAddress receiverAddress, qint64 bu
 
 FileSender::~FileSender()
 {
-    qDebug() << "FileSender destcutor called";
     disconnect(socket, &QTcpSocket::bytesWritten, this, &FileSender::socketBytesWritten);
     disconnect(socket, &QTcpSocket::connected, this, &FileSender::socketConnected);
     disconnect(socket, &QTcpSocket::disconnected, this, &FileSender::socketDisconnected);
@@ -42,7 +41,7 @@ FileSender::~FileSender()
 
 void FileSender::sendRequest()
 {
-    QString fileName = QDir(file->fileName()).dirName();
+    fileName = QDir(file->fileName()).dirName();
     #if defined (Q_OS_ANDROID)
     fileName = Utils::androidFileNameParser(file->fileName());
     #endif
@@ -139,10 +138,8 @@ void FileSender::readPacket()
                 } catch (...) {
                     return;
                 }
-                if (payloadSize + (qint64)(sizeof(type) + sizeof(qint32)) > socketBuffer.size()) {
-//                    sendPacket(PacketType::RequestData);
+                if (payloadSize + (qint64)(sizeof(type) + sizeof(qint32)) > socketBuffer.size())
                     return;
-                }
                 qint64 pos = 0;
                 memcpy(&pos, socketBuffer.mid(sizeof(type) + sizeof(qint32), sizeof(qint64)), sizeof(qint64));
                 qDebug() << "[Sender] Received SYNC to position " << pos;
@@ -155,12 +152,12 @@ void FileSender::readPacket()
                 break;
             }
             case PacketType::SyncDone: {
-                qDebug() << "Sync done";
                 status = SenderStatus::Transferring;
                 break;
             }
             default: {
-                qDebug() << "[Sender] Default case. Could be a serious error!" << socketBuffer.constData();
+                // Abort on error packet
+                cancel();
                 break;
             }
         }
