@@ -133,7 +133,7 @@ ApplicationWindow {
                     z: 1
                     width: userPic.width*1.8
                     height: userPic.height*0.4
-                    text: qsTr("I am Scared Termite")
+                    text: qsTr("I am " + _nickname)
                     font.pixelSize: 22
                     color: "#f4eeeb"
                     horizontalAlignment: Text.AlignLeft
