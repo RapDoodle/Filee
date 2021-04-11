@@ -8,13 +8,13 @@
 #include <QHostAddress>
 #include <QStandardPaths>
 
-#include "broadcaster.h"
-#include "broadcastreceiver.h"
-#include "filesender.h"
-#include "filereceiveserver.h"
-#include "filereceiver.h"
-#include "onlinedevicesmodel.h"
-#include "transfersession.h"
+#include "./broadcast/broadcaster.h"
+#include "./broadcast/broadcastreceiver.h"
+#include "./transfer/sender/filesender.h"
+#include "./transfer/receiver/filereceiveserver.h"
+#include "./transfer/receiver/filereceiver.h"
+#include "./models/onlinedevicesmodel.h"
+#include "./transfer/sender/transfersession.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
