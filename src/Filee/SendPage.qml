@@ -31,6 +31,7 @@ Page{
                     pointSize: 15
                     family: "Verdana"
                 }
+                color: "#f4eeeb"
                 text: "H:\\mobile computing"
                 persistentSelection: false
                 selectByMouse: true
@@ -154,13 +155,15 @@ Page{
                     if(receivePause.text==="\u003D"){
                         receivePause.text = "\u25B2"
                         //receivePause.rotation = 0
-                        receivePause.font.pointSize = 20
+                        receivePause.font.pointSize = 15
                     }else{
                         receivePause.text = "\u003D"
                         receivePause.rotation = 90
                         receivePause.font.pointSize = 30
                     }
                 }
+                palette.button: "#414141"
+                palette.buttonText: "#cea392"
             }
             RoundButton{
                 id:receiveCancel
@@ -169,14 +172,15 @@ Page{
                 width:height
                 radius: height
                 text: "\u00D7"
-                font.pointSize: 25
+                font.pointSize: 20
                 anchors{
                     right: parent.right
                     topMargin: 1
 
                     rightMargin: 0.2*parent.width
                 }
-
+                palette.button: "#414141"
+                palette.buttonText: "#cea392"
             }
         }
         Rectangle{
@@ -194,7 +198,8 @@ Page{
                     pointSize: 15
                     family: "Verdana"
                 }
-                palette.buttonText: "#323232"
+                palette.button: "#323232"
+                palette.buttonText: "#cea392"
             }
         }
     }
