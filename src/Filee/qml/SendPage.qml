@@ -246,13 +246,14 @@ Page{
         Rectangle{
             id:sendField
             width: parent.width
-            height:0.125*parent.height
+            height:0.18*parent.height
             anchors{
                 bottom: parent.bottom
             }
             Button{
                 id:send
                 width: parent.width
+                height: parent.height
                 text: "SEND"
                 font{
                     pointSize: 15
