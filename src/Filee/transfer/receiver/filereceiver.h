@@ -34,7 +34,6 @@ private:
     void sendData();
     void sendMeta();
     void writeData(QByteArray& data);
-    QString fileName;
     ReceiverStatus status = ReceiverStatus::Initialized;
     bool metaProcessed = false;
     void error();

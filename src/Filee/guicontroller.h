@@ -9,6 +9,7 @@
 #include <QFileDialog>
 #include <QHostAddress>
 #include <QStandardPaths>
+#include <QApplication>
 
 #include "./broadcast/broadcaster.h"
 #include "./broadcast/broadcastreceiver.h"
@@ -21,15 +22,30 @@
 class GuiController : public QObject
 {
     Q_OBJECT
+
+    Q_PROPERTY(QString qmlSenderFileName READ getSenderFileName)
+    Q_PROPERTY(QString qmlSenderFilePath MEMBER senderFilePath)
+
 public:
     explicit GuiController(QQmlContext*, QObject *parent = nullptr);
     Q_INVOKABLE void exec();
+    Q_INVOKABLE QString openFileDialog();
+    Q_INVOKABLE void setSenderFilePath(QString);
+    QString getSenderFileName() const;
+
 
 private:
     QQmlContext *context;
+    QApplication *app;
     Broadcaster broadcaster;
     BroadcastReceiver broadcastReceiver;
     OnlineDevicesModel *onlineDevicesModel;
+    QDir previousDir;
+    QString senderFilePath;
+    QString senderFileName;
+
+
+
 
 signals:
 

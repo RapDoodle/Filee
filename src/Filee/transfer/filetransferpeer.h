@@ -32,6 +32,7 @@ enum class PacketType : char
 class FileTransferPeer : public QObject
 {
     Q_OBJECT
+
 public:
     explicit FileTransferPeer(QObject *parent = nullptr);
 
@@ -42,6 +43,7 @@ public:
 protected:
     QTcpSocket* socket = nullptr;
     QFile* file = nullptr;
+    QString fileName;
     QByteArray socketBuffer;
     qint32 currentPayloadSize = 0;
     qint32 payloadUnreadSize = 0;  // For not finished packet

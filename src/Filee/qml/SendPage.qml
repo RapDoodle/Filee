@@ -2,17 +2,31 @@ import QtQuick 2.9
 import QtQuick.Controls 2.5
 import QtQuick.Controls.Styles 1.2
 //import QtQuick.Controls 1.2
-
+import QtQuick.Dialogs 1.0
 
 Page{
     Rectangle{
         color: "#525252"
         anchors.fill: parent
 
+        FileDialog {
+            id: fileDialog
+            title: "Please choose a file"
+            folder: shortcuts.home
+            onAccepted: {
+                console.log("You chose: " + fileDialog.fileUrls)
+                _guiController.setSenderFilePath(fileDialog.fileUrls)
+                fileNameLabel.text = _guiController.qmlSenderFileName
+            }
+            onRejected: {
+                console.log("Canceled")
+            }
+        }
+
         Rectangle{
             id:fileNamePlace
             width: parent.width-40
-            height: fileName.height+10
+            height: fileNameLabel.height+10
             color: parent.color
             anchors{
                 top: parent.top
@@ -21,8 +35,8 @@ Page{
                 rightMargin: leftMargin
                 horizontalCenter: parent.horizontalCenter
             }
-            TextEdit{
-                id:fileName
+            TextEdit {
+                id: fileNameLabel
                 width: parent.width-selectButton.width*2
                 anchors{
                     //horizontalCenter: parent.horizontalCenter
@@ -33,7 +47,7 @@ Page{
                     family: "Verdana"
                 }
                 color: "#f4eeeb"
-                text: "H:\\mobile computing"
+                text: _guiController.qmlSenderFileName
                 persistentSelection: false
                 selectByMouse: true
                 readOnly: true
@@ -42,7 +56,7 @@ Page{
 
                 }
             }
-            RoundButton{
+            RoundButton {
                 id: selectButton
                 width: parent.width*0.2
                 height: parent.height
@@ -60,7 +74,7 @@ Page{
                 }
                 palette.button: "#323232"// change button color
                 palette.buttonText: "#cea392"
-                onClicked: _broadcaster.stopBroadcaster();
+                onClicked: fileDialog.open()
             }
         }
 
@@ -207,8 +221,3 @@ Page{
     }
 }
 
-/*##^##
-Designer {
-    D{i:0;autoSize:true;height:480;width:640}
-}
-##^##*/
