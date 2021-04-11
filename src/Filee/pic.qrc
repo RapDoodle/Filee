@@ -1,8 +1,0 @@
-<RCC>
-    <qresource prefix="/">
-        <file>pic/messageBubble.png</file>
-        <file>pic/messageBubble3(1).png</file>
-        <file>pic/messageBubble3(2).png</file>
-        <file>ReceivePage.qml</file>
-    </qresource>
-</RCC>
