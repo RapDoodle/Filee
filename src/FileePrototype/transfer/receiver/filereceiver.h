@@ -6,7 +6,7 @@
 // Test only
 #include <QMessageBox>
 
-#include "filetransferpeer.h"
+#include "./transfer/filetransferpeer.h"
 
 const QStringList sizeUnits = { "bytes", "KB", "MB", "GB", "TB", "PB" };
 

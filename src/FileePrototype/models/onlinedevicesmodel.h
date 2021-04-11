@@ -9,7 +9,7 @@
 #include <QNetworkInterface>
 #include <QTimer>
 
-#include "broadcastreceiver.h"
+#include "./broadcast/broadcastreceiver.h"
 
 enum class DeviceStatus : char
 {
