@@ -4,7 +4,7 @@
 #include <QObject>
 #include <QMessageBox>
 
-#include "./utils/utils.h"
+#include "./utils/androidutils.h"
 #include "./transfer/filetransferpeer.h"
 
 #define DEFAULT_BUFFER_SIZE 1024

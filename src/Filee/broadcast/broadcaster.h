@@ -9,14 +9,14 @@ class Broadcaster : public QObject
 {
     Q_OBJECT
 public:
-    explicit Broadcaster(QObject *parent = nullptr);
+    explicit Broadcaster(QString, QObject *parent = nullptr);
     Q_INVOKABLE bool startBroadcaster();
     Q_INVOKABLE bool stopBroadcaster();
 
 private:
+    QByteArray nameDatagram;
     QUdpSocket *udpSocket = nullptr;
     QTimer timer;
-    int count = 0;
 
 private slots:
     void broadcastUdpDatagram();

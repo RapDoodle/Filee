@@ -1,11 +1,12 @@
 #include "broadcaster.h"
 #include <QDebug>
 
-Broadcaster::Broadcaster(QObject *parent) : QObject(parent)
+Broadcaster::Broadcaster(QString nickname, QObject *parent)
+    : QObject(parent)
 {
+    nameDatagram = nickname.toUtf8();
     udpSocket = new QUdpSocket(this);
     connect(&timer, &QTimer::timeout, this, &Broadcaster::broadcastUdpDatagram);
-
 }
 
 bool Broadcaster::startBroadcaster()
@@ -22,7 +23,5 @@ bool Broadcaster::stopBroadcaster()
 
 void Broadcaster::broadcastUdpDatagram()
 {
-    QByteArray datagram = "Stupid Bird";
-    count++;
-    udpSocket->writeDatagram(datagram, QHostAddress::Broadcast, 6816);
+    udpSocket->writeDatagram(nameDatagram, QHostAddress::Broadcast, 6816);
 }

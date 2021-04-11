@@ -25,9 +25,6 @@ FileSender::FileSender(QString filePath, QHostAddress receiverAddress, qint64 bu
     connect(socket, &QTcpSocket::connected, this, &FileSender::socketConnected);
     connect(socket, &QTcpSocket::disconnected, this, &FileSender::socketDisconnected);
     connect(socket, &QTcpSocket::readyRead, this, &FileSender::readPacket);
-
-    // Send meta info
-
 }
 
 FileSender::~FileSender()
@@ -43,7 +40,7 @@ void FileSender::sendRequest()
 {
     fileName = QDir(file->fileName()).dirName();
     #if defined (Q_OS_ANDROID)
-    fileName = Utils::androidFileNameParser(file->fileName());
+    fileName = AndroidUtils::androidFileNameParser(file->fileName());
     #endif
     QJsonObject obj(QJsonObject::
                     fromVariantMap(

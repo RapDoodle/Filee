@@ -1,5 +1,5 @@
-#ifndef UTILS_H
-#define UTILS_H
+#ifndef ANDROIDUTILS_H
+#define ANDROIDUTILS_H
 
 #include <QDir>
 #include <QFile>
@@ -47,13 +47,13 @@ const static QMap<QByteArray, QString> videoTypes = {
     {QByteArrayLiteral("\x46\x4C\x56"), "flv"},
 };
 
-class Utils
+class AndroidUtils
 {
 public:
+    AndroidUtils();
     static QString androidFileNameParser(QString path);
 private:
     static QString getExtension(QFile*, FileType);
-
 };
 
-#endif // UTILS_H
+#endif // ANDROIDUTILS_H
