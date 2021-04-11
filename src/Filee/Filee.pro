@@ -15,6 +15,7 @@ CONFIG += c++14
 SOURCES += \
         broadcast/broadcaster.cpp \
         broadcast/broadcastreceiver.cpp \
+        guicontroller.cpp \
         main.cpp \
         models/onlinedevicesmodel.cpp \
         transfer/filetransferpeer.cpp \
@@ -42,6 +43,7 @@ ANDROID_ABIS = armeabi-v7a
 HEADERS += \
     broadcast/broadcaster.h \
     broadcast/broadcastreceiver.h \
+    guicontroller.h \
     models/onlinedevicesmodel.h \
     transfer/filetransferpeer.h \
     transfer/receiver/filereceiver.h \
