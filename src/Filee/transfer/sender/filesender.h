@@ -31,6 +31,7 @@ public:
     void pause() override;
     void resume() override;
     void cancel() override;
+    void getFileName();
 
 private:
     QByteArray fileBuffer;
