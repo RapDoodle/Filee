@@ -30,7 +30,14 @@ const static QMap<QByteArray, QString> audioTypes = {
 };
 
 const static QMap<QByteArray, QString> videoTypes = {
-    {QByteArrayLiteral("\x00\x00\x00\x18\x66\x74\x79\x70\x69\x73\x6F\x6D"), "mp4"},
+    {QByteArrayLiteral("\x00\x00\x00\x18\x66\x74\x79\x70\x6D\x70\x34"), "mp4"},
+    {QByteArrayLiteral("\x00\x00\x00\x20\x66\x74\x79\x70"), "mp4"},
+    {QByteArrayLiteral("\x00\x00\x00\x20\x66\x74\x79\x69"), "mp4"},
+    {QByteArrayLiteral("\x66\x74\x79\x70\x4D\x53\x4E\x56"), "mp4"},
+    {QByteArrayLiteral("\x66\x74\x79\x70\x69\x73\x6F\x6D"), "mp4"},
+    {QByteArrayLiteral("\x66\x74\x79\x70\x6D\x70\x34\x32"), "m4v"},
+    {QByteArrayLiteral("\x00\x00\x00\x18\x66\x74\x79\x70\x71\x74\x20"), "mov"},
+    {QByteArrayLiteral("\x66\x74\x79\x70\x71\x74\x20\x20"), "mov"},
     {QByteArrayLiteral("\x1A\x45\xDF\xA3"), "mkv"},
     {QByteArrayLiteral("\x4D\x4C\x56\x49"), "MLV"},
     {QByteArrayLiteral("\x00\x00\x01\xBA"), "mpeg"},
