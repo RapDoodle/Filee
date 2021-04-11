@@ -133,7 +133,7 @@ Page{
                                 //interval = interval-1
                             }
                         }
-                        console.log(progress.width+","+animation.x+","+progress.x+","+(progress.x+progress.width))
+//                        console.log(progress.width+","+animation.x+","+progress.x+","+(progress.x+progress.width))
                     }
                 }
 
