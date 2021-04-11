@@ -10,6 +10,9 @@ ApplicationWindow {
     height: 720
     visible: true
     title: qsTr("Filee")
+    minimumHeight: 720
+    minimumWidth: 405
+
 
 //    property Component transferPanelView: TransferPanelView {}
 //    property var componentMap: {
