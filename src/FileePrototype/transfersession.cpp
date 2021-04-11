@@ -6,7 +6,7 @@ TransferSession::TransferSession(QString filePath, QHostAddress receiverAddress,
     bufferSize = 1024 * 8192;
 
     #if defined (Q_OS_ANDROID)
-    bufferSize = 1024 * 2048;
+    bufferSize = 1024 * 4096;
     #endif
 
     transfer();

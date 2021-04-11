@@ -42,10 +42,6 @@ FileSender::~FileSender()
 
 void FileSender::sendRequest()
 {
-    sendPacket(PacketType::RequestSend);
-}
-
-void FileSender::sendMeta() {
     QString fileName = QDir(file->fileName()).dirName();
     QJsonObject obj(QJsonObject::
                     fromVariantMap(
@@ -54,7 +50,7 @@ void FileSender::sendMeta() {
                             {"size", fileSize},
                         }));
     QByteArray payload(QJsonDocument(obj).toJson());
-    sendPacket(PacketType::Meta, payload);
+    sendPacket(PacketType::SendRequest, payload);
 }
 
 void FileSender::sendData()
@@ -98,8 +94,6 @@ void FileSender::readPacket()
         switch (type) {
             case PacketType::Accept: {
                 status = SenderStatus::Transferring;
-                sendMeta();
-//                sendData();
                 break;
             }
             case PacketType::RequestData: {
@@ -183,7 +177,7 @@ void FileSender::socketBytesWritten()
 
 void FileSender::socketConnected()
 {
-    sendPacket(PacketType::RequestSend);
+    sendRequest();
 }
 
 void FileSender::socketDisconnected()

@@ -49,20 +49,41 @@ void FileReceiver::readPacket()
                 }
                 break;
             }
-            case PacketType::RequestSend: {
-                qDebug() << "Type: request";
-                sendPacket(PacketType::Accept);
-                break;
-            }
-            case PacketType::Meta: {
+            case PacketType::SendRequest: {
+                qDebug() << "Type: request" << socketBuffer;
                 if (metaProcessed)
                     return error();
-                qDebug() << "Type: meta";
-                payloadSize = socketBuffer.at(1);
+                memcpy(&payloadSize, socketBuffer.mid(sizeof(type), sizeof(qint32)), sizeof(qint32));
                 QByteArray data = socketBuffer.mid(sizeof(type) + sizeof(qint32), payloadSize);
                 QJsonObject obj = QJsonDocument::fromJson(data).object();
                 fileSize = obj.value("size").toVariant().value<qint64>();
                 fileName = obj.value("name").toString();
+
+                qDebug() << "File name: " << fileName;
+                double fileSizeDisplay = fileSize;
+                int unitIdx = 0;
+                while (fileSizeDisplay > 1024) {
+                    fileSizeDisplay /= 1024;
+                    if (unitIdx > sizeUnits.size())
+                        break;
+                    unitIdx++;
+                }
+                QString fileSizeUnit = sizeUnits.at(unitIdx);
+
+                QMessageBox msgBox;
+                msgBox.setText(socket->peerAddress().toString() + " wants to transfer a file to you.");
+                msgBox.setInformativeText("File name: " + fileName + "\n"
+                                          + "File size: " + QString::number(fileSizeDisplay, 'f', 2) + " " + fileSizeUnit + "\n"
+                                          + "Do you want to accept the file?");
+                msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
+                msgBox.setDefaultButton(QMessageBox::Ok);
+                int ret = msgBox.exec();
+
+                if (ret != QMessageBox::Ok) {
+                    sendPacket(PacketType::Deny);
+                    socket->close();
+                    return;
+                }
 
                 QDir dir(QStandardPaths::writableLocation(QStandardPaths::DownloadLocation) + "/Filee");
                 if (!dir.exists()) {
@@ -102,6 +123,8 @@ void FileReceiver::readPacket()
                     qDebug() << "Sender: File opened successfully.";
                     status = ReceiverStatus::Transferring;
                     metaProcessed = true;
+                    sendPacket(PacketType::Accept);
+                    sendPacket(PacketType::RequestData);
                 } else {
                     qDebug() << "Sender: Failed to write ";
                     cancel();
