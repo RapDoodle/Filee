@@ -24,5 +24,5 @@ void Broadcaster::broadcastUdpDatagram()
 {
     QByteArray datagram = "Stupid Bird";
     count++;
-    udpSocket->writeDatagram(datagram, QHostAddress::Broadcast, 3456);
+    udpSocket->writeDatagram(datagram, QHostAddress::Broadcast, 6816);
 }
