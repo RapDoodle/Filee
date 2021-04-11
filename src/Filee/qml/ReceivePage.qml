@@ -1,6 +1,7 @@
 import QtQuick 2.9
 import QtQuick.Controls 2.5
 import QtQuick.Controls.Styles 1.2
+import QtGraphicalEffects 1.12
 //import QtQuick.Controls 1.2
 
 
@@ -67,21 +68,76 @@ Page{
                 topMargin: 35
                 horizontalCenter: parent.horizontalCenter
             }
-        Rectangle{
-            id:progressBackground
-            width: parent.width
-            height: 20
-            color: "lightgrey"
-            radius: 4
-        }
-        Rectangle{
-            id:progress
-            width: parent.width*slider.value
-            height: 20
-            color: "#d6845a"
-            radius: 4
-            //ColorAnimation on color { to: "yellow";duration:1000}
-        }
+            Rectangle{
+                id:progressBackground
+                width: parent.width
+                height: 20
+                color: "lightgrey"
+                radius: 4
+            }
+            Rectangle{
+                id:progress
+                width: parent.width*slider.value
+                height: 20
+                color: "#d6845a"
+                radius: 4
+                //ColorAnimation on color { to: "yellow";duration:1000}
+                onWidthChanged: {
+                    if(progress.width==0){
+                        animation.width=0
+                    }
+                }
+            }
+            Rectangle{
+                id:animation
+                radius: 4
+                x:parent.x+4
+                LinearGradient{
+                    anchors.fill: parent
+                    start: Qt.point(0,0)
+                    end: Qt.point(width, 0)      ///1.横向渐变
+                    //end: Qt.point(0, height)     ///2.竖向渐变
+                    //end: Qt.point(width, height) ///3.斜向渐变
+                    gradient: Gradient {
+                        GradientStop {  position: 0.0;    color: "#d6845a" }
+                        GradientStop {  position: 0.5;    color: "#e0ae94" }
+                        GradientStop {  position: 1.0;    color: "#d6845a" }
+                    }
+                }
+
+                height:progress.height
+                color: "#d6845a"
+                anchors{
+                    top: progress.top
+                    //left: progress.left
+                }
+                width:0
+                Timer{
+                    id:animationTimer
+                    interval: 1000/progress.width
+                    running: true
+                    repeat: true
+                    onTriggered:{
+                        if(animation.x+animation.width>=progress.x+progress.width-4){
+                            if(animation.width>0){
+                                animation.width--
+                                animation.x += 1
+                            }else{
+                                animation.x = progress.x+4
+                            }
+                        }else{
+                            if(animation.width<0.5*progress.width){
+                                animation.width++
+                            }else{
+                                animation.x += 1
+                                //interval = interval-1
+                            }
+                        }
+//                        console.log(progress.width+","+animation.x+","+progress.x+","+(progress.x+progress.width))
+                    }
+                }
+
+            }
 
             Slider {
                 id: slider
@@ -124,11 +180,12 @@ Page{
                         receivePause.text = "\u25B2"
                         //receivePause.rotation = 0
                         receivePause.font.pointSize = 15
+                        animationTimer.stop()
                     }else{
                         receivePause.text = "\u003D"
                         receivePause.rotation = 90
                         receivePause.font.pointSize = 30
-
+                        animationTimer.restart()
                     }
                 }
                 palette.button: "#414141"
