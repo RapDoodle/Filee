@@ -3,7 +3,7 @@
 TransferSession::TransferSession(QString filePath, QHostAddress receiverAddress, QObject *parent) :
     QObject(parent), fileDir(filePath), address(receiverAddress)
 {
-    bufferSize = 1024 * 2048;
+    bufferSize = 1024 * 8192;
 
     #if defined (Q_OS_ANDROID)
     bufferSize = 1024 * 2048;
