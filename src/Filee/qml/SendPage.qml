@@ -60,6 +60,7 @@ Page{
                 }
                 palette.button: "#323232"// change button color
                 palette.buttonText: "#cea392"
+                onClicked: _broadcaster.stopBroadcaster();
             }
         }
 

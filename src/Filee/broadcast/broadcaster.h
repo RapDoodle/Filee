@@ -10,8 +10,8 @@ class Broadcaster : public QObject
     Q_OBJECT
 public:
     explicit Broadcaster(QObject *parent = nullptr);
-    bool startBroadcaster();
-    bool stopBroadcaster();
+    Q_INVOKABLE bool startBroadcaster();
+    Q_INVOKABLE bool stopBroadcaster();
 
 private:
     QUdpSocket *udpSocket = nullptr;

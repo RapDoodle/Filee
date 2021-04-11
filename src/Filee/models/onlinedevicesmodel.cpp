@@ -37,24 +37,22 @@ int OnlineDevicesModel::columnCount(const QModelIndex &parent) const
 
 QVariant OnlineDevicesModel::data(const QModelIndex &index, int role) const
 {
-    if (role == Qt::DisplayRole) {
-        if (index.column() == 0) {
-            // Display the IP name
-            return devices.at(index.row()).address.toString();
+    if (!index.isValid())
+        return QVariant();
 
-        } else if (index.column() == 1) {
-            return devices.at(index.row()).name;
-        } else {
-            // Column 2, display the status
-            switch(devices.at(index.row()).status) {
-            case DeviceStatus::Online: return "Online";
-            case DeviceStatus::Offline: return "Offline";
-            default: return "Unknown";
-            }
+    if (role == NicknameRole) {
+        return devices.at(index.row()).name;
+    } else if (role == StatusRole) {
+        switch(devices.at(index.row()).status) {
+        case DeviceStatus::Online: return "Online";
+        case DeviceStatus::Offline: return "Offline";
+        default: return "Unknown";
         }
+    } else if (role == IpRole) {
+        return devices.at(index.row()).address.toString();
+    } else {
+        return QVariant();
     }
-
-    return QVariant();
 }
 
 QVariant OnlineDevicesModel::headerData(int section, Qt::Orientation orientation, int role) const
@@ -136,6 +134,16 @@ void OnlineDevicesModel::OnlineDevicesModel::onlineCheck()
             emit dataChanged(index(i, 2), index(i, 2));
         }
     }
+}
+
+QHash<int, QByteArray> OnlineDevicesModel::roleNames() const
+{
+    static QHash<int, QByteArray> mapping {
+        {NicknameRole, "nickname"},
+        {StatusRole, "status"},
+        {IpRole, "ip"}
+    };
+    return mapping;
 }
 
 QString OnlineDevicesModel::getSelectedIp(int row) {
