@@ -12,6 +12,15 @@ ApplicationWindow {
     title: qsTr("Filee")
     minimumHeight: 720
     minimumWidth: 405
+    property bool sendModify: false
+    function sendHide(){
+        //sendVisibility.visible = false
+        sendModify = false
+    }
+    function sendShow(){
+        //sendVisibility.visible = false
+        sendModify = true
+    }
 
 
 //    property Component transferPanelView: TransferPanelView {}
@@ -43,7 +52,38 @@ ApplicationWindow {
                     top: root.top
                 }
 
+                Rectangle{
+                    id:speedField
+                    width: parent.width
+                    height: 0.20*parent.height
+                    color: "#282828"
+                    anchors{
+                        top: userInfo.top
+                    }
+                    Text {
+                        id: speedText
+                        anchors{
+                            centerIn:  speedField
 
+                            //verticalCenter: speedField.verticalCenter
+                        }
+                        color: "white"
+                        font {
+                            pointSize: 15
+                            family: "Verdana"
+                        }
+                        text: qsTr("Speed: ")+"999.99MB/s"
+                    }
+                    Button{
+                        id:testButtom
+                        height:parent.height
+                        width:parent.width
+                        onClicked: {
+                            sendShow()
+
+                        }
+                    }
+                }
 //                Rectangle {
 //                    id: boardcast
 //                    width: userInfo.width
