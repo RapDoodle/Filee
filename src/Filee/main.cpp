@@ -3,6 +3,8 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
+#include <QNetworkConfiguration>
+
 #include "guicontroller.h"
 
 #if defined (Q_OS_ANDROID)
@@ -12,7 +14,8 @@ bool requestAndroidPermissions()
 {
     const QVector<QString> permissions({"android.permission.INTERNET",
                                         "android.permission.WRITE_EXTERNAL_STORAGE",
-                                        "android.permission.READ_EXTERNAL_STORAGE"});
+                                        "android.permission.READ_EXTERNAL_STORAGE",
+                                        "android.permission.ACCESS_NETWORK_STATE"});
 
     for(const QString &permission : permissions) {
         auto result = QtAndroid::checkPermission(permission);

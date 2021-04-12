@@ -104,17 +104,14 @@ void FileSender::readPacket()
                 break;
             }
             case PacketType::Pause: {
-                qDebug() << "[Sender] Pause";
                 pause();
                 break;
             }
             case PacketType::Resume: {
-                qDebug() << "[Sender] Resume";
                 resume();
                 break;
             }
             case PacketType::Cancel: {
-                qDebug() << "[Sender] Cancel";
                 if (status == SenderStatus::Transferring || status == SenderStatus::Paused)
                     status = SenderStatus::Canceled;
                 emit statusUpdate(0);
