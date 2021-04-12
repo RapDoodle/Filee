@@ -5,9 +5,9 @@ SwipeView{
 
     id:swipeView
     width: parent.width
-    height: parent.height*0.4
-    property alias _send : send
-    //interactive: false
+    height: parent.height*0.30
+    //property alias _send : send
+    //interactive: false//禁止手动滑动swipe界面
     SendPage{
         id:send
 
