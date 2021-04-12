@@ -6,11 +6,13 @@ SwipeView{
     id:swipeView
     width: parent.width
     height: parent.height*0.4
+    property alias _send : send
     //interactive: false
     SendPage{
+        id:send
 
     }
     ReceivePage{
-
+        id:receive
     }
 }
