@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QMessageBox>
 
+#include "./utils/messagebox.h"
 #include "./utils/androidutils.h"
 #include "./transfer/filetransferpeer.h"
 

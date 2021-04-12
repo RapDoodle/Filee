@@ -24,7 +24,8 @@ SOURCES += \
         transfer/sender/filesender.cpp \
         transfer/sender/transfersession.cpp \
         utils/androidutils.cpp \
-        utils/common.cpp
+        utils/common.cpp \
+        utils/messagebox.cpp
 
 
 RESOURCES += qml.qrc
@@ -53,4 +54,5 @@ HEADERS += \
     transfer/sender/filesender.h \
     transfer/sender/transfersession.h \
     utils/androidutils.h \
-    utils/common.h
+    utils/common.h \
+    utils/messagebox.h

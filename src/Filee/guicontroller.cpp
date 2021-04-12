@@ -36,13 +36,21 @@ void GuiController::setSenderFilePath(QString path)
 
 QString GuiController::getSenderFileName() const
 {
-    qDebug() << "Read: " << senderFileName;
     return senderFileName;
 }
 
 QString GuiController::getReceiverIpAddress() const { return receiverIp; }
 
 void GuiController::setReceiverIpAddress(QString ip) { receiverIp = ip; }
+
+void GuiController::setReceiverIpAddress(int row)
+{
+    QString newIp = onlineDevicesModel->getSelectedIp(row);
+    if (receiverIp != newIp) {
+        receiverIp = newIp;
+        emit receiverIpChanged();
+    }
+}
 
 QVariantList GuiController::getLocalIpAddress() const { return localIps; }
 
@@ -53,4 +61,18 @@ void GuiController::updateLocalIpAddress()
     for (auto ip : ips)
         list.append(ip.toString());
     localIps = list;
+}
+
+void GuiController::senderSend()
+{
+    if (senderFilePath.size() == 0) {
+        MessageBox::messageBoxWarning("Please select a file to send.");
+        return;
+    }
+    QHostAddress receiverAddress = QHostAddress(receiverIp);
+    if (receiverAddress.isNull()) {
+        MessageBox::messageBoxWarning("Please select or type in a file receiver.");
+        return;
+    }
+    session = new TransferSession(senderFilePath, QHostAddress(receiverIp));
 }
