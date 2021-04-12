@@ -44,8 +44,8 @@ private:
 
 signals:
     void senderBegin();
-    void senderStatusUpdate(int);
     void senderEnded();
+    void senderStatusUpdate(int);
 
     void restartRequest();
 

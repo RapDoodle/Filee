@@ -24,6 +24,7 @@ enum class ReceiverStatus : char
 
 class FileReceiver : public FileTransferPeer
 {
+    Q_OBJECT
 public:
     explicit FileReceiver(QTcpSocket *tcpSocket, QObject *parent = nullptr);
 
@@ -41,6 +42,9 @@ private:
     void overloaded();
 
 signals:
+    void receiverBegin();
+    void receiverEnded();
+    void receiverStatusUpdate(int);
 
 private slots:
     void socketConnected() override;

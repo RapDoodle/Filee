@@ -1,4 +1,3 @@
-#if defined (Q_OS_ANDROID)
 #include "androidutils.h"
 
 QString AndroidUtils::androidFileNameParser(QString path)
@@ -78,5 +77,3 @@ QString AndroidUtils::getExtension(QFile* file, FileType fileType)
 
     return "";
 }
-
-#endif

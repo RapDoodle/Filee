@@ -56,11 +56,22 @@ ApplicationWindow {
         usertable.model = _onlineDevicesList
     }
 
+    // For sender
     Connections {
         target: _guiController
         onSenderBegin: sendHide()
         onSenderEnded: sendShow()
         onSenderStatusUpdate: sendProgressModify(status)
+    }
+
+    // For receiver
+    Connections {
+        target: _guiController
+        onReceiverBegin: {
+            swipePageNumTo2();
+        }
+        onReceiverEnded: receiveShow();
+        onReceiverStatusUpdate: receiveProgressModify(status)
     }
 
     StackView {
@@ -230,9 +241,9 @@ ApplicationWindow {
                     z: 1
                     width: userPic.width*1.8
                     height: userPic.height*0.4
-                    text: qsTr("Not connected To WI-FI")
+                    text: qsTr("Service is running")
                     font.pixelSize: 18
-                    color: "#d6845a"
+                    color: "#01b636"
                     horizontalAlignment: Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter
                     minimumPixelSize: 12
@@ -281,7 +292,8 @@ ApplicationWindow {
                 }
                 Switch {
                     id: boardcastSwitch
-                    x:(root.width-width)/2
+                    x: (root.width-width)/2
+                    checked: true
                     anchors{
                         //right: menuButton.right
                         //horizontalCenter: menuButton.horizontalCenter
@@ -294,7 +306,10 @@ ApplicationWindow {
                     //property color checkedColor: "#0ACF97"
 
                     onCheckedChanged: {//checked 是一个bool值
-                        //console.log(checked)
+                        if (checked)
+                            _guiController.startBroadcast();
+                        else
+                            _guiController.stopBroadcast();
                     }
                     indicator: Rectangle {
                         width: 2*height
@@ -327,7 +342,7 @@ ApplicationWindow {
                         //topMargin: 1
                         horizontalCenter: boardcastSwitch.horizontalCenter
                     }
-                    font.pixelSize: 18
+                    font.pixelSize: 14
                     color: "#f4eeeb"
                     horizontalAlignment: Text.AlignLeft
                     verticalAlignment: Text.AlignVCenter

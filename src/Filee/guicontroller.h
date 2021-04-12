@@ -47,6 +47,9 @@ public:
     QVariantList getLocalIpAddress() const;
     void updateLocalIpAddress();
 
+    Q_INVOKABLE void startBroadcast();
+    Q_INVOKABLE void stopBroadcast();
+
     Q_INVOKABLE void senderSend();
     Q_INVOKABLE void senderPause();
     Q_INVOKABLE void senderResume();
@@ -67,7 +70,7 @@ private:
     QString senderFileName;
     QString receiverIp;
 
-    FileReceiveServer fileReceiveServer;
+    FileReceiveServer *fileReceiveServer;
     TransferSession *session = nullptr;
 
 signals:
@@ -84,8 +87,9 @@ signals:
     void senderEnded();
     void senderStatusUpdate(int status);
 
-
-
+    void receiverBegin();
+    void receiverEnded();
+    void receiverStatusUpdate(int status);
 
 };
 
