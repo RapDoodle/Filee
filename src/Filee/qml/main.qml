@@ -153,7 +153,7 @@ ApplicationWindow {
                         id: userShortName
                         width: userPic.width*0.6
                         height: userPic.width*0.6
-                        text: qsTr("ST")
+                        text: qsTr(_nickname.substring(0, 2).toUpperCase())
                         font.pixelSize: 36
                         horizontalAlignment: Text.AlignHCenter
                         verticalAlignment: Text.AlignVCenter
@@ -173,7 +173,7 @@ ApplicationWindow {
                     z: 1
                     width: userPic.width*1.8
                     height: userPic.height*0.4
-                    text: qsTr("I am Scared Termite")
+                    text: qsTr("I am " + _nickname)
                     font.pixelSize: 22
                     color: "#f4eeeb"
                     horizontalAlignment: Text.AlignLeft
