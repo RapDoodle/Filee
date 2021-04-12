@@ -17,6 +17,18 @@ void GuiController::exec()
 
     onlineDevicesModel = new OnlineDevicesModel(broadcastReceiver);
 
+    fileReceiveServer = new FileReceiveServer();
+    connect(fileReceiveServer, &FileReceiveServer::receiverBegin, this, [&]() {
+        emit receiverBegin();
+    });
+    connect(fileReceiveServer, &FileReceiveServer::receiverEnded, this, [&]() {
+        emit receiverEnded();
+    });
+    connect(fileReceiveServer, QOverload<int>::of(&FileReceiveServer::receiverStatusUpdate),
+            this, [&](int status) {
+        emit receiverStatusUpdate(status);
+    });
+
     context->setContextProperty("_broadcaster", broadcaster);
     context->setContextProperty("_onlineDevicesList", onlineDevicesModel);
     context->setContextProperty("_broadcastReceiver", &broadcastReceiver);
@@ -91,3 +103,7 @@ void GuiController::senderPause() { if (session) session->pause(); }
 void GuiController::senderResume() { if (session) session->resume(); }
 
 void GuiController::senderCancel() { if (session) session->cancel(); }
+
+void GuiController::startBroadcast() { broadcaster->startBroadcaster(); }
+
+void GuiController::stopBroadcast() { broadcaster->stopBroadcaster(); }

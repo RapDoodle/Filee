@@ -3,16 +3,15 @@ import QtQuick.Controls 2.2
 
 SwipeView{
 
-    id:swipeView
+    id: swipeView
     width: parent.width
     height: parent.height*0.30
-    //property alias _send : send
-    //interactive: false//禁止手动滑动swipe界面
-    SendPage{
-        id:send
+    interactive: false  // Set to false to disable swiping
+    SendPage {
+        id: send
 
     }
-    ReceivePage{
-        id:receive
+    ReceivePage {
+        id: receive
     }
 }

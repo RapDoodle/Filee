@@ -120,6 +120,7 @@ void FileReceiver::readPacket()
                     metaProcessed = true;
                     sendPacket(PacketType::Accept);
                     sendPacket(PacketType::RequestData);
+                    emit receiverBegin();
                 } else {
                     MessageBox::messageBoxCritical("Unable to open to write.");
                     cancel();
@@ -130,6 +131,7 @@ void FileReceiver::readPacket()
                 emit statusUpdate(10000);
                 file->close();
                 socket->close();
+                emit receiverEnded();
                 break;
             }
             case PacketType::Pause: {
@@ -139,6 +141,7 @@ void FileReceiver::readPacket()
                 break;
             }
             case PacketType::Cancel: {
+                emit receiverEnded();
                 return cancel();
             }
             case PacketType::ConfirmSync: {
@@ -188,7 +191,7 @@ void FileReceiver::writeData(QByteArray& data)
 {
     file->write(data);
     sizeProcessed += data.size();
-    emit statusUpdate((int)((double)sizeProcessed * 10000 / fileSize));
+    emit receiverStatusUpdate((int)((double)sizeProcessed * 10000 / fileSize));
 }
 
 void FileReceiver::pause()

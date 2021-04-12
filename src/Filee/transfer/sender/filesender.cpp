@@ -40,10 +40,11 @@ FileSender::~FileSender()
 
 void FileSender::sendRequest()
 {
-    fileName = QDir(file->fileName()).dirName();
-    #if defined (Q_OS_ANDROID)
+#if defined (Q_OS_ANDROID)
     fileName = AndroidUtils::androidFileNameParser(file->fileName());
-    #endif
+#else
+    fileName = QDir(file->fileName()).dirName();
+#endif
     QJsonObject obj(QJsonObject::
                     fromVariantMap(
                         {

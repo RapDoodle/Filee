@@ -439,8 +439,8 @@ Page{
                     value: 0.5
                     visible: false
                 }
-                Button{
-                    id:back
+                Button {
+                    id: back
                     anchors{
                         bottom:parent.bottom
                     }
@@ -455,7 +455,8 @@ Page{
                     palette.buttonText: "#cea392"
                     visible: receiveModify
                     onClicked: {
-
+                        root.swipePageNumTo1()
+                        root.receiveHide()
                     }
 //                    background: {
 //                        opacity: 0//background transparent

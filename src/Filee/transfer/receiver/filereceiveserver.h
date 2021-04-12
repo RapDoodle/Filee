@@ -18,7 +18,9 @@ private:
 
 
 signals:
-    void receiverInitialized(FileReceiver*);
+    void receiverBegin();
+    void receiverEnded();
+    void receiverStatusUpdate(int);
 
 private slots:
     void newConnection();
