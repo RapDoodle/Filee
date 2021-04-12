@@ -144,100 +144,6 @@ Page{
                 onClicked: fileDialog.open()
             }
         }
-
-//        Rectangle{
-//            id: progressField
-//            width: parent.width-40
-//            anchors{
-//                top: fileNamePlace.bottom
-
-//                topMargin: 35
-//                horizontalCenter: parent.horizontalCenter
-//            }
-//        //var progressValue = 0
-//            Rectangle{
-//                id:progressBackground
-//                width: parent.width
-//                height: 20
-//                color: "lightgrey"
-//                radius: 4
-//            }
-//            Rectangle{
-//                id:progress
-//                width: parent.width*slider.value
-//                height: 20
-//                color: "#d6845a"
-//                radius: 4
-//                //ColorAnimation on color { to: "yellow";duration:1000}
-//                onWidthChanged: {
-//                    if(progress.width==0){
-//                        animation.width=0
-//                    }
-//                }
-//            }
-//            Rectangle{
-//                id:animation
-//                radius: 4
-//                x:parent.x+4
-//                LinearGradient{
-//                    anchors.fill: parent
-//                    start: Qt.point(0,0)
-//                    end: Qt.point(width, 0)      ///1.横向渐变
-//                    //end: Qt.point(0, height)     ///2.竖向渐变
-//                    //end: Qt.point(width, height) ///3.斜向渐变
-//                    gradient: Gradient {
-//                        GradientStop {  position: 0.0;    color: "#d6845a" }
-//                        GradientStop {  position: 0.5;    color: "#e0ae94" }
-//                        GradientStop {  position: 1.0;    color: "#d6845a" }
-//                    }
-//                }
-
-//                height:progress.height
-//                color: "#d6845a"
-//                anchors{
-//                    top: progress.top
-//                    //left: progress.left
-//                }
-//                width:0
-//                Timer{
-//                    id:animationTimer
-//                    interval: 1000/progress.width
-//                    running: true
-//                    repeat: true
-//                    onTriggered:{
-//                        if(animation.x+animation.width>=progress.x+progress.width-4){
-//                            if(animation.width>0){
-//                                animation.width--
-//                                animation.x += 1
-//                            }else{
-//                                animation.x = progress.x+4
-//                            }
-//                        }else{
-//                            if(animation.width<0.5*progress.width){
-//                                animation.width++
-//                            }else{
-//                                animation.x += 1
-//                                //interval = interval-1
-//                            }
-//                        }
-////                        console.log(progress.width+","+animation.x+","+progress.x+","+(progress.x+progress.width))
-//                    }
-//                }
-
-//            }
-
-//            Slider {
-//                id: slider
-//                width: progressBackground.width
-//                anchors{
-//                    top: progress.bottom
-//                }
-//                value: 0.5
-//                visible: false
-//            }
-//        }
-
-
         Rectangle{
             id:buttonArea
             width:parent.width-40
@@ -247,7 +153,7 @@ Page{
                 //top: progressField.bottom
                 top: fileNamePlace.bottom
                 //bottom: parent.bottom
-                topMargin: 47
+                topMargin: 32
                 horizontalCenter: parent.horizontalCenter
             }
             RoundButton{
@@ -325,7 +231,7 @@ Page{
                 }
                 Rectangle{
                     id:progress
-                    width: parent.width*slider.value
+                    width: parent.width*sendProgress
                     height: parent.height
                     color: "#323232"
                     //radius: 4
@@ -394,7 +300,7 @@ Page{
                         bottom: progress.top
                     }
                     value: 0.5
-                    //visible: false
+                    visible: false
                 }
                 Button{
                     id:send
@@ -417,7 +323,7 @@ Page{
                     }
 //                    background: {
 //                        opacity: 0//background transparent
-//                    }
+                    //                    }
                 }
             }
 

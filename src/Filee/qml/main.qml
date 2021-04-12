@@ -1,7 +1,8 @@
 import QtQuick 2.12
 import QtQuick.Window 2.12
-import QtQuick.Controls 2.5
+
 import QtQuick.Controls 1.4
+import QtQuick.Controls 2.5
 
 
 ApplicationWindow {
@@ -12,16 +13,40 @@ ApplicationWindow {
     title: qsTr("Filee")
     minimumHeight: 720
     minimumWidth: 405
-    property bool sendModify: false
-    function sendHide(){
+
+
+    property bool sendModify: true
+    property bool receiveModify: false
+    property double sendProgress: 0.0
+    property double receiveProgress: 0.0
+    property int swipePageNum: 0
+    property color checkedColor: "lightgray"//"#cea392"//""#0ACF97"
+
+    function sendHide(){//send按钮隐藏
         //sendVisibility.visible = false
         sendModify = false
     }
-    function sendShow(){
-        //sendVisibility.visible = false
+    function sendShow(){//send按钮重现
         sendModify = true
     }
-
+    function receiveHide(){//receivePage 两个按钮隐藏
+        receiveModify = false
+    }
+    function receiveShow(){//receivePage 两个按钮出现
+        receiveModify = true
+    }
+    function sendProgressModify(progress){//send进度，输入值0~10000
+        sendProgress =  0.0001*progress
+    }
+    function receiveProgressModify(progress){//receive进度，输入值0~10000
+        receiveProgress =  0.0001*progress
+    }
+    function swipePageNumTo1(){//切换至send page
+        swipePageNum = 0
+    }
+    function swipePageNumTo2(){//切换至receive page
+        swipePageNum = 1
+    }
 
 //    property Component transferPanelView: TransferPanelView {}
 //    property var componentMap: {
@@ -78,8 +103,9 @@ ApplicationWindow {
                         id:testButtom
                         height:parent.height
                         width:parent.width
+                        visible: false
                         onClicked: {
-                            sendShow()
+                            //swipePageNumTo1()
 
                         }
                     }
@@ -99,38 +125,41 @@ ApplicationWindow {
 
 //                }
 
+
 //                Switch {
 //                    id: boardcastButton
-//                    property color checkedColor: "#0ACF97"
+//                    //property color checkedColor: "#0ACF97"
+//                    //checkedColor: "#0ACF97"
 
-//                    Rectangle {
-//                        width: userInfo.width*0.3
-//                        height: userInfo.height*0.16
-//                        radius: height / 2
-//                        color: root.checked ? checkedColor : "white"
-//                        border.width: 2
-//                        border.color: root.checked ? checkedColor : "#E5E5E5"
 
-//                        anchors {
-//                            left: root.left
-//                            top: root.top
-//                            topMargin: userInfo.height*0.1
-//                        }
+////                    Rectangle {
+////                        width: userInfo.width*0.3
+////                        height: userInfo.height*0.16
+////                        radius: height / 2
+////                        color: root.checked ? checkedColor : "white"
+////                        border.width: 2
+////                        border.color: root.checked ? checkedColor : "#E5E5E5"
 
-//                        Rectangle {
-//                            x: root.checked ? parent.width - width - 2 : 1
-//                            width: root.checked ? parent.height - 4 : parent.height - 2
-//                            height: width
-//                            radius: width / 2
-//                            anchors.verticalCenter: parent.verticalCenter
-//                            color: "white"
-//                            border.color: "#D5D5D5"
+////                        anchors {
+////                            left: root.left
+////                            top: root.top
+////                            topMargin: userInfo.height*0.1
+////                        }
 
-//                            Behavior on x {
-//                                NumberAnimation { duration: 200 }
-//                            }
-//                        }
-//                    }
+////                        Rectangle {
+////                            x: root.checked ? parent.width - width - 2 : 1
+////                            width: root.checked ? parent.height - 4 : parent.height - 2
+////                            height: width
+////                            radius: width / 2
+////                            anchors.verticalCenter: parent.verticalCenter
+////                            color: "white"
+////                            border.color: "#D5D5D5"
+
+////                            Behavior on x {
+////                                NumberAnimation { duration: 200 }
+////                            }
+////                        }
+////                    }
 //                }
 
 
@@ -237,15 +266,77 @@ ApplicationWindow {
             Rectangle {
                 id: menuButton
                 width: root.width
-                height: root.height*0.05
+                height: root.height*0.05*1.5
                 color: "#282828"
 
                 anchors {
                     left: root.left
                     top: userInfo.bottom
                 }
+                Switch {
+                    id: boardcastSwitch
+                    x:(root.width-width)/2
+                    anchors{
+                        //right: menuButton.right
+                        //horizontalCenter: menuButton.horizontalCenter
+                        //leftMargin: 1
+                        top: menuButton.top
+                        //verticalCenter: menuButton.verticalCenter
+                        topMargin:  0.1*menuButton.height
+                        //verticalCenterOffset: -5
+                    }
+                    //property color checkedColor: "#0ACF97"
 
+                    onCheckedChanged: {//checked 是一个bool值
+                        //console.log(checked)
+                    }
+                    indicator: Rectangle {
+                        width: 2*height
+                        height: 0.7*menuButton.height/2
+                        radius: height / 2
+                        color: boardcastSwitch.checked ? checkedColor : "white"
+                        border.width: 2
+                        border.color: boardcastSwitch.checked ? checkedColor : "#E5E5E5"
+
+                        Rectangle {
+                            x: boardcastSwitch.checked ? parent.width - width - 2 : 1
+                            width: boardcastSwitch.checked ? parent.height - 4 : parent.height - 2
+                            height: width
+                            radius: width / 2
+                            anchors.verticalCenter: parent.verticalCenter
+                            color: "white"
+                            border.color: "#D5D5D5"
+
+                            Behavior on x {
+                                NumberAnimation { duration: 200 }
+                            }
+                        }
+                    }
+                }
+                Text {
+                    id: boardcastText
+                    text: qsTr("Turn on/off boardcast")
+                    anchors{
+                        top: boardcastSwitch.bottom
+                        //topMargin: 1
+                        horizontalCenter: boardcastSwitch.horizontalCenter
+                    }
+                    font.pixelSize: 18
+                    color: "#f4eeeb"
+                    horizontalAlignment: Text.AlignLeft
+                    verticalAlignment: Text.AlignVCenter
+                    minimumPixelSize: 12
+                    font.family: "Verdana"
+                }
             }
+//            Rectangle{
+//                id:dividingLine
+//                width: parent.width
+//                height: 1
+//                anchors{
+//                    top: menuButton.bottom
+//                }
+//            }
 
             TableView {
                 id: usertable
@@ -339,7 +430,7 @@ ApplicationWindow {
                     bottom: parent.bottom
                     //bottomMargin: 1
                 }
-                currentIndex: tabBar.currentIndex
+                currentIndex: swipePageNum
             }
 //                SwipeView{
 //                    id:swipeView
