@@ -84,23 +84,29 @@ void OnlineDevicesModel::statusUpdate(QHostAddress senderAddress, QString name)
 {
 
     // Check whether it is a loopback interface
-    for (int i = 0; i < loopbackInterfaces.size(); i++) {
+    for (int i = 0; i < loopbackInterfaces.size(); i++)
         if (senderAddress.toString() == loopbackInterfaces.at(i).toString())
             return;
-    }
 
     // Check if it already exists
     for (int i = 0; i < devices.size(); i++) {
         Device device = devices.at(i);
+
         if (senderAddress.toString() != device.address.toString())
             continue;
-        // When the device is already in the list
 
+        // When the device is already in the list
         // Set status to online if it is offline
         if (device.status == DeviceStatus::Offline) {
             // Set to online
             devices[i].status = DeviceStatus::Online;
             emit dataChanged(index(i, 2), index(i, 2));
+
+            // Update device name (may due to restart)
+            if (device.name != name) {
+                devices[i].name = name;
+                emit dataChanged(index(i, 0), index(i, 0));
+            }
         }
 
         // Update lastReceivedTime to current time
@@ -117,7 +123,7 @@ void OnlineDevicesModel::statusUpdate(QHostAddress senderAddress, QString name)
     newDevice.status = DeviceStatus::Online;
 
     devices.push_back(newDevice);
-    insertRows(0, 1, QModelIndex());
+    insertRows(devices.size() - 1, 1, QModelIndex());
 }
 
 void OnlineDevicesModel::OnlineDevicesModel::onlineCheck()
@@ -131,7 +137,7 @@ void OnlineDevicesModel::OnlineDevicesModel::onlineCheck()
         if (timeInterval > 5) {
             // Set status to offline
             devices[i].status = DeviceStatus::Offline;
-            emit dataChanged(index(i, 2), index(i, 2));
+            emit dataChanged(index(i, 0), index(i, 2));
         }
     }
 }

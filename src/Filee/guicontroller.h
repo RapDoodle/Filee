@@ -12,6 +12,7 @@
 #include <QApplication>
 
 #include "./utils/common.h"
+#include "./utils/messagebox.h"
 
 #if defined (Q_OS_ANDROID)
 #include "./utils/androidutils.h"
@@ -33,6 +34,7 @@ class GuiController : public QObject
     Q_PROPERTY(QString qmlSenderFileName READ getSenderFileName)
     Q_PROPERTY(QString qmlSenderFilePath MEMBER senderFilePath)
     Q_PROPERTY(QVariantList qmlLocalIps READ getLocalIpAddress)
+    Q_PROPERTY(QString qmlReceiverIp READ getReceiverIpAddress WRITE setReceiverIpAddress NOTIFY receiverIpChanged)
 
 public:
     explicit GuiController(QQmlContext*, QObject *parent = nullptr);
@@ -41,8 +43,11 @@ public:
     QString getSenderFileName() const;
     QString getReceiverIpAddress() const;
     void setReceiverIpAddress(QString);
+    Q_INVOKABLE void setReceiverIpAddress(int);
     QVariantList getLocalIpAddress() const;
     void updateLocalIpAddress();
+
+    Q_INVOKABLE void senderSend();
 
 private:
     QQmlContext *context;
@@ -51,8 +56,8 @@ private:
     Broadcaster *broadcaster;
     BroadcastReceiver broadcastReceiver;
     OnlineDevicesModel *onlineDevicesModel;
-    QVariantList localIps;
 
+    QVariantList localIps;
     QString nickname;
     QDir previousDir;
     QString senderFilePath;
@@ -70,6 +75,8 @@ signals:
     void qmlReceiverCancel();
     void qmlSenderComplete();
     void qmlReceiverComplete();
+
+    void receiverIpChanged();
 
 
 

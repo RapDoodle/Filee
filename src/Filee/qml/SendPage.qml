@@ -15,8 +15,11 @@ Page{
             title: "Please choose a file"
             folder: shortcuts.home
             onAccepted: {
-                console.log("You chose: " + fileDialog.fileUrls)
-                _guiController.setSenderFilePath(fileDialog.fileUrls)
+                // Fix for: file name containing file:/// is not readable on Windows
+                var path = fileDialog.fileUrl.toString()
+                path = path.replace(/^(file:\/{3})/, '');
+                _guiController.setSenderFilePath(path)
+                console.log(path)
                 fileNameLabel.text = _guiController.qmlSenderFileName
             }
         }
@@ -53,26 +56,35 @@ Page{
             TextEdit {
                 id: ipTextInfo
                 //width: parent.width*0.7
-                anchors{
+                anchors {
                     //horizontalCenter: parent.horizontalCenter
                     verticalCenter: parent.verticalCenter
                     left: ipText.right
                 }
-                font{
+                font {
                     pointSize: 15
                     family: "Verdana"
                 }
                 color: "#f4eeeb"
-                text: "Select a receiver"
+                text: _guiController.qmlReceiverIp.length > 0 ? _guiController.qmlReceiverIp : "Select a receiver..."
                 persistentSelection: false
                 selectByMouse: true
+                onTextChanged: {
+                    _guiController.qmlReceiverIp = text
+                    console.log(_guiController.qmlReceiverIp)
+                }
+
                 //readOnly: true
                 //wrapMode: "WordWrap"
+//                Connections {
+//                    target: _guiController
+//                    onReceiverIpChanged: console.log("changed")
+//                }
 
             }
         }
         Rectangle{
-            id:fileNamePlace
+            id: fileNamePlace
             width: parent.width-40
             height: fileNameLabel.height+10
             color: parent.color
@@ -413,6 +425,7 @@ Page{
                     visible: sendModify
 
                     onClicked: {
+                        _guiController.senderSend();
                         //send.visible = false
                     }
 //                    background: {

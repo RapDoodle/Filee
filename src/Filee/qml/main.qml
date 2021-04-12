@@ -12,12 +12,12 @@ ApplicationWindow {
     title: qsTr("Filee")
     minimumHeight: 720
     minimumWidth: 405
-    property bool sendModify: false
+    property bool sendModify: true
     function sendHide(){
         //sendVisibility.visible = false
         sendModify = false
     }
-    function sendShow(){
+    function sendShow() {
         //sendVisibility.visible = false
         sendModify = true
     }
@@ -52,7 +52,7 @@ ApplicationWindow {
                     top: root.top
                 }
 
-                Rectangle{
+                Rectangle {
                     id:speedField
                     width: parent.width
                     height: 0.20*parent.height
@@ -62,7 +62,7 @@ ApplicationWindow {
                     }
                     Text {
                         id: speedText
-                        anchors{
+                        anchors {
                             centerIn:  speedField
 
                             //verticalCenter: speedField.verticalCenter
@@ -260,11 +260,9 @@ ApplicationWindow {
 
                 //anchors.fill: parent
 
-                onClicked: {
-                    console.log(root._onlineDevicesList.get(row))  // NEED TO BE TESTED
-                }
+                onClicked: _guiController.setReceiverIpAddress(currentRow)
 
-                model: root._onlineDevicesList
+                model: _onlineDevicesList
 
                 Component {
                     id: itemDelegateText

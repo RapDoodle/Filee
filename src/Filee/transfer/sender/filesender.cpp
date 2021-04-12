@@ -8,8 +8,10 @@ FileSender::FileSender(QString filePath, QHostAddress receiverAddress, qint64 bu
     file = new QFile(fileDir, this);
     bool opened = file->open(QIODevice::ReadOnly);
 
-    if (!opened)
+    if (!opened) {
+        MessageBox::messageBoxCritical("Unable to open the file to read.");
         return;
+    }
 
     if (file->size() == 0)
         return;
@@ -115,17 +117,16 @@ void FileSender::readPacket()
                 if (status == SenderStatus::Transferring || status == SenderStatus::Paused)
                     status = SenderStatus::Canceled;
                 emit statusUpdate(0);
+                MessageBox::messageBoxCritical("The transfer was termianted by the remote peer.");
                 break;
             }
             case PacketType::Error: {
-                qDebug() << "Error signal received";
                 socket->close();
                 file->close();
                 emit transferAborted();
                 return;
             }
             case PacketType::SyncRequest: {
-                qDebug() << "[Sender] Request to sync received";
                 status = SenderStatus::Syncing;
                 try {
                     memcpy(&payloadSize, socketBuffer.mid(sizeof(type), sizeof(qint32)), sizeof(qint32));
@@ -136,7 +137,6 @@ void FileSender::readPacket()
                     return;
                 qint64 pos = 0;
                 memcpy(&pos, socketBuffer.mid(sizeof(type) + sizeof(qint32), sizeof(qint64)), sizeof(qint64));
-                qDebug() << "[Sender] Received SYNC to position " << pos;
                 sizeProcessed = pos;
                 file->seek(sizeProcessed);
                 // Confirm the position
@@ -165,21 +165,14 @@ void FileSender::readPacket()
     }
 }
 
-void FileSender::socketBytesWritten()
-{
+void FileSender::socketBytesWritten() {}
 
-}
-
-void FileSender::socketConnected()
-{
-    sendRequest();
-}
+void FileSender::socketConnected() { sendRequest(); }
 
 void FileSender::socketDisconnected()
 {
     // Cancel when the receiver has disconnected.
     status = SenderStatus::Canceled;
-    qDebug() << "Disconnected.";
 }
 
 void FileSender::pause()
