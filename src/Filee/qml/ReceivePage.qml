@@ -290,7 +290,7 @@ Page{
                 //top: progressField.bottom
                 top: fileNamePlace.bottom
                 //bottom: parent.bottom
-                topMargin: 47
+                topMargin: 32
                 horizontalCenter: parent.horizontalCenter
             }
             RoundButton{
@@ -368,7 +368,7 @@ Page{
                 }
                 Rectangle{
                     id:progress
-                    width: parent.width*slider.value
+                    width: parent.width*receiveProgress
                     height: parent.height
                     color: "#323232"
                     //radius: 4
@@ -453,7 +453,7 @@ Page{
                     }
                     palette.button: "#323232"
                     palette.buttonText: "#cea392"
-                    visible: false
+                    visible: receiveModify
                     onClicked: {
 
                     }
@@ -476,7 +476,7 @@ Page{
                     }
                     palette.button: "#323232"
                     palette.buttonText: "#cea392"
-                    visible: false
+                    visible: receiveModify
                     onClicked: {
 
                     }
