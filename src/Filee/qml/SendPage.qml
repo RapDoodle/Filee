@@ -168,8 +168,8 @@ Page{
                 topMargin: 32
                 horizontalCenter: parent.horizontalCenter
             }
-            RoundButton{
-                id:receivePause
+            RoundButton {
+                id: receivePause
                 height:parent.height
                 width:height
                 radius: height
@@ -183,12 +183,13 @@ Page{
                     leftMargin: 0.2*parent.width
                 }
                 onClicked: {
-                    if(receivePause.text==="\u003D"){
+                    if (receivePause.text==="\u003D") {
+                        _guiController.senderPause()
                         receivePause.text = "\u25B2"
-                        //receivePause.rotation = 0
                         receivePause.font.pointSize = 15
                         animationTimer.stop()
-                    }else{
+                    } else {
+                        _guiController.senderResume()
                         receivePause.text = "\u003D"
                         receivePause.rotation = 90
                         receivePause.font.pointSize = 30
@@ -214,6 +215,7 @@ Page{
                 }
                 palette.button: "#414141"
                 palette.buttonText: "#cea392"
+                onClicked: _guiController.senderCancel()
             }
         }
 

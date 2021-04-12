@@ -19,7 +19,9 @@ public:
     void cancel();
 
 signals:
-    void progressUpdate(int);
+    void senderStatusUpdate(int);
+    void senderBegin();
+    void senderEnded();
     void sessionCompleted();
     void sessionAborted();
 
@@ -35,7 +37,6 @@ private:
     void deleteConnection();
 
 private slots:
-    void senderProgressChanged(int);
     void overloadedHandler();
     void completed();
     void canceled();

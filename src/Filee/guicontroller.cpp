@@ -75,4 +75,19 @@ void GuiController::senderSend()
         return;
     }
     session = new TransferSession(senderFilePath, QHostAddress(receiverIp));
+    connect(session, &TransferSession::senderBegin, this, [&]() {
+        emit senderBegin();
+    });
+    connect(session, &TransferSession::senderEnded, this, [&]() {
+        emit senderEnded();
+    });
+    connect(session, QOverload<int>::of(&TransferSession::senderStatusUpdate), this, [&](int status) {
+        emit senderStatusUpdate(status);
+    });
 }
+
+void GuiController::senderPause() { if (session) session->pause(); }
+
+void GuiController::senderResume() { if (session) session->resume(); }
+
+void GuiController::senderCancel() { if (session) session->cancel(); }

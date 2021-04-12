@@ -39,10 +39,8 @@ void FileReceiver::readPacket()
                 } catch (...) {
                     return;
                 }
-                if (payloadSize + (qint64)(sizeof(type) + sizeof(qint32)) > socketBuffer.size()) {
-//                    sendPacket(PacketType::RequestData);
+                if (payloadSize + (qint64)(sizeof(type) + sizeof(qint32)) > socketBuffer.size())
                     return;
-                }
                 if (status != ReceiverStatus::Syncing) {
                     QByteArray data = socketBuffer.mid(sizeof(type) + sizeof(qint32), payloadSize);
                     writeData(data);
@@ -50,7 +48,6 @@ void FileReceiver::readPacket()
                 break;
             }
             case PacketType::SendRequest: {
-                qDebug() << "Type: request" << socketBuffer;
                 if (metaProcessed)
                     return error();
                 memcpy(&payloadSize, socketBuffer.mid(sizeof(type), sizeof(qint32)), sizeof(qint32));
@@ -59,7 +56,6 @@ void FileReceiver::readPacket()
                 fileSize = obj.value("size").toVariant().value<qint64>();
                 fileName = obj.value("name").toString();
 
-                qDebug() << "File name: " << fileName;
                 double fileSizeDisplay = fileSize;
                 int unitIdx = 0;
                 while (fileSizeDisplay > 1024) {
@@ -120,40 +116,34 @@ void FileReceiver::readPacket()
                     }
                 }
                 if (file->open(QIODevice::WriteOnly)) {
-                    qDebug() << "Sender: File opened successfully.";
                     status = ReceiverStatus::Transferring;
                     metaProcessed = true;
                     sendPacket(PacketType::Accept);
                     sendPacket(PacketType::RequestData);
                 } else {
-                    qDebug() << "Sender: Failed to write ";
+                    MessageBox::messageBoxCritical("Unable to open to write.");
                     cancel();
                 }
                 break;
             }
             case PacketType::Complete: {
                 emit statusUpdate(10000);
-                qDebug() << "[Receiver] Complete!";
                 file->close();
                 socket->close();
                 break;
             }
             case PacketType::Pause: {
-                qDebug() << "Type: pause";
                 break;
             }
             case PacketType::Resume: {
-                qDebug() << "Type: resume";
                 break;
             }
             case PacketType::Cancel: {
-                qDebug() << "Type: cancel";
                 return cancel();
             }
             case PacketType::ConfirmSync: {
-                qDebug() << "Type: ConfirmSync";
                 if (status != ReceiverStatus::Syncing) {
-                    qDebug() << "Syncing packet received while not syncing, could be serious congestion, aborting";
+                    // Syncing packet received while not syncing, could be serious congestion, aborting
                     return error();
                 }
                 try {
@@ -162,16 +152,13 @@ void FileReceiver::readPacket()
                     return;
                 }
 
-                if (payloadSize + (qint64)(sizeof(type) + sizeof(qint32)) > socketBuffer.size()) {
-//                    sendPacket(PacketType::RequestData);
+                if (payloadSize + (qint64)(sizeof(type) + sizeof(qint32)) > socketBuffer.size())
                     return;
-                }
+
                 // The packet now contains valid data
                 qint64 pos = 0;
                 memcpy(&pos, socketBuffer.mid(sizeof(type) + sizeof(qint32), sizeof(qint64)), sizeof(qint64));
-                qDebug() << "[Receiver] Received SYNC to position " << pos;
                 if (pos != sizeProcessed) {
-                    qDebug() << "Wrong pos rewinded, aborting...";
                     return error();
                 }
                 sendPacket(PacketType::SyncDone);
@@ -181,8 +168,6 @@ void FileReceiver::readPacket()
             }
             default: {
                 return overloaded();
-//                return error();
-                qDebug() << "Receiver: Default case: " << socketBuffer;
                 break;
             }
         }
@@ -220,7 +205,6 @@ void FileReceiver::resume()
 
 void FileReceiver::error()
 {
-    qDebug() << "[Receiver] Error detected";
     sendPacket(PacketType::Error);
     status = ReceiverStatus::Error;
     emit statusUpdate(0);
@@ -231,7 +215,6 @@ void FileReceiver::error()
 
 void FileReceiver::overloaded()
 {
-    qDebug() << "[Receiver] Overloaded! Need to rewind to " << sizeProcessed;
     if (status == ReceiverStatus::Syncing)
         return;
     status = ReceiverStatus::Syncing;
@@ -241,7 +224,6 @@ void FileReceiver::overloaded()
 
 void FileReceiver::cancel()
 {
-    qDebug() << "[Receiver] Cancel.";
     sendPacket(PacketType::Cancel);
     status = ReceiverStatus::Canceled;
     file->close();

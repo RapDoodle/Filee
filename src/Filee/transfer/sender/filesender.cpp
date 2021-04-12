@@ -71,7 +71,7 @@ void FileSender::sendData()
     sizeProcessed += bytesRead;
 
     // Emit progress change
-    emit statusUpdate((int)((double)sizeProcessed * 10000 / fileSize));
+    emit senderStatusUpdate((int)((double)sizeProcessed * 10000 / fileSize));
 
     sendPacket(PacketType::Data, fileBuffer);
 
@@ -81,6 +81,7 @@ void FileSender::sendData()
         fileBuffer.clear();
         status = SenderStatus::Completed;
         sendPacket(PacketType::Complete);
+        emit senderEnded();
     }
 }
 
@@ -95,6 +96,7 @@ void FileSender::readPacket()
         switch (type) {
             case PacketType::Accept: {
                 status = SenderStatus::Transferring;
+                emit senderBegin();
                 break;
             }
             case PacketType::RequestData: {
@@ -117,13 +119,16 @@ void FileSender::readPacket()
                 if (status == SenderStatus::Transferring || status == SenderStatus::Paused)
                     status = SenderStatus::Canceled;
                 emit statusUpdate(0);
-                MessageBox::messageBoxCritical("The transfer was termianted by the remote peer.");
+                emit senderEnded();
+                // Do not notify the sender of the termination if it was done by the sender
+                if (status != SenderStatus::Canceled)
+                    MessageBox::messageBoxCritical("The transfer was termianted by the remote peer.");
                 break;
             }
             case PacketType::Error: {
                 socket->close();
                 file->close();
-                emit transferAborted();
+                emit restartRequest();
                 return;
             }
             case PacketType::SyncRequest: {
@@ -191,8 +196,9 @@ void FileSender::resume()
 
 void FileSender::cancel()
 {
-    if (status == SenderStatus::Transferring || status == SenderStatus::Paused)
+    if (status == SenderStatus::Transferring || status == SenderStatus::Paused) {
         status = SenderStatus::Canceled;
-    emit statusUpdate(0);
-    sendPacket(PacketType::Cancel);
+        emit statusUpdate(0);
+        sendPacket(PacketType::Cancel);
+    }
 }

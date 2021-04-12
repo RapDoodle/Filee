@@ -7,8 +7,8 @@ import QtQuick.Controls 2.5
 
 ApplicationWindow {
     id: root
-    width: 405
-    height: 720
+    width: 562
+    height: 1000
     visible: true
     title: qsTr("Filee")
     minimumHeight: 720
@@ -54,6 +54,13 @@ ApplicationWindow {
     Component.onCompleted: {
         _guiController.exec()
         usertable.model = _onlineDevicesList
+    }
+
+    Connections {
+        target: _guiController
+        onSenderBegin: sendHide()
+        onSenderEnded: sendShow()
+        onSenderStatusUpdate: sendProgressModify(status)
     }
 
     StackView {
@@ -371,22 +378,22 @@ ApplicationWindow {
 
                 TableViewColumn {
                     role: "nickname"
-                    title:qsTr("Nickname")
-                    width: 200
+                    title: qsTr("Nickname")
+                    width: usertable.width * 0.4
                     delegate: itemDelegateText
                 }
 
                 TableViewColumn {
                     role: "ip"
-                    title:qsTr("Address")
-                    width:100
+                    title: qsTr("Address")
+                    width: usertable.width * 0.4
                     delegate: itemDelegateText
                 }
 
                 TableViewColumn {
                     role: "status"
-                    title:qsTr("Status")
-                    width:100
+                    title: qsTr("Status")
+                    width: usertable.width * 0.2
                     delegate: itemDelegateText
                 }
 
@@ -412,8 +419,7 @@ ApplicationWindow {
                     property color rowColor: styleData.selected?"#f1eeeb":(styleData.alternate ? "#525252":"#323232")
                     color:rowColor
                     height: 30
-
-                  }
+                 }
             }
 
 

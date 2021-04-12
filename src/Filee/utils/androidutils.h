@@ -1,3 +1,4 @@
+#if defined (Q_OS_ANDROID)
 #ifndef ANDROIDUTILS_H
 #define ANDROIDUTILS_H
 
@@ -57,3 +58,4 @@ private:
 };
 
 #endif // ANDROIDUTILS_H
+#endif

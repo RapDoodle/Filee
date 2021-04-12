@@ -4,6 +4,7 @@
 #include <QStandardPaths>
 #include <QMessageBox>
 
+#include "./utils/messagebox.h"
 #include "./transfer/filetransferpeer.h"
 
 const QStringList sizeUnits = { "bytes", "KB", "MB", "GB", "TB", "PB" };
