@@ -176,7 +176,7 @@ ApplicationWindow {
                     z: 1
                     width: userPic.width*1.8
                     height: userPic.height*0.3
-                    text: qsTr("IP Address: 127.0.0.1")
+                    text: qsTr(_guiController.qmlLocalIps[0])
                     font.pixelSize: 18
                     color: "#f4eeeb"
                     horizontalAlignment: Text.AlignLeft
@@ -219,6 +219,10 @@ ApplicationWindow {
                 backgroundVisible: false
 
                 //anchors.fill: parent
+
+                onClicked: {
+                    console.log(root._onlineDevicesList.get(row))  // NEED TO BE TESTED
+                }
 
                 model: root._onlineDevicesList
 

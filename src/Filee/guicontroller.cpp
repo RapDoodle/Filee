@@ -4,6 +4,7 @@ GuiController::GuiController(QQmlContext *qmlContext, QObject *parent)
     : QObject(parent), context(qmlContext)
 {
     nickname = Common::randomName();
+    updateLocalIpAddress();
     // Start the file dialog at the user's desktop
     previousDir.setPath(QStandardPaths::writableLocation(QStandardPaths::DesktopLocation));
     senderFileName = "Select a file...";
@@ -37,4 +38,19 @@ QString GuiController::getSenderFileName() const
 {
     qDebug() << "Read: " << senderFileName;
     return senderFileName;
+}
+
+QString GuiController::getReceiverIpAddress() const { return receiverIp; }
+
+void GuiController::setReceiverIpAddress(QString ip) { receiverIp = ip; }
+
+QVariantList GuiController::getLocalIpAddress() const { return localIps; }
+
+void GuiController::updateLocalIpAddress()
+{
+    QVariantList list;
+    QList<QHostAddress> ips = Common::getLocalIpAddresses();
+    for (auto ip : ips)
+        list.append(ip.toString());
+    localIps = list;
 }

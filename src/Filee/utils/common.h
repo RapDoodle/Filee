@@ -3,6 +3,7 @@
 
 #include <QRandomGenerator>
 #include <QStringList>
+#include <QNetworkInterface>
 #include <QTime>
 
 const static QStringList toneAdjectives = {"Agreeable", "Animated", "Bright", "Clever", "Encouraging",
@@ -74,8 +75,8 @@ const static QStringList animalNames = {"Aardvark", "Ainu", "Akbash", "Akita", "
 class Common
 {
 public:
-    Common();
     static QString randomName();
+    static QList<QHostAddress> getLocalIpAddresses();
 };
 
 #endif // COMMON_H

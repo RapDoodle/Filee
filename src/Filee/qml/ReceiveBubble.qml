@@ -18,7 +18,6 @@ Rectangle {
         id: receiveBubbleImage
         anchors{
             left: parent.left
-
         }
 
 

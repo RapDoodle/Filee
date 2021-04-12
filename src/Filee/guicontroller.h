@@ -32,16 +32,17 @@ class GuiController : public QObject
 
     Q_PROPERTY(QString qmlSenderFileName READ getSenderFileName)
     Q_PROPERTY(QString qmlSenderFilePath MEMBER senderFilePath)
+    Q_PROPERTY(QVariantList qmlLocalIps READ getLocalIpAddress)
 
 public:
     explicit GuiController(QQmlContext*, QObject *parent = nullptr);
     Q_INVOKABLE void exec();
     Q_INVOKABLE void setSenderFilePath(QString);
     QString getSenderFileName() const;
-    QString getIpAddress() const;
-    QString setIpAddress();
-
-
+    QString getReceiverIpAddress() const;
+    void setReceiverIpAddress(QString);
+    QVariantList getLocalIpAddress() const;
+    void updateLocalIpAddress();
 
 private:
     QQmlContext *context;
@@ -50,6 +51,7 @@ private:
     Broadcaster *broadcaster;
     BroadcastReceiver broadcastReceiver;
     OnlineDevicesModel *onlineDevicesModel;
+    QVariantList localIps;
 
     QString nickname;
     QDir previousDir;
@@ -61,6 +63,15 @@ private:
     TransferSession *session = nullptr;
 
 signals:
+    void qmlReceiverStatusUpdate(int);
+    void qmlSenderStatusUpdate(int);
+    void qmlSpeedUpdate(QString);
+    void qmlSenderCancel();
+    void qmlReceiverCancel();
+    void qmlSenderComplete();
+    void qmlReceiverComplete();
+
+
 
 };
 
