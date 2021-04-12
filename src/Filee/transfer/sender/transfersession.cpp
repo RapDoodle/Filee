@@ -15,16 +15,21 @@ TransferSession::TransferSession(QString filePath, QHostAddress receiverAddress,
 void TransferSession::transfer()
 {
     sender = new FileSender(fileDir, address, bufferSize);
-    connect(sender, &FileSender::transferAborted, this, &TransferSession::overloadedHandler);
-    connect(sender, QOverload<int>::of(&FileSender::statusUpdate),
-            this, QOverload<int>::of(&TransferSession::senderProgressChanged));
+    connect(sender, &FileSender::restartRequest, this, &TransferSession::overloadedHandler);
+    connect(sender, &FileSender::senderBegin, this, [&]() {
+        emit senderBegin();
+    });
+    connect(sender, &FileSender::senderEnded, this, [&]() {
+        emit senderEnded();
+    });
+    connect(sender, QOverload<int>::of(&FileSender::senderStatusUpdate), this, [&](int status) {
+        emit senderStatusUpdate(status);
+    });
 }
 
 void TransferSession::deleteConnection()
 {
-    disconnect(sender, QOverload<int>::of(&FileSender::statusUpdate),
-               this, QOverload<int>::of(&TransferSession::senderProgressChanged));
-    disconnect(sender, &FileSender::transferAborted, this, &TransferSession::overloadedHandler);
+
 }
 
 void TransferSession::overloadedHandler()
@@ -65,16 +70,9 @@ void TransferSession::cancel()
         sender->cancel();
 }
 
-void TransferSession::senderProgressChanged(int progress)
-{
-    emit progressUpdate(progress);
-}
-
 /* Slots */
-void TransferSession::completed()
-{
-    emit sessionCompleted();
-}
+
+void TransferSession::completed() { emit sessionCompleted(); }
 
 void TransferSession::canceled()
 {

@@ -48,6 +48,9 @@ public:
     void updateLocalIpAddress();
 
     Q_INVOKABLE void senderSend();
+    Q_INVOKABLE void senderPause();
+    Q_INVOKABLE void senderResume();
+    Q_INVOKABLE void senderCancel();
 
 private:
     QQmlContext *context;
@@ -77,6 +80,10 @@ signals:
     void qmlReceiverComplete();
 
     void receiverIpChanged();
+    void senderBegin();
+    void senderEnded();
+    void senderStatusUpdate(int status);
+
 
 
 

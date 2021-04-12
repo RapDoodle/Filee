@@ -8,8 +8,6 @@
 #include "./utils/androidutils.h"
 #include "./transfer/filetransferpeer.h"
 
-#define DEFAULT_BUFFER_SIZE 1024
-
 enum class SenderStatus : char
 {
     Initialized     = 0x00,
@@ -39,14 +37,17 @@ private:
     qint64 fileBufferSize = -1;
     QString fileDir;
 
+    SenderStatus status = SenderStatus::Initialized;
+
     void sendRequest();
     void sendData();
 
-    SenderStatus status = SenderStatus::Initialized;
-
 signals:
-    void transferComplete();
-    void transferAborted();
+    void senderBegin();
+    void senderStatusUpdate(int);
+    void senderEnded();
+
+    void restartRequest();
 
 private slots:
     void socketBytesWritten() override;
