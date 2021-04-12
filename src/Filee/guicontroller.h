@@ -11,6 +11,13 @@
 #include <QStandardPaths>
 #include <QApplication>
 
+#include "./utils/common.h"
+
+#if defined (Q_OS_ANDROID)
+#include "./utils/androidutils.h"
+#endif
+
+
 #include "./broadcast/broadcaster.h"
 #include "./broadcast/broadcastreceiver.h"
 #include "./transfer/sender/filesender.h"
@@ -29,23 +36,29 @@ class GuiController : public QObject
 public:
     explicit GuiController(QQmlContext*, QObject *parent = nullptr);
     Q_INVOKABLE void exec();
-    Q_INVOKABLE QString openFileDialog();
     Q_INVOKABLE void setSenderFilePath(QString);
     QString getSenderFileName() const;
+    QString getIpAddress() const;
+    QString setIpAddress();
+
 
 
 private:
     QQmlContext *context;
     QApplication *app;
-    Broadcaster broadcaster;
+
+    Broadcaster *broadcaster;
     BroadcastReceiver broadcastReceiver;
     OnlineDevicesModel *onlineDevicesModel;
+
+    QString nickname;
     QDir previousDir;
     QString senderFilePath;
     QString senderFileName;
+    QString receiverIp;
 
-
-
+    FileReceiveServer fileReceiveServer;
+    TransferSession *session = nullptr;
 
 signals:
 

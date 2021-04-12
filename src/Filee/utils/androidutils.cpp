@@ -1,7 +1,11 @@
-#include "utils.h"
-#include <QDebug>
+#include "androidutils.h"
 
-QString Utils::androidFileNameParser(QString path)
+AndroidUtils::AndroidUtils()
+{
+
+}
+
+QString AndroidUtils::androidFileNameParser(QString path)
 {
     QString name = QDir(path).dirName();
 
@@ -38,7 +42,7 @@ QString Utils::androidFileNameParser(QString path)
     return name;
 }
 
-QString Utils::getExtension(QFile* file, FileType fileType)
+QString AndroidUtils::getExtension(QFile* file, FileType fileType)
 {
     qint64 pos = file->pos();
     file->seek(0);
