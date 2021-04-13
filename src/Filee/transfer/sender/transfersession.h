@@ -24,6 +24,7 @@ signals:
     void senderEnded();
     void sessionCompleted();
     void sessionAborted();
+    void rateUpdate(QString);
 
 private:
     QString fileDir;

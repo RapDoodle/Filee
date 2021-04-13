@@ -25,3 +25,17 @@ QList<QHostAddress> Common::getLocalIpAddresses()
     
     return loopbackInterfaces;
 }
+
+// Get the size that is human readable, for example, 1.61 GB
+QString Common::humanReadableSize(qint64 fileSize)
+{
+    double size = fileSize;
+    int unitIdx = 0;
+    while (size > 1024) {
+        if (unitIdx > sizeUnits.size())
+            break;
+        size /= 1024;
+        unitIdx++;
+    }
+    return QString::number(size, 'f', 2) + " " + sizeUnits.at(unitIdx);
+}

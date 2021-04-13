@@ -18,9 +18,10 @@ private:
 
 
 signals:
-    void receiverBegin();
+    void receiverBegin(QString sender, QString filename, QString filePath);
     void receiverEnded();
     void receiverStatusUpdate(int);
+    void rateUpdate(QString);
 
 private slots:
     void newConnection();

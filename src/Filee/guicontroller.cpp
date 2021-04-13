@@ -18,7 +18,13 @@ void GuiController::exec()
     onlineDevicesModel = new OnlineDevicesModel(broadcastReceiver);
 
     fileReceiveServer = new FileReceiveServer();
-    connect(fileReceiveServer, &FileReceiveServer::receiverBegin, this, [&]() {
+    connect(fileReceiveServer, &FileReceiveServer::receiverBegin, this, [&](QString sender,
+            QString filename, QString filePath) {
+        receiverPeerIp = sender;
+        receiverFilename = filename;
+        receiverFilePath = filePath;
+        emit receiverPeerIpChanged();
+        emit receiverFilenameChanged();
         emit receiverBegin();
     });
     connect(fileReceiveServer, &FileReceiveServer::receiverEnded, this, [&]() {
@@ -27,6 +33,10 @@ void GuiController::exec()
     connect(fileReceiveServer, QOverload<int>::of(&FileReceiveServer::receiverStatusUpdate),
             this, [&](int status) {
         emit receiverStatusUpdate(status);
+    });
+    connect(fileReceiveServer, QOverload<QString>::of(&FileReceiveServer::rateUpdate),
+            this, [&](QString rate) {
+        emit rateUpdate(rate);
     });
 
     context->setContextProperty("_broadcaster", broadcaster);
@@ -96,6 +106,22 @@ void GuiController::senderSend()
     connect(session, QOverload<int>::of(&TransferSession::senderStatusUpdate), this, [&](int status) {
         emit senderStatusUpdate(status);
     });
+    connect(session, QOverload<QString>::of(&TransferSession::rateUpdate), this, [&](QString rate) {
+        emit rateUpdate(rate);
+    });
+}
+
+void GuiController::openReceivedFile()
+{
+    if (receiverFilePath.size() > 0) {
+//        QProcess::startDetached(receiverFilePath, parameters);
+        QString path = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation) + "/Filee/" + receiverFilename;
+        if (!QDesktopServices::openUrl(QUrl::fromLocalFile(path))) {
+            MessageBox::messageBoxCritical(QUrl::fromLocalFile(path).toString());
+//        if (!QDesktopServices::openUrl(QUrl::fromLocalFile(receiverFilePath))) {
+            MessageBox::messageBoxCritical("Unable to open the received file.");
+        }
+    }
 }
 
 void GuiController::senderPause() { if (session) session->pause(); }
@@ -107,3 +133,7 @@ void GuiController::senderCancel() { if (session) session->cancel(); }
 void GuiController::startBroadcast() { broadcaster->startBroadcaster(); }
 
 void GuiController::stopBroadcast() { broadcaster->stopBroadcaster(); }
+
+QString GuiController::getReceiverPeerIp() { return receiverPeerIp; }
+
+QString GuiController::getReceiverFilename() { return receiverFilename; }

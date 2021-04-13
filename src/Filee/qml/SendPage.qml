@@ -19,7 +19,6 @@ Page{
                 var path = fileDialog.fileUrl.toString()
                 path = path.replace(/^(file:\/{3})/, '');
                 _guiController.setSenderFilePath(path)
-                console.log(path)
                 fileNameLabel.text = _guiController.qmlSenderFileName
             }
         }
@@ -69,18 +68,7 @@ Page{
                 text: _guiController.qmlReceiverIp.length > 0 ? _guiController.qmlReceiverIp : "Select a receiver..."
                 persistentSelection: false
                 selectByMouse: true
-                onTextChanged: {
-                    _guiController.qmlReceiverIp = text
-                    console.log(_guiController.qmlReceiverIp)
-                }
-
-                //readOnly: true
-                //wrapMode: "WordWrap"
-//                Connections {
-//                    target: _guiController
-//                    onReceiverIpChanged: console.log("changed")
-//                }
-
+                onTextChanged: _guiController.qmlReceiverIp = text
             }
         }
         Rectangle{
@@ -263,9 +251,9 @@ Page{
                     LinearGradient{
                         anchors.fill: parent
                         start: Qt.point(0,0)
-                        end: Qt.point(width, 0)      ///1.横向渐变
-                        //end: Qt.point(0, height)     ///2.竖向渐变
-                        //end: Qt.point(width, height) ///3.斜向渐变
+                        end: Qt.point(width, 0)         // 1. Horizontal transition
+                        //end: Qt.point(0, height)      // 2. Vertical transition
+                        //end: Qt.point(width, height)  // 3. Oblique transition
                         gradient: Gradient {
                             GradientStop {  position: 0.0;    color: "#323232" }
                             GradientStop {  position: 0.5;    color: "#575757" }
@@ -301,7 +289,6 @@ Page{
                                     //interval = interval-1
                                 }
                             }
-    //                        console.log(progress.width+","+animation.x+","+progress.x+","+(progress.x+progress.width))
                         }
                     }
 

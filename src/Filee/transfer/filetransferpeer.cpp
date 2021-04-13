@@ -2,7 +2,10 @@
 
 FileTransferPeer::FileTransferPeer(QObject *parent) : QObject(parent)
 {
-
+    connect(&rateMeter, &QTimer::timeout, this, [&]() {
+        emit rateUpdate(Common::humanReadableSize(sizeTransferred - lastSizeTransferred) + "/s");
+        lastSizeTransferred = sizeTransferred;
+    });
 }
 
 void FileTransferPeer::sendPacket(PacketType type)
@@ -23,6 +26,10 @@ void FileTransferPeer::sendPacket(PacketType type, const QByteArray &payload)
     socket->write(reinterpret_cast<const char*>(&payloadSize), sizeof(payloadSize));
     socket->write(payload);
 }
+
+void FileTransferPeer::startRateMeter() { rateMeter.start(interval); }
+
+void FileTransferPeer::stopRateMeter() { rateMeter.stop(); }
 
 /* Functions to be overridden */
 

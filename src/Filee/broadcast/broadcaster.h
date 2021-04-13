@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QTimer>
 #include <QUdpSocket>
+#include <QNetworkAddressEntry>
 
 class Broadcaster : public QObject
 {

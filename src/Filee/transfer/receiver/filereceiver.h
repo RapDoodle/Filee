@@ -4,10 +4,9 @@
 #include <QStandardPaths>
 #include <QMessageBox>
 
+#include "./utils/common.h"
 #include "./utils/messagebox.h"
 #include "./transfer/filetransferpeer.h"
-
-const QStringList sizeUnits = { "bytes", "KB", "MB", "GB", "TB", "PB" };
 
 enum class ReceiverStatus : char
 {
@@ -42,7 +41,7 @@ private:
     void overloaded();
 
 signals:
-    void receiverBegin();
+    void receiverBegin(QString sender, QString fileName, QString filePath);
     void receiverEnded();
     void receiverStatusUpdate(int);
 

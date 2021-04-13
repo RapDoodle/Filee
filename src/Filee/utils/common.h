@@ -6,6 +6,8 @@
 #include <QNetworkInterface>
 #include <QTime>
 
+const static QStringList sizeUnits = { "bytes", "KB", "MB", "GB", "TB", "PB" };
+
 const static QStringList toneAdjectives = {"Agreeable", "Animated", "Bright", "Clever", "Encouraging",
                                            "Fresh", "Gentle", "Hopeful", "Kind", "Loving", "Open",
                                            "Pleased", "Supportive", "Sympathetic", "Warm", "Annoyed",
@@ -77,6 +79,7 @@ class Common
 public:
     static QString randomName();
     static QList<QHostAddress> getLocalIpAddresses();
+    static QString humanReadableSize(qint64);
 };
 
 #endif // COMMON_H

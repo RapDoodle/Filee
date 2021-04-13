@@ -3,8 +3,6 @@
 #include <QQmlApplicationEngine>
 #include <QQmlContext>
 
-#include <QNetworkConfiguration>
-
 #include "guicontroller.h"
 
 #if defined (Q_OS_ANDROID)
