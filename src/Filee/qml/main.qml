@@ -64,10 +64,6 @@ ApplicationWindow {
         swipePageNum = 1
     }
 
-//    property Component transferPanelView: TransferPanelView {}
-//    property var componentMap: {
-//        "TransferPanelView": transferPanelView
-//    }
     Component.onCompleted: {
         _guiController.exec()
         usertable.model = _onlineDevicesList
@@ -79,13 +75,11 @@ ApplicationWindow {
         onSenderBegin: {
             sendProgressModify(0)
             sendHide()
-            // TO-DO: Show the speed bar (text) here
             speedModify = true
 
         }
         onSenderEnded: {
             sendShow()
-            // TO-DO: Hide the speed bar (text) here
             speedModify = false
         }
         onSenderStatusUpdate: sendProgressModify(status)
@@ -97,12 +91,10 @@ ApplicationWindow {
         onReceiverBegin: {
             receiveHide();
             swipePageNumTo2();
-            // TO-DO: Show the speed bar (text) here
             speedModify = true
         }
         onReceiverEnded: {
             receiveShow();
-            // TO-DO: Hide the speed bar (text) here
             speedModify = false
         }
         onReceiverStatusUpdate: receiveProgressModify(status)
@@ -154,69 +146,7 @@ ApplicationWindow {
                         }
                         visible: speedModify
                     }
-                    Button{
-                        id:testButtom
-                        height:parent.height
-                        width:parent.width
-                        visible: false
-                        onClicked: {
-                            //swipePageNumTo1()
-
-                        }
-                    }
                 }
-//                Rectangle {
-//                    id: boardcast
-//                    width: userInfo.width
-//                    height: userInfo.height*0.16
-
-//                    anchors {
-//                        left: root.left
-//                        top: root.top
-//                        topMargin: userInfo.height*0.1
-//                    }
-
-
-
-//                }
-
-
-//                Switch {
-//                    id: boardcastButton
-//                    //property color checkedColor: "#0ACF97"
-//                    //checkedColor: "#0ACF97"
-
-
-////                    Rectangle {
-////                        width: userInfo.width*0.3
-////                        height: userInfo.height*0.16
-////                        radius: height / 2
-////                        color: root.checked ? checkedColor : "white"
-////                        border.width: 2
-////                        border.color: root.checked ? checkedColor : "#E5E5E5"
-
-////                        anchors {
-////                            left: root.left
-////                            top: root.top
-////                            topMargin: userInfo.height*0.1
-////                        }
-
-////                        Rectangle {
-////                            x: root.checked ? parent.width - width - 2 : 1
-////                            width: root.checked ? parent.height - 4 : parent.height - 2
-////                            height: width
-////                            radius: width / 2
-////                            anchors.verticalCenter: parent.verticalCenter
-////                            color: "white"
-////                            border.color: "#D5D5D5"
-
-////                            Behavior on x {
-////                                NumberAnimation { duration: 200 }
-////                            }
-////                        }
-////                    }
-//                }
-
 
                 Rectangle {
                     id: userPic
@@ -300,7 +230,7 @@ ApplicationWindow {
                     z: 1
                     width: userPic.width*1.8
                     height: userPic.height*0.3
-                    text: qsTr(_guiController.qmlLocalIps[0])
+                    text: "No valid interface."
                     font.pixelSize: 18
                     color: "#f4eeeb"
                     horizontalAlignment: Text.AlignLeft
@@ -308,14 +238,39 @@ ApplicationWindow {
                     minimumPixelSize: 12
                     font.family: "Verdana"
 
+                    property int ipIndex: 0
+                    Component.onCompleted: {
+                        ipAddress.showIp()
+                    }
+
+                    function showIp() {
+                        if (_guiController.qmlLocalIps.length > 0) {
+                            if (_guiController.qmlLocalIps.length === 1) {
+                                ipAddress.text = qsTr(_guiController.qmlLocalIps[0]);
+                            } else {
+                                ipAddress.text = qsTr(_guiController.qmlLocalIps[ipIndex] +
+                                        " (" +  (_guiController.qmlLocalIps.length - 1) + " more)");
+                            }
+                        } else {
+                            ipAddress.text = qsTr("No valid interface.");
+                        }
+                    }
+
                     anchors {
                         left: userPic.right
                         leftMargin: userPic.width*0.2
                         bottom: userPic.bottom
                     }
 
+                    MouseArea {
+                        anchors.fill: parent
+                        onClicked: {
+                            ipAddress.ipIndex++
+                            ipAddress.ipIndex %= _guiController.qmlLocalIps.length
+                            ipAddress.showIp()
+                        }
+                    }
                 }
-
             }
 
             Rectangle {
@@ -343,7 +298,7 @@ ApplicationWindow {
                     }
                     //property color checkedColor: "#0ACF97"
 
-                    onCheckedChanged: {//checked 是一个bool值
+                    onCheckedChanged: {
                         if (checked)
                             _guiController.startBroadcast();
                         else
@@ -388,14 +343,6 @@ ApplicationWindow {
                     font.family: "Verdana"
                 }
             }
-//            Rectangle{
-//                id:dividingLine
-//                width: parent.width
-//                height: 1
-//                anchors{
-//                    top: menuButton.bottom
-//                }
-//            }
 
             TableView {
                 id: usertable
@@ -488,39 +435,6 @@ ApplicationWindow {
                 }
                 currentIndex: swipePageNum
             }
-//                SwipeView{
-//                    id:swipeView
-//                    width: parent.width
-//                    height: parent.height*0.3
-//                    anchors{
-//                        top: menuButton.bottom
-//                    }
-//                    currentIndex: tabBar.currentIndex
-//                    SendPage{
-//                        width: parent.width
-//                    }
-//                    ReceivePage{
-//                        width: parent.width
-//                    }
-//                }
-//                TabBar{
-//                    id: tabBar
-//                    width: parent.width
-//                    anchors{
-//                        top: swipeControl.bottom
-//                    }
-//                    currentIndex: swipeControl.currentIndex
-
-
-//                    TabButton {
-//                        text: qsTr("Page 1")
-//                    }
-//                    TabButton {
-//                        text: qsTr("Page 2")
-//                    }
-//                }
-            //swipe view ends here
-
         // The home page ends here
         }
     }
