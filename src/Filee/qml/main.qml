@@ -7,8 +7,8 @@ import QtQuick.Controls 2.5
 
 ApplicationWindow {
     id: root
-    width: 562
-    height: 1000
+    width: 460
+    height: 720
     visible: true
     title: qsTr("Filee")
     minimumHeight: 720
@@ -76,6 +76,7 @@ ApplicationWindow {
     Connections {
         target: _guiController
         onSenderBegin: {
+            sendProgressModify(0)
             sendHide()
             // TO-DO: Show the speed bar (text) here
         }
@@ -90,6 +91,7 @@ ApplicationWindow {
     Connections {
         target: _guiController
         onReceiverBegin: {
+            receiveHide();
             swipePageNumTo2();
             // TO-DO: Show the speed bar (text) here
         }

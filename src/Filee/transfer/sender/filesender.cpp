@@ -84,6 +84,7 @@ void FileSender::sendData()
         status = SenderStatus::Completed;
         sendPacket(PacketType::Complete);
         emit senderEnded();
+        MessageBox::messageBoxInfo("The transfer is completed.");
     }
 }
 
@@ -108,6 +109,9 @@ void FileSender::readPacket()
             }
             case PacketType::Deny: {
                 // Denied by receiver
+                socket->close();
+                file->close();
+                MessageBox::messageBoxCritical("The transfer was rejected by the remote peer.");
                 break;
             }
             case PacketType::Pause: {
@@ -119,14 +123,14 @@ void FileSender::readPacket()
                 break;
             }
             case PacketType::Cancel: {
+                // Do not notify the sender of the termination if it was done by the sender
+                if (status != SenderStatus::Canceled)
+                    MessageBox::messageBoxCritical("The transfer was terminated by the remote peer.");
                 if (status == SenderStatus::Transferring || status == SenderStatus::Paused)
                     status = SenderStatus::Canceled;
                 emit senderStatusUpdate(0);
                 emit senderEnded();
                 stopRateMeter();
-                // Do not notify the sender of the termination if it was done by the sender
-                if (status != SenderStatus::Canceled)
-                    MessageBox::messageBoxCritical("The transfer was termianted by the remote peer.");
                 break;
             }
             case PacketType::Error: {

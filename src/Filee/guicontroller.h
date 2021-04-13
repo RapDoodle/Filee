@@ -59,6 +59,10 @@ public:
     Q_INVOKABLE void senderResume();
     Q_INVOKABLE void senderCancel();
 
+    Q_INVOKABLE void receiverPause();
+    Q_INVOKABLE void receiverResume();
+    Q_INVOKABLE void receiverCancel();
+
     Q_INVOKABLE void openReceivedFile();
 
 private:
