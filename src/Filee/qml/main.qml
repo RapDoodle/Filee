@@ -20,7 +20,7 @@ ApplicationWindow {
     property double receiveProgress: 0.0
     property int swipePageNum: 0
     property bool speedModify: false
-    property color checkedColor: "lightgray"//"#cea392"//""#0ACF97"
+    property color checkedColor: "#525252"//"#cea392"//""#0ACF97"
 
     // Interfaces
 
@@ -285,7 +285,7 @@ ApplicationWindow {
                 }
                 Switch {
                     id: boardcastSwitch
-                    x: (root.width-width)/2
+                    x: (root.width-width)/2+15
                     checked: true
                     anchors{
                         //right: menuButton.right
