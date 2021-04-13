@@ -1,17 +1,17 @@
-#ifndef TRANSFERSESSION_H
-#define TRANSFERSESSION_H
+#ifndef FILESENDERSESSION_H
+#define FILESENDERSESSION_H
 
 #include <QObject>
 #include <QHostAddress>
 
 #include "filesender.h"
 
-class TransferSession : public QObject
+class FileSenderSession : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit TransferSession(QString filePath, QHostAddress receiverAddress, QObject *parent = nullptr);
+    explicit FileSenderSession(QString filePath, QHostAddress receiverAddress, QObject *parent = nullptr);
 
     void endSession();
     void pause();
@@ -44,4 +44,4 @@ private slots:
 
 };
 
-#endif // TRANSFERSESSION_H
+#endif // FILESENDERSESSION_H

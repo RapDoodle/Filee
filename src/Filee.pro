@@ -22,7 +22,7 @@ SOURCES += \
         transfer/receiver/filereceiver.cpp \
         transfer/receiver/filereceiveserver.cpp \
         transfer/sender/filesender.cpp \
-        transfer/sender/transfersession.cpp \
+        transfer/sender/filesendersession.cpp \
         utils/androidutils.cpp \
         utils/common.cpp \
         utils/messagebox.cpp
@@ -52,7 +52,7 @@ HEADERS += \
     transfer/receiver/filereceiver.h \
     transfer/receiver/filereceiveserver.h \
     transfer/sender/filesender.h \
-    transfer/sender/transfersession.h \
+    transfer/sender/filesendersession.h \
     utils/androidutils.h \
     utils/common.h \
     utils/messagebox.h

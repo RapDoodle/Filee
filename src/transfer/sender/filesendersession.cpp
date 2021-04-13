@@ -1,21 +1,21 @@
-#include "transfersession.h"
+#include "filesendersession.h"
 
-TransferSession::TransferSession(QString filePath, QHostAddress receiverAddress, QObject *parent) :
+FileSenderSession::FileSenderSession(QString filePath, QHostAddress receiverAddress, QObject *parent) :
     QObject(parent), fileDir(filePath), address(receiverAddress)
 {
     bufferSize = 1024 * 8192;
 
     #if defined (Q_OS_ANDROID)
-    bufferSize = 1024 * 4096;
+    bufferSize = 1024 * 8192;
     #endif
 
     transfer();
 }
 
-void TransferSession::transfer()
+void FileSenderSession::transfer()
 {
     sender = new FileSender(fileDir, address, bufferSize);
-    connect(sender, &FileSender::restartRequest, this, &TransferSession::overloadedHandler);
+    connect(sender, &FileSender::restartRequest, this, &FileSenderSession::overloadedHandler);
     connect(sender, &FileSender::senderBegin, this, [&]() {
         emit senderBegin();
     });
@@ -30,12 +30,12 @@ void TransferSession::transfer()
     });
 }
 
-void TransferSession::deleteConnection()
+void FileSenderSession::deleteConnection()
 {
 
 }
 
-void TransferSession::overloadedHandler()
+void FileSenderSession::overloadedHandler()
 {
     deleteConnection();
 //    delete sender;
@@ -48,26 +48,26 @@ void TransferSession::overloadedHandler()
     transfer();
 }
 
-void TransferSession::endSession()
+void FileSenderSession::endSession()
 {
     deleteConnection();
     delete sender;
     emit sessionAborted();
 }
 
-void TransferSession::pause()
+void FileSenderSession::pause()
 {
     if (sender)
         sender->pause();
 }
 
-void TransferSession::resume()
+void FileSenderSession::resume()
 {
     if (sender)
         sender->resume();
 }
 
-void TransferSession::cancel()
+void FileSenderSession::cancel()
 {
     if (sender)
         sender->cancel();
@@ -75,9 +75,9 @@ void TransferSession::cancel()
 
 /* Slots */
 
-void TransferSession::completed() { emit sessionCompleted(); }
+void FileSenderSession::completed() { emit sessionCompleted(); }
 
-void TransferSession::canceled()
+void FileSenderSession::canceled()
 {
     delete sender;
     emit sessionAborted();
