@@ -97,6 +97,11 @@ ApplicationWindow {
             receiveShow();
             speedModify = false
         }
+        onReceiverTerminated: {
+            sendProgressModify(0);
+            swipePageNumTo1();
+            speedModify = false
+        }
         onReceiverStatusUpdate: receiveProgressModify(status)
     }
 

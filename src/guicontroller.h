@@ -94,6 +94,7 @@ signals:
 
     void receiverBegin();
     void receiverEnded();
+    void receiverTerminated();
     void receiverStatusUpdate(int status);
 
     void receiverPeerIpChanged();

@@ -30,6 +30,9 @@ void GuiController::exec()
     connect(fileReceiveServer, &FileReceiveServer::receiverEnded, this, [&]() {
         emit receiverEnded();
     });
+    connect(fileReceiveServer, &FileReceiveServer::receiverTerminated, this, [&]() {
+        emit receiverTerminated();
+    });
     connect(fileReceiveServer, QOverload<int>::of(&FileReceiveServer::receiverStatusUpdate),
             this, [&](int status) {
         emit receiverStatusUpdate(status);
@@ -117,9 +120,8 @@ void GuiController::openReceivedFile()
 //        QProcess::startDetached(receiverFilePath, parameters);
         QString path = QStandardPaths::writableLocation(QStandardPaths::DownloadLocation) + "/Filee/" + receiverFilename;
         if (!QDesktopServices::openUrl(QUrl::fromLocalFile(path))) {
-            MessageBox::messageBoxCritical(QUrl::fromLocalFile(path).toString());
-//        if (!QDesktopServices::openUrl(QUrl::fromLocalFile(receiverFilePath))) {
-            MessageBox::messageBoxCritical("Unable to open the received file.");
+            MessageBox::messageBoxCritical("Permission denied. Unable to open the received file. But the file is stored in "
+                                           + QUrl::fromLocalFile(path).toString());
         }
     }
 }

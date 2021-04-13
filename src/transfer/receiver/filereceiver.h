@@ -40,6 +40,7 @@ private:
 signals:
     void receiverBegin(QString sender, QString fileName, QString filePath);
     void receiverEnded();
+    void receiverTerminated();
     void receiverStatusUpdate(int);
 
 private slots:

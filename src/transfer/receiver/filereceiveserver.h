@@ -22,6 +22,7 @@ private:
 signals:
     void receiverBegin(QString sender, QString filename, QString filePath);
     void receiverEnded();
+    void receiverTerminated();
     void receiverStatusUpdate(int);
     void rateUpdate(QString);
 
