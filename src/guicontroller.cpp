@@ -96,17 +96,17 @@ void GuiController::senderSend()
         MessageBox::messageBoxWarning("Please select or type in a file receiver.");
         return;
     }
-    session = new TransferSession(senderFilePath, QHostAddress(receiverIp));
-    connect(session, &TransferSession::senderBegin, this, [&]() {
+    session = new FileSenderSession(senderFilePath, QHostAddress(receiverIp));
+    connect(session, &FileSenderSession::senderBegin, this, [&]() {
         emit senderBegin();
     });
-    connect(session, &TransferSession::senderEnded, this, [&]() {
+    connect(session, &FileSenderSession::senderEnded, this, [&]() {
         emit senderEnded();
     });
-    connect(session, QOverload<int>::of(&TransferSession::senderStatusUpdate), this, [&](int status) {
+    connect(session, QOverload<int>::of(&FileSenderSession::senderStatusUpdate), this, [&](int status) {
         emit senderStatusUpdate(status);
     });
-    connect(session, QOverload<QString>::of(&TransferSession::rateUpdate), this, [&](QString rate) {
+    connect(session, QOverload<QString>::of(&FileSenderSession::rateUpdate), this, [&](QString rate) {
         emit rateUpdate(rate);
     });
 }

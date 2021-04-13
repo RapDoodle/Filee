@@ -3,14 +3,7 @@
 
 #include <QObject>
 #include <QQmlContext>
-#include <QDebug>
-#include <QFile>
-#include <QVector>
 #include <QDesktopServices>
-#include <QFileDialog>
-#include <QHostAddress>
-#include <QStandardPaths>
-#include <QApplication>
 
 #include "./utils/common.h"
 #include "./utils/messagebox.h"
@@ -19,13 +12,11 @@
 #include "./utils/androidutils.h"
 #endif
 
+#include "./models/onlinedevicesmodel.h"
 #include "./broadcast/broadcaster.h"
 #include "./broadcast/broadcastreceiver.h"
-#include "./transfer/sender/filesender.h"
 #include "./transfer/receiver/filereceiveserver.h"
-#include "./transfer/receiver/filereceiver.h"
-#include "./models/onlinedevicesmodel.h"
-#include "./transfer/sender/transfersession.h"
+#include "./transfer/sender/filesendersession.h"
 
 class GuiController : public QObject
 {
@@ -85,7 +76,7 @@ private:
     QString receiverFilePath;
 
     FileReceiveServer *fileReceiveServer;
-    TransferSession *session = nullptr;
+    FileSenderSession *session = nullptr;
 
 signals:
     void qmlReceiverStatusUpdate(int);

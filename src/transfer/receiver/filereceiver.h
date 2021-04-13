@@ -3,12 +3,7 @@
 
 #include <QStandardPaths>
 
-// Test only
-#include <QMessageBox>
-
 #include "./transfer/filetransferpeer.h"
-
-const QStringList sizeUnits = { "bytes", "KB", "MB", "GB", "TB", "PB" };
 
 enum class ReceiverStatus : char
 {
@@ -25,6 +20,7 @@ enum class ReceiverStatus : char
 
 class FileReceiver : public FileTransferPeer
 {
+    Q_OBJECT
 public:
     explicit FileReceiver(QTcpSocket *tcpSocket, QObject *parent = nullptr);
 
@@ -36,13 +32,15 @@ private:
     void sendData();
     void sendMeta();
     void writeData(QByteArray& data);
-    QString fileName;
     ReceiverStatus status = ReceiverStatus::Initialized;
     bool metaProcessed = false;
     void error();
     void overloaded();
 
 signals:
+    void receiverBegin(QString sender, QString fileName, QString filePath);
+    void receiverEnded();
+    void receiverStatusUpdate(int);
 
 private slots:
     void socketConnected() override;

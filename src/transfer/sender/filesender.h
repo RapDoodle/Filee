@@ -1,11 +1,6 @@
 #ifndef FILESENDER_H
 #define FILESENDER_H
 
-#include <QObject>
-#include <QMessageBox>
-
-#include "./utils/messagebox.h"
-#include "./utils/androidutils.h"
 #include "./transfer/filetransferpeer.h"
 
 enum class SenderStatus : char

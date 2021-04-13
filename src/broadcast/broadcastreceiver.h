@@ -3,8 +3,6 @@
 
 #include <QObject>
 #include <QUdpSocket>
-#include <QDebug>
-#include <cstdint>
 
 class BroadcastReceiver : public QObject
 {
