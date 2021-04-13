@@ -29,3 +29,24 @@ void FileReceiveServer::newConnection()
         });
     }
 }
+
+void FileReceiveServer::pause()
+{
+    for (auto socket : receivers) {
+        socket->pause();
+    }
+}
+
+void FileReceiveServer::resume()
+{
+    for (auto socket : receivers) {
+        socket->resume();
+    }
+}
+
+void FileReceiveServer::cancel()
+{
+    for (auto socket : receivers) {
+        socket->cancel();
+    }
+}

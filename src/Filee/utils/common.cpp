@@ -8,7 +8,9 @@ QString Common::randomName()
     quint32 toneIndex = gen.bounded(toneAdjectives.size());
     quint32 animalNamesIndex = gen.bounded(animalNames.size());
 
-    return toneAdjectives.at(toneIndex) + " " + animalNames.at(animalNamesIndex);
+    QString name = toneAdjectives.at(toneIndex) + " " + animalNames.at(animalNamesIndex);
+
+    return name.size() >= 15 ? randomName() : name;
 }
 
 QList<QHostAddress> Common::getLocalIpAddresses()

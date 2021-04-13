@@ -315,11 +315,13 @@ Page{
                         receivePause.text = "\u25B2"
                         //receivePause.rotation = 0
                         receivePause.font.pointSize = 15
+                        _guiController.receiverPause()
                         animationTimer.stop()
                     }else{
                         receivePause.text = "\u003D"
                         receivePause.rotation = 90
                         receivePause.font.pointSize = 30
+                        _guiController.receiverResume()
                         animationTimer.restart()
                     }
                 }
@@ -342,6 +344,11 @@ Page{
                 }
                 palette.button: "#414141"
                 palette.buttonText: "#cea392"
+                onClicked: {
+                    _guiController.receiverCancel()
+                    root.swipePageNumTo1()
+                    // TO-DO: Hide the speed bar
+                }
             }
         }
 

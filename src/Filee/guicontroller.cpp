@@ -130,6 +130,12 @@ void GuiController::senderResume() { if (session) session->resume(); }
 
 void GuiController::senderCancel() { if (session) session->cancel(); }
 
+void GuiController::receiverPause() { fileReceiveServer->pause(); }
+
+void GuiController::receiverResume() { fileReceiveServer->resume(); }
+
+void GuiController::receiverCancel() { fileReceiveServer->cancel(); }
+
 void GuiController::startBroadcast() { broadcaster->startBroadcaster(); }
 
 void GuiController::stopBroadcast() { broadcaster->stopBroadcaster(); }

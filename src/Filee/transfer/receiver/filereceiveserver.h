@@ -11,11 +11,13 @@ class FileReceiveServer : public QObject
     Q_OBJECT
 public:
     explicit FileReceiveServer(QObject *parent = nullptr);
+    void pause();
+    void resume();
+    void cancel();
 
 private:
     QVector<FileReceiver*> receivers;
     QTcpServer *tcpServer = nullptr;
-
 
 signals:
     void receiverBegin(QString sender, QString filename, QString filePath);
