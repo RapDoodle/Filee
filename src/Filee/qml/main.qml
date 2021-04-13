@@ -19,6 +19,7 @@ ApplicationWindow {
     property double sendProgress: 0.0
     property double receiveProgress: 0.0
     property int swipePageNum: 0
+    property bool speedModify: false
     property color checkedColor: "lightgray"//"#cea392"//""#0ACF97"
 
     // Interfaces
@@ -79,10 +80,13 @@ ApplicationWindow {
             sendProgressModify(0)
             sendHide()
             // TO-DO: Show the speed bar (text) here
+            speedModify = true
+
         }
         onSenderEnded: {
             sendShow()
             // TO-DO: Hide the speed bar (text) here
+            speedModify = false
         }
         onSenderStatusUpdate: sendProgressModify(status)
     }
@@ -94,10 +98,12 @@ ApplicationWindow {
             receiveHide();
             swipePageNumTo2();
             // TO-DO: Show the speed bar (text) here
+            speedModify = true
         }
         onReceiverEnded: {
             receiveShow();
             // TO-DO: Hide the speed bar (text) here
+            speedModify = false
         }
         onReceiverStatusUpdate: receiveProgressModify(status)
     }
@@ -146,6 +152,7 @@ ApplicationWindow {
                             target: _guiController
                             onRateUpdate: speedText.text = qsTr("Speed: ") + rate
                         }
+                        visible: speedModify
                     }
                     Button{
                         id:testButtom

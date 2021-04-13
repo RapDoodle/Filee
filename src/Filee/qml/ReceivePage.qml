@@ -95,7 +95,7 @@ Page{
             }
             TextEdit {
                 id: fileNameLabel
-                width: parent.width-selectButton.width*2
+                width: parent.width-fileName.width
                 anchors {
                     //horizontalCenter: parent.horizontalCenter
                     verticalCenter: parent.verticalCenter
@@ -110,7 +110,7 @@ Page{
                 persistentSelection: false
                 selectByMouse: true
                 readOnly: true
-                //wrapMode: "WordWrap"
+                wrapMode: Text.WrapAnywhere
             }
 //            RoundButton {
 //                id: selectButton
