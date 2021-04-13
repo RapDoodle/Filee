@@ -27,6 +27,7 @@ FileSender::FileSender(QString filePath, QHostAddress receiverAddress, qint64 bu
     connect(socket, &QTcpSocket::connected, this, &FileSender::socketConnected);
     connect(socket, &QTcpSocket::disconnected, this, &FileSender::socketDisconnected);
     connect(socket, &QTcpSocket::readyRead, this, &FileSender::readPacket);
+
 }
 
 FileSender::~FileSender()
@@ -41,14 +42,14 @@ FileSender::~FileSender()
 void FileSender::sendRequest()
 {
 #if defined (Q_OS_ANDROID)
-    fileName = AndroidUtils::androidFileNameParser(file->fileName());
+    filename = AndroidUtils::androidFileNameParser(file->fileName());
 #else
-    fileName = QDir(file->fileName()).dirName();
+    filename = QDir(file->fileName()).dirName();
 #endif
     QJsonObject obj(QJsonObject::
                     fromVariantMap(
                         {
-                            {"name", fileName},
+                            {"name", filename},
                             {"size", fileSize},
                         }));
     QByteArray payload(QJsonDocument(obj).toJson());
@@ -97,6 +98,7 @@ void FileSender::readPacket()
         switch (type) {
             case PacketType::Accept: {
                 status = SenderStatus::Transferring;
+                startRateMeter();
                 emit senderBegin();
                 break;
             }
@@ -119,8 +121,9 @@ void FileSender::readPacket()
             case PacketType::Cancel: {
                 if (status == SenderStatus::Transferring || status == SenderStatus::Paused)
                     status = SenderStatus::Canceled;
-                emit statusUpdate(0);
+                emit senderStatusUpdate(0);
                 emit senderEnded();
+                stopRateMeter();
                 // Do not notify the sender of the termination if it was done by the sender
                 if (status != SenderStatus::Canceled)
                     MessageBox::messageBoxCritical("The transfer was termianted by the remote peer.");
@@ -130,6 +133,7 @@ void FileSender::readPacket()
                 socket->close();
                 file->close();
                 emit restartRequest();
+                stopRateMeter();
                 return;
             }
             case PacketType::SyncRequest: {
@@ -158,6 +162,7 @@ void FileSender::readPacket()
             default: {
                 // Abort on error packet
                 cancel();
+                stopRateMeter();
                 break;
             }
         }
@@ -171,7 +176,7 @@ void FileSender::readPacket()
     }
 }
 
-void FileSender::socketBytesWritten() {}
+void FileSender::socketBytesWritten() { sizeTransferred = sizeProcessed; }
 
 void FileSender::socketConnected() { sendRequest(); }
 
@@ -179,6 +184,7 @@ void FileSender::socketDisconnected()
 {
     // Cancel when the receiver has disconnected.
     status = SenderStatus::Canceled;
+    stopRateMeter();
 }
 
 void FileSender::pause()
@@ -199,7 +205,8 @@ void FileSender::cancel()
 {
     if (status == SenderStatus::Transferring || status == SenderStatus::Paused) {
         status = SenderStatus::Canceled;
-        emit statusUpdate(0);
+        emit senderStatusUpdate(0);
         sendPacket(PacketType::Cancel);
     }
+    stopRateMeter();
 }

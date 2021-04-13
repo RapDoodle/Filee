@@ -13,8 +13,8 @@ void FileReceiveServer::newConnection()
     if (socket) {
         FileReceiver* receiver = new FileReceiver(socket);
         receivers.push_back(receiver);
-        connect(receiver, &FileReceiver::receiverBegin, this, [&]() {
-            emit receiverBegin();
+        connect(receiver, &FileReceiver::receiverBegin, this, [&](QString sender, QString filename, QString filePath) {
+            emit receiverBegin(sender, filename, filePath);
         });
         connect(receiver, &FileReceiver::receiverEnded, this, [&]() {
             emit receiverEnded();
@@ -22,6 +22,10 @@ void FileReceiveServer::newConnection()
         connect(receiver, QOverload<int>::of(&FileReceiver::receiverStatusUpdate),
                 this, [&](int status) {
             emit receiverStatusUpdate(status);
+        });
+        connect(receiver, QOverload<QString>::of(&FileReceiver::rateUpdate),
+                this, [&](QString rate) {
+            emit rateUpdate(rate);
         });
     }
 }

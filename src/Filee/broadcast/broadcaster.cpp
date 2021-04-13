@@ -1,11 +1,11 @@
 #include "broadcaster.h"
-#include <QDebug>
 
 Broadcaster::Broadcaster(QString nickname, QObject *parent)
     : QObject(parent)
 {
     nameDatagram = nickname.toUtf8();
     udpSocket = new QUdpSocket(this);
+    udpSocket->bind(6816, QUdpSocket::ShareAddress | QUdpSocket::ReuseAddressHint);
     connect(&timer, &QTimer::timeout, this, &Broadcaster::broadcastUdpDatagram);
 }
 

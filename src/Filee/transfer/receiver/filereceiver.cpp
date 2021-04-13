@@ -22,6 +22,7 @@ void FileReceiver::socketDisconnected()
 
 void FileReceiver::readPacket()
 {
+    sizeTransferred += socket->bytesAvailable();
     socketBuffer.append(socket->readAll());
 
     while (socketBuffer.size() > 0) {
@@ -54,22 +55,12 @@ void FileReceiver::readPacket()
                 QByteArray data = socketBuffer.mid(sizeof(type) + sizeof(qint32), payloadSize);
                 QJsonObject obj = QJsonDocument::fromJson(data).object();
                 fileSize = obj.value("size").toVariant().value<qint64>();
-                fileName = obj.value("name").toString();
-
-                double fileSizeDisplay = fileSize;
-                int unitIdx = 0;
-                while (fileSizeDisplay > 1024) {
-                    if (unitIdx > sizeUnits.size())
-                        break;
-                    fileSizeDisplay /= 1024;
-                    unitIdx++;
-                }
-                QString fileSizeUnit = sizeUnits.at(unitIdx);
+                filename = obj.value("name").toString();
 
                 QMessageBox msgBox;
                 msgBox.setText(socket->peerAddress().toString() + " wants to transfer a file to you.");
-                msgBox.setInformativeText("File name: " + fileName + "\n"
-                                          + "File size: " + QString::number(fileSizeDisplay, 'f', 2) + " " + fileSizeUnit + "\n"
+                msgBox.setInformativeText("File name: " + filename + "\n"
+                                          + "File size: " + Common::humanReadableSize(fileSize) + "\n"
                                           + "Do you want to accept the file?");
                 msgBox.setStandardButtons(QMessageBox::Ok | QMessageBox::Cancel);
                 msgBox.setDefaultButton(QMessageBox::Ok);
@@ -86,7 +77,7 @@ void FileReceiver::readPacket()
                     QDir().mkdir(dir.absolutePath());
                 }
 
-                file = new QFile(dir.absolutePath() + "/" + fileName, this);
+                file = new QFile(dir.absolutePath() + "/" + filename, this);
 
                 // Handle file conficts (already exists)
                 if (file->exists()) {
@@ -120,18 +111,21 @@ void FileReceiver::readPacket()
                     metaProcessed = true;
                     sendPacket(PacketType::Accept);
                     sendPacket(PacketType::RequestData);
-                    emit receiverBegin();
+                    emit receiverBegin(socket->peerAddress().toString(),
+                                       filename, file->fileName());
                 } else {
                     MessageBox::messageBoxCritical("Unable to open to write.");
                     cancel();
                 }
+                startRateMeter();
                 break;
             }
             case PacketType::Complete: {
-                emit statusUpdate(10000);
+                emit receiverStatusUpdate(10000);
                 file->close();
                 socket->close();
                 emit receiverEnded();
+                stopRateMeter();
                 break;
             }
             case PacketType::Pause: {
@@ -210,10 +204,11 @@ void FileReceiver::error()
 {
     sendPacket(PacketType::Error);
     status = ReceiverStatus::Error;
-    emit statusUpdate(0);
+    emit receiverStatusUpdate(0);
     if (file)
         file->close();
     file->remove();
+    stopRateMeter();
 }
 
 void FileReceiver::overloaded()
@@ -223,6 +218,7 @@ void FileReceiver::overloaded()
     status = ReceiverStatus::Syncing;
     QByteArray packet(reinterpret_cast<const char *>(&sizeProcessed), sizeof(sizeProcessed));
     sendPacket(PacketType::SyncRequest, packet);
+    stopRateMeter();
 }
 
 void FileReceiver::cancel()
@@ -232,5 +228,6 @@ void FileReceiver::cancel()
     file->close();
     file->remove();
     socket->close();
-    emit statusUpdate(0);
+    emit receiverStatusUpdate(0);
+    stopRateMeter();
 }

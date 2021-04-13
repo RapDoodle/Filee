@@ -25,6 +25,9 @@ void TransferSession::transfer()
     connect(sender, QOverload<int>::of(&FileSender::senderStatusUpdate), this, [&](int status) {
         emit senderStatusUpdate(status);
     });
+    connect(sender, QOverload<QString>::of(&FileSender::rateUpdate), this, [&](QString rate) {
+        emit rateUpdate(rate);
+    });
 }
 
 void TransferSession::deleteConnection()

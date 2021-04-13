@@ -1,6 +1,7 @@
 #ifndef FILETRANSFERPEER_H
 #define FILETRANSFERPEER_H
 
+#include <QTimer>
 #include <QObject>
 #include <QTcpSocket>
 #include <QFile>
@@ -10,6 +11,8 @@
 #include <QJsonObject>
 #include <QJsonDocument>
 #include <QNetworkProxyFactory>
+
+#include "utils/common.h"
 
 enum class PacketType : char
 {
@@ -39,22 +42,31 @@ public:
     virtual void pause();
     virtual void resume();
     virtual void cancel();
+    void startRateMeter();
+    void stopRateMeter();
 
 protected:
     QTcpSocket* socket = nullptr;
+    QTimer rateMeter;
     QFile* file = nullptr;
-    QString fileName;
+
+    QString filename;
     QByteArray socketBuffer;
     qint32 currentPayloadSize = 0;
     qint32 payloadUnreadSize = 0;  // For not finished packet
-    qint64 fileSize = -1;
-    qint64 sizeProcessed = -1;
+    qint64 fileSize = 0;
+    qint64 sizeProcessed = 0;
+    qint64 sizeTransferred = 0;  // For rate meter
 
     void sendPacket(PacketType type);
     void sendPacket(PacketType type, const QByteArray& payload);
 
+private:
+    qint64 lastSizeTransferred = 0;
+    int interval = 1000;  // In ms
+
 signals:
-    void statusUpdate(int);
+    void rateUpdate(QString);
 
 protected slots:
     virtual void socketBytesWritten();

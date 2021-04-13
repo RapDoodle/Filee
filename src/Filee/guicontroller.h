@@ -6,6 +6,7 @@
 #include <QDebug>
 #include <QFile>
 #include <QVector>
+#include <QDesktopServices>
 #include <QFileDialog>
 #include <QHostAddress>
 #include <QStandardPaths>
@@ -17,7 +18,6 @@
 #if defined (Q_OS_ANDROID)
 #include "./utils/androidutils.h"
 #endif
-
 
 #include "./broadcast/broadcaster.h"
 #include "./broadcast/broadcastreceiver.h"
@@ -35,6 +35,8 @@ class GuiController : public QObject
     Q_PROPERTY(QString qmlSenderFilePath MEMBER senderFilePath)
     Q_PROPERTY(QVariantList qmlLocalIps READ getLocalIpAddress)
     Q_PROPERTY(QString qmlReceiverIp READ getReceiverIpAddress WRITE setReceiverIpAddress NOTIFY receiverIpChanged)
+    Q_PROPERTY(QString qmlReceiverPeerIp READ getReceiverPeerIp NOTIFY receiverPeerIpChanged)
+    Q_PROPERTY(QString qmlReceiverFilename READ getReceiverFilename NOTIFY receiverFilenameChanged)
 
 public:
     explicit GuiController(QQmlContext*, QObject *parent = nullptr);
@@ -46,6 +48,8 @@ public:
     Q_INVOKABLE void setReceiverIpAddress(int);
     QVariantList getLocalIpAddress() const;
     void updateLocalIpAddress();
+    QString getReceiverPeerIp();
+    QString getReceiverFilename();
 
     Q_INVOKABLE void startBroadcast();
     Q_INVOKABLE void stopBroadcast();
@@ -54,6 +58,8 @@ public:
     Q_INVOKABLE void senderPause();
     Q_INVOKABLE void senderResume();
     Q_INVOKABLE void senderCancel();
+
+    Q_INVOKABLE void openReceivedFile();
 
 private:
     QQmlContext *context;
@@ -69,6 +75,10 @@ private:
     QString senderFilePath;
     QString senderFileName;
     QString receiverIp;
+
+    QString receiverPeerIp;
+    QString receiverFilename;
+    QString receiverFilePath;
 
     FileReceiveServer *fileReceiveServer;
     TransferSession *session = nullptr;
@@ -90,6 +100,11 @@ signals:
     void receiverBegin();
     void receiverEnded();
     void receiverStatusUpdate(int status);
+
+    void receiverPeerIpChanged();
+    void receiverFilenameChanged();
+
+    void rateUpdate(QString rate);
 
 };
 

@@ -52,20 +52,23 @@ Page{
                     family: "Verdana"
                 }
                 color: "#f4eeeb"
-                text: "127.0.0.1"
+                text: _guiController.qmlReceiverPeerIp
                 persistentSelection: false
                 selectByMouse: true
                 readOnly: true
                 //wrapMode: "WordWrap"
-
+                Connections {
+                    target: _guiController
+                    onReceiverPeerIpChanged: ;
+                }
             }
         }
-        Rectangle{
-            id:fileNamePlace
+        Rectangle {
+            id: fileNamePlace
             width: parent.width-40
             height: fileNameLabel.height+10
             color: parent.color
-            anchors{
+            anchors {
                 top: ipField.bottom
                 topMargin: parent.height*0.1
                 leftMargin: parent.width*0.01
@@ -75,11 +78,11 @@ Page{
             TextEdit {
                 id: fileName
                 width: parent.width*0.3
-                anchors{
+                anchors {
                     //horizontalCenter: parent.horizontalCenter
                     verticalCenter: parent.verticalCenter
                 }
-                font{
+                font {
                     pointSize: 15
                     family: "Verdana"
                 }
@@ -93,17 +96,17 @@ Page{
             TextEdit {
                 id: fileNameLabel
                 width: parent.width-selectButton.width*2
-                anchors{
+                anchors {
                     //horizontalCenter: parent.horizontalCenter
                     verticalCenter: parent.verticalCenter
                     left: fileName.right
                 }
-                font{
+                font {
                     pointSize: 15
                     family: "Verdana"
                 }
                 color: "#f4eeeb"
-                text: _guiController.qmlSenderFileName
+                text: _guiController.qmlReceiverFilename
                 persistentSelection: false
                 selectByMouse: true
                 readOnly: true
@@ -386,9 +389,9 @@ Page{
                     LinearGradient{
                         anchors.fill: parent
                         start: Qt.point(0,0)
-                        end: Qt.point(width, 0)      ///1.横向渐变
-                        //end: Qt.point(0, height)     ///2.竖向渐变
-                        //end: Qt.point(width, height) ///3.斜向渐变
+                        end: Qt.point(width, 0)         // 1. Horizontal transition
+                        //end: Qt.point(0, height)      // 2. Vertical transition
+                        //end: Qt.point(width, height)  // 3. Oblique transition
                         gradient: Gradient {
                             GradientStop {  position: 0.0;    color: "#323232" }
                             GradientStop {  position: 0.5;    color: "#575757" }
@@ -424,7 +427,6 @@ Page{
                                     //interval = interval-1
                                 }
                             }
-    //                        console.log(progress.width+","+animation.x+","+progress.x+","+(progress.x+progress.width))
                         }
                     }
 
@@ -457,13 +459,14 @@ Page{
                     onClicked: {
                         root.swipePageNumTo1()
                         root.receiveHide()
+                        root.receiveProgressModify(0)
                     }
 //                    background: {
 //                        opacity: 0//background transparent
 //                    }
                 }
-                Button{
-                    id:open
+                Button {
+                    id: open
                     anchors{
                         bottom:parent.bottom
                         left: back.right
@@ -479,7 +482,7 @@ Page{
                     palette.buttonText: "#cea392"
                     visible: receiveModify
                     onClicked: {
-
+                        _guiController.openReceivedFile()
                     }
 //                    background: {
 //                        opacity: 0//background transparent

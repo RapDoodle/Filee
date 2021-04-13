@@ -21,29 +21,45 @@ ApplicationWindow {
     property int swipePageNum: 0
     property color checkedColor: "lightgray"//"#cea392"//""#0ACF97"
 
-    function sendHide(){//send按钮隐藏
+    // Interfaces
+
+    // Hide the send button
+    function sendHide(){
         //sendVisibility.visible = false
         sendModify = false
     }
-    function sendShow(){//send按钮重现
+    // Show the send button
+    function sendShow() {
         sendModify = true
     }
-    function receiveHide(){//receivePage 两个按钮隐藏
+
+    // Hide the two buttons in the receiver page
+    function receiveHide() {
         receiveModify = false
     }
-    function receiveShow(){//receivePage 两个按钮出现
+
+    // Show the two buttons in the receiver page
+    function receiveShow() {
         receiveModify = true
     }
-    function sendProgressModify(progress){//send进度，输入值0~10000
-        sendProgress =  0.0001*progress
+
+    // Sender's progress update (between 0 to 10000)
+    function sendProgressModify(progress) {
+        sendProgress = 0.0001*progress
     }
-    function receiveProgressModify(progress){//receive进度，输入值0~10000
+
+    // Receiver's progress update (between 0 to 10000)
+    function receiveProgressModify(progress) {
         receiveProgress =  0.0001*progress
     }
-    function swipePageNumTo1(){//切换至send page
+
+    // Switch to sender's page
+    function swipePageNumTo1() {
         swipePageNum = 0
     }
-    function swipePageNumTo2(){//切换至receive page
+
+    // Switch to receiver's page
+    function swipePageNumTo2() {
         swipePageNum = 1
     }
 
@@ -59,8 +75,14 @@ ApplicationWindow {
     // For sender
     Connections {
         target: _guiController
-        onSenderBegin: sendHide()
-        onSenderEnded: sendShow()
+        onSenderBegin: {
+            sendHide()
+            // TO-DO: Show the speed bar (text) here
+        }
+        onSenderEnded: {
+            sendShow()
+            // TO-DO: Hide the speed bar (text) here
+        }
         onSenderStatusUpdate: sendProgressModify(status)
     }
 
@@ -69,8 +91,12 @@ ApplicationWindow {
         target: _guiController
         onReceiverBegin: {
             swipePageNumTo2();
+            // TO-DO: Show the speed bar (text) here
         }
-        onReceiverEnded: receiveShow();
+        onReceiverEnded: {
+            receiveShow();
+            // TO-DO: Hide the speed bar (text) here
+        }
         onReceiverStatusUpdate: receiveProgressModify(status)
     }
 
@@ -95,7 +121,7 @@ ApplicationWindow {
                 }
 
                 Rectangle {
-                    id:speedField
+                    id: speedField
                     width: parent.width
                     height: 0.20*parent.height
                     color: "#282828"
@@ -114,7 +140,10 @@ ApplicationWindow {
                             pointSize: 15
                             family: "Verdana"
                         }
-                        text: qsTr("Speed: ")+"999.99MB/s"
+                        Connections {
+                            target: _guiController
+                            onRateUpdate: speedText.text = qsTr("Speed: ") + rate
+                        }
                     }
                     Button{
                         id:testButtom

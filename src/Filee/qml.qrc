@@ -3,7 +3,6 @@
         <file>qml/ReceivePage.qml</file>
         <file>qml/SendPage.qml</file>
         <file>qml/SwipeControl.qml</file>
-        <file>qml/Test.qml</file>
         <file>qml/main.qml</file>
     </qresource>
 </RCC>
