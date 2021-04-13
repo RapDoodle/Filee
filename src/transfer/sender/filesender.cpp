@@ -84,7 +84,7 @@ void FileSender::sendData()
         status = SenderStatus::Completed;
         sendPacket(PacketType::Complete);
         emit senderEnded();
-        MessageBox::messageBoxInfo("The transfer is completed.");
+        MessageBox::messageBoxInfo("The transfer has completed.");
     }
 }
 

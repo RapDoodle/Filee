@@ -135,7 +135,8 @@ void FileReceiver::readPacket()
                 break;
             }
             case PacketType::Cancel: {
-                emit receiverEnded();
+                emit receiverTerminated();
+                MessageBox::messageBoxCritical("The transfer was terminated by the remote peer.");
                 return cancel();
             }
             case PacketType::ConfirmSync: {

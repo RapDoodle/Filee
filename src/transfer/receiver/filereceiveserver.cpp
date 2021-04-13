@@ -19,6 +19,9 @@ void FileReceiveServer::newConnection()
         connect(receiver, &FileReceiver::receiverEnded, this, [&]() {
             emit receiverEnded();
         });
+        connect(receiver, &FileReceiver::receiverTerminated, this, [&]() {
+            emit receiverTerminated();
+        });
         connect(receiver, QOverload<int>::of(&FileReceiver::receiverStatusUpdate),
                 this, [&](int status) {
             emit receiverStatusUpdate(status);
