@@ -85,7 +85,7 @@ Page{
             }
             TextEdit {
                 id: fileName
-                width: parent.width*0.3
+                width: fileNamePlace.width*0.3
                 anchors{
                     //horizontalCenter: parent.horizontalCenter
                     verticalCenter: parent.verticalCenter
@@ -103,7 +103,7 @@ Page{
             }
             TextEdit {
                 id: fileNameLabel
-                width: parent.width-selectButton.width*2
+                width: fileNamePlace.width-selectButton.width-fileName.width
                 anchors{
                     //horizontalCenter: parent.horizontalCenter
                     verticalCenter: parent.verticalCenter
@@ -114,22 +114,23 @@ Page{
                     family: "Verdana"
                 }
                 color: "#f4eeeb"
-                text: _guiController.qmlSenderFileName
+                text: _guiController.qmlSenderFileName/*"asijdoihfgoisjodfijhowihjefo;iwehjejf;oiaweo;fijh;oiehfo"*/
                 persistentSelection: false
                 selectByMouse: true
                 readOnly: true
-                //wrapMode: "WordWrap"
-                function textwidth(){
+                wrapMode: Text.WrapAnywhere
 
-                }
+                //                function textwidth(){
+
+//                }
             }
             RoundButton {
                 id: selectButton
                 width: parent.width*0.2
-                height: parent.height
+                height: fileName.height
                 anchors{
                     leftMargin: 10
-
+                    verticalCenter: parent.verticalCenter
                     right: parent.right
 
                 }
