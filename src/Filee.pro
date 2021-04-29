@@ -1,5 +1,4 @@
 QT       += core quick gui network
-
 android {
     QT   += androidextras
 }

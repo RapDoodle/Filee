@@ -11,7 +11,7 @@ SwipeView{
         id: send
 
     }
-    ReceivePage {
-        id: receive
-    }
+//    ReceivePage {
+//        id: receive
+//    }
 }

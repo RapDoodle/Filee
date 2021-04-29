@@ -1,11 +1,13 @@
-import QtQuick 2.12
-import QtQuick.Window 2.12
-
-import QtQuick.Controls 1.4
+import QtQuick 2.14
+import QtQuick.Window 2.0
+import Qt.labs.qmlmodels 1.0
+//import QtQuick.Controls 1.4
 import QtQuick.Controls 2.5
 
 
-ApplicationWindow {
+
+
+ApplicationWindow{
     id: root
     width: 460
     height: 720
@@ -289,6 +291,7 @@ ApplicationWindow {
                     top: userInfo.bottom
                 }
                 Switch {
+                    //enabled: false
                     id: boardcastSwitch
                     x: (root.width-width)/2+15
                     checked: true
@@ -349,83 +352,84 @@ ApplicationWindow {
                 }
             }
 
-            TableView {
-                id: usertable
-                frameVisible: true
-                width: parent.width
-                height: parent.height
+//            TableView {
+//                id: usertable
+//                // frameVisible: true
+//                width: parent.width
+//                height: parent.height
 
-                anchors {
-                    top: menuButton.bottom
-                }
-                backgroundVisible: false
+//                anchors {
+//                    top: menuButton.bottom
+//                }
 
-                //anchors.fill: parent
+//                // backgroundVisible: false
 
-                onClicked: _guiController.setReceiverIpAddress(currentRow)
+//                //anchors.fill: parent
 
-                model: _onlineDevicesList
+//                // onClicked: _guiController.setReceiverIpAddress(currentRow)
 
-                Component {
-                    id: itemDelegateText
-                    Text {
-                        anchors.verticalCenter: parent.verticalCenter
-                        color: styleData.selected ? "#cb8862" : "#c5aba8"
-                        elide: styleData.elideMode
-                        text: styleData.value
-                        font.family: "Verdana"
-                        font.pointSize: 10
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        anchors.fill: parent
-                    }
-                }
+//                model: _onlineDevicesList
 
-                TableViewColumn {
-                    role: "nickname"
-                    title: qsTr("Nickname")
-                    width: usertable.width * 0.4
-                    delegate: itemDelegateText
-                }
+//                Component {
+//                    id: itemDelegateText
+//                    Text {
+//                        anchors.verticalCenter: parent.verticalCenter
+//                        color: styleData.selected ? "#cb8862" : "#c5aba8"
+//                        elide: styleData.elideMode
+//                        text: styleData.value
+//                        font.family: "Verdana"
+//                        font.pointSize: 10
+//                        horizontalAlignment: Text.AlignHCenter
+//                        verticalAlignment: Text.AlignVCenter
+//                        anchors.fill: parent
+//                    }
+//                }
 
-                TableViewColumn {
-                    role: "ip"
-                    title: qsTr("Address")
-                    width: usertable.width * 0.4
-                    delegate: itemDelegateText
-                }
+//                TableModelColumn {
+//                    role: "nickname"
+//                    title: qsTr("Nickname")
+//                    width: usertable.width * 0.4
+//                    delegate: itemDelegateText
+//                }
 
-                TableViewColumn {
-                    role: "status"
-                    title: qsTr("Status")
-                    width: usertable.width * 0.2
-                    delegate: itemDelegateText
-                }
+//                TableModelColumn  {
+//                    role: "ip"
+//                    title: qsTr("Address")
+//                    width: usertable.width * 0.4
+//                    delegate: itemDelegateText
+//                }
 
-                headerDelegate: Rectangle {
-                     height: 30
-                     color: "#323232"
-                     border.color: "#626262"
-                     Text {
-                        id: headerName
-                        text: styleData.value
-                        color: "lightgrey"
-                        font.family: "Verdana"
-                        font.pointSize: 10
-                        horizontalAlignment: Text.AlignHCenter
-                        verticalAlignment: Text.AlignVCenter
-                        anchors.fill: parent
-                       }
-                 }
+//                TableModelColumn  {
+//                    role: "status"
+//                    title: qsTr("Status")
+//                    width: usertable.width * 0.2
+//                    delegate: itemDelegateText
+//                }
 
-                 rowDelegate: Rectangle {
-                    id:rowRectangle
+////                headerDelegate: Rectangle {
+////                     height: 30
+////                     color: "#323232"
+////                     border.color: "#626262"
+////                     Text {
+////                        id: headerName
+////                        text: styleData.value
+////                        color: "lightgrey"
+////                        font.family: "Verdana"
+////                        font.pointSize: 10
+////                        horizontalAlignment: Text.AlignHCenter
+////                        verticalAlignment: Text.AlignVCenter
+////                        anchors.fill: parent
+////                       }
+////                 }
 
-                    property color rowColor: styleData.selected?"#f1eeeb":(styleData.alternate ? "#525252":"#323232")
-                    color:rowColor
-                    height: 30
-                 }
-            }
+////                 rowDelegate: Rectangle {
+////                    id:rowRectangle
+
+////                    property color rowColor: styleData.selected?"#f1eeeb":(styleData.alternate ? "#525252":"#323232")
+////                    color:rowColor
+////                    height: 30
+////                 }
+//            }
 
 
             //swipe view starts here

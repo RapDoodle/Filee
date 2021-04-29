@@ -1,9 +1,11 @@
-import QtQuick 2.9
+import QtQuick 2.12
 import QtQuick.Controls 2.5
-import QtQuick.Controls.Styles 1.2
+//import QtQuick.Controls.Styles 1.2
 //import QtQuick.Controls 1.2
-import QtQuick.Dialogs 1.0
-import QtGraphicalEffects 1.12
+//import QtQuick.Dialogs 1.0
+//import QtGraphicalEffects 1.12
+import Qt.labs.platform 1.1
+//import QtQuick.Shapes 1.12
 
 Page{
     Rectangle{
@@ -16,7 +18,7 @@ Page{
             folder: shortcuts.home
             onAccepted: {
                 // Fix for: file name containing file:/// is not readable on Windows
-                var path = fileDialog.fileUrl.toString()
+                var path = fileDialog.file.toString()
                 path = path.replace(/^(file:\/{3})/, '');
                 _guiController.setSenderFilePath(path)
                 fileNameLabel.text = _guiController.qmlSenderFileName
@@ -164,7 +166,7 @@ Page{
                 radius: height
                 text: "\u003D"
                 //text: U+2713
-                font.pointSize: 30
+                font.pointSize: 20
                 rotation: 90
                 anchors{
                     top: parent.top
@@ -181,11 +183,16 @@ Page{
                         _guiController.senderResume()
                         receivePause.text = "\u003D"
                         receivePause.rotation = 90
-                        receivePause.font.pointSize = 30
+                        receivePause.font.pointSize = 20
                         animationTimer.restart()
                     }
                 }
+//                background: Rectangle{
+//                    radius: height
+//                    color:"#414141"
+//                }
                 palette.button: "#414141"
+
                 palette.buttonText: "#cea392"
             }
             RoundButton{
@@ -202,8 +209,13 @@ Page{
 
                     rightMargin: 0.2*parent.width
                 }
-                palette.button: "#414141"
-                palette.buttonText: "#cea392"
+//                palette.button: "#414141"
+//                palette.buttonText: "#cea392"
+                palette{
+                    button: "#414141"
+                    buttonText: "#cea392"
+                }
+
                 onClicked: _guiController.senderCancel()
             }
         }
@@ -240,7 +252,7 @@ Page{
                     //radius: 4
                     //ColorAnimation on color { to: "yellow";duration:1000}
                     onWidthChanged: {
-                        if(progress.width==0){
+                        if(progress.width===0){
                             animation.width=0
                         }
                     }
@@ -249,17 +261,16 @@ Page{
                     id:animation
                     //radius: 4
                     x:parent.x
-                    LinearGradient{
-                        anchors.fill: parent
-                        start: Qt.point(0,0)
-                        end: Qt.point(width, 0)         // 1. Horizontal transition
+                    gradient: Gradient{
+                        orientation: Gradient.Horizontal
+                        //Gradient.Horizontal
+//                        start: Qt.point(0,0)
+//                        end: Qt.point(width, 0)         // 1. Horizontal transition
                         //end: Qt.point(0, height)      // 2. Vertical transition
                         //end: Qt.point(width, height)  // 3. Oblique transition
-                        gradient: Gradient {
-                            GradientStop {  position: 0.0;    color: "#323232" }
-                            GradientStop {  position: 0.5;    color: "#575757" }
-                            GradientStop {  position: 1.0;    color: "#323232" }
-                        }
+                        GradientStop {  position: 0.0;    color: "#323232" }
+                        GradientStop {  position: 0.5;    color: "#575757" }
+                        GradientStop {  position: 1.0;    color: "#323232" }
                     }
 
                     height:progress.height
@@ -294,6 +305,55 @@ Page{
                     }
 
                 }
+//                Rectangle{
+//                    id:animation
+//                    //radius: 4
+//                    x:parent.x
+//                    LinearGradient{
+//                        anchors.fill: parent
+//                        start: Qt.point(0,0)
+//                        end: Qt.point(width, 0)         // 1. Horizontal transition
+//                        //end: Qt.point(0, height)      // 2. Vertical transition
+//                        //end: Qt.point(width, height)  // 3. Oblique transition
+//                        gradient: Gradient {
+//                            GradientStop {  position: 0.0;    color: "#323232" }
+//                            GradientStop {  position: 0.5;    color: "#575757" }
+//                            GradientStop {  position: 1.0;    color: "#323232" }
+//                        }
+//                    }
+
+//                    height:progress.height
+//                    //color: "#d6845a"
+//                    anchors{
+//                        top: progress.top
+//                        //left: progress.left
+//                    }
+//                    width:0
+//                    Timer{
+//                        id:animationTimer
+//                        interval: 1000/progress.width
+//                        running: true
+//                        repeat: true
+//                        onTriggered:{
+//                            if(animation.x+animation.width>=progress.x+progress.width){
+//                                if(animation.width>0){
+//                                    animation.width--
+//                                    animation.x += 1
+//                                }else{
+//                                    animation.x = progress.x
+//                                }
+//                            }else{
+//                                if(animation.width<0.5*progress.width){
+//                                    animation.width++
+//                                }else{
+//                                    animation.x += 1
+//                                    //interval = interval-1
+//                                }
+//                            }
+//                        }
+//                    }
+
+//                }
 
                 Slider {
                     id: slider
