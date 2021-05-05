@@ -146,10 +146,91 @@ Page{
             }
         }
         Rectangle{
+            id: encryptSwitchArea
+            visible: !pauseAndCancelVisibility
+            width: parent.width-40
+            height: encryptText.height+10
+            color: parent.color
+            anchors{
+                top: fileNamePlace.bottom
+                topMargin: parent.height*0.05
+
+                leftMargin: parent.width*0.01
+                rightMargin: leftMargin
+                horizontalCenter: parent.horizontalCenter
+            }
+
+            TextEdit {
+                id: encryptText
+                width: encryptSwitchArea.width*0.3
+                anchors{
+                    //horizontalCenter: parent.horizontalCenter
+                    verticalCenter: parent.verticalCenter
+                }
+                font{
+                    pointSize: 15
+                    family: "Verdana"
+                }
+                color: "#f4eeeb"
+                text: "Encrypt   "
+                persistentSelection: false
+                selectByMouse: true
+                readOnly: true
+                //wrapMode: "WordWrap"
+            }
+
+            Switch {
+                id: encryptSwitch
+                //x: parent.width-selectButton.height*2
+                x: parent.width-0.7*menuButton.height
+                checked: true
+                anchors{
+                    top: parent.top
+                    topMargin:  0.065*menuButton.height
+                    //left: encryptText.right
+                    //right: parent.right
+                    //verticalCenter: parent.verticalCenter
+                    //verticalCenterOffset: 10
+                }
+                //property color checkedColor: "#0ACF97"
+
+                onCheckedChanged: {
+
+                }
+                indicator: Rectangle {
+                    width: 2*height
+                    height: 0.7*menuButton.height/2
+                    //height: selectButton.height
+                    radius: height / 2
+                    color: encryptSwitch.checked ? "#757575" : "white"
+                    border.width: 2
+                    border.color: encryptSwitch.checked ? "#757575" : "white"
+
+                    Rectangle {
+                        x: encryptSwitch.checked ? parent.width - width - 2 : 1
+                        width: encryptSwitch.checked ? parent.height - 4 : parent.height - 2
+                        height: width
+                        radius: width / 2
+                        anchors.verticalCenter: parent.verticalCenter
+                        color: "white"
+                        border.color: "#D5D5D5"
+
+                        Behavior on x {
+                            NumberAnimation { duration: 200 }
+                        }
+                    }
+                }
+            }
+        }
+
+
+
+        Rectangle{
             id:buttonArea
             width:parent.width-40
             height:50
             color: parent.color
+            visible: pauseAndCancelVisibility
             anchors{
                 //top: progressField.bottom
                 top: fileNamePlace.bottom
@@ -157,8 +238,10 @@ Page{
                 topMargin: 32
                 horizontalCenter: parent.horizontalCenter
             }
+
             RoundButton {
-                id: receivePause
+                id: sendPause
+                //visible: pauseAndCancelVisibility
                 height:parent.height
                 width:height
                 radius: height
@@ -172,16 +255,16 @@ Page{
                     leftMargin: 0.2*parent.width
                 }
                 onClicked: {
-                    if (receivePause.text==="\u003D") {
+                    if (sendPause.text==="\u003D") {
                         _guiController.senderPause()
-                        receivePause.text = "\u25B2"
-                        receivePause.font.pointSize = 15
+                        sendPause.text = "\u25B2"
+                        sendPause.font.pointSize = 15
                         animationTimer.stop()
                     } else {
                         _guiController.senderResume()
-                        receivePause.text = "\u003D"
-                        receivePause.rotation = 90
-                        receivePause.font.pointSize = 30
+                        sendPause.text = "\u003D"
+                        sendPause.rotation = 90
+                        sendPause.font.pointSize = 30
                         animationTimer.restart()
                     }
                 }
@@ -189,8 +272,8 @@ Page{
                 palette.buttonText: "#cea392"
             }
             RoundButton{
-                id:receiveCancel
-
+                id:sendCancel
+                //visible: pauseAndCancelVisibility
                 height:parent.height
                 width:height
                 radius: height

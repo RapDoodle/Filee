@@ -329,7 +329,6 @@ Page{
             }
             RoundButton{
                 id:receiveCancel
-
                 height:parent.height
                 width:height
                 radius: height

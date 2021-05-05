@@ -20,6 +20,7 @@ ApplicationWindow {
     property double receiveProgress: 0.0
     property int swipePageNum: 0
     property bool speedModify: false
+    property bool pauseAndCancelVisibility: false
     property color checkedColor: "#525252"//"#cea392"//""#0ACF97"
 
     // Interfaces
@@ -63,6 +64,16 @@ ApplicationWindow {
     function swipePageNumTo2() {
         swipePageNum = 1
     }
+
+    //change here-------------------------------------------
+    function pauseAndCancelShow(){
+        pauseAndCancelVisibility = true
+    }
+    function pauseAndCancelHide(){
+        pauseAndCancelVisibility = false
+    }
+    //------------------------------------------------------
+
 
     Component.onCompleted: {
         _guiController.exec()
@@ -315,7 +326,7 @@ ApplicationWindow {
                         radius: height / 2
                         color: boardcastSwitch.checked ? checkedColor : "white"
                         border.width: 2
-                        border.color: boardcastSwitch.checked ? checkedColor : "#E5E5E5"
+                        border.color: boardcastSwitch.checked ? checkedColor : "white"
 
                         Rectangle {
                             x: boardcastSwitch.checked ? parent.width - width - 2 : 1
