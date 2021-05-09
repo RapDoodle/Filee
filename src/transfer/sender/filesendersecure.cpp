@@ -1,5 +1,4 @@
 #include "filesendersecure.h"
-#include "../filetransferpeersecure.h"
 
 FileSenderSecure::FileSenderSecure(QString filePath, QHostAddress receiverAddress, qint64 bufferSize, QObject *parent)
     : FileSender(parent)
