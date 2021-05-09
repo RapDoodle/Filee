@@ -99,7 +99,7 @@ void GuiController::senderSend()
         MessageBox::messageBoxWarning("Please select or type in a file receiver.");
         return;
     }
-    session = new FileSenderSession(senderFilePath, QHostAddress(receiverIp));
+    session = new FileSenderSession(senderFilePath, QHostAddress(receiverIp), true);
     connect(session, &FileSenderSession::senderBegin, this, [&]() {
         emit senderBegin();
     });

@@ -16,12 +16,16 @@ SOURCES += \
         broadcast/broadcaster.cpp \
         broadcast/broadcastreceiver.cpp \
         guicontroller.cpp \
+        include/sslserver.cpp \
+        include/sslsocket.cpp \
         main.cpp \
         models/onlinedevicesmodel.cpp \
         transfer/filetransferpeer.cpp \
         transfer/receiver/filereceiver.cpp \
+        transfer/receiver/filereceiversecure.cpp \
         transfer/receiver/filereceiveserver.cpp \
         transfer/sender/filesender.cpp \
+        transfer/sender/filesendersecure.cpp \
         transfer/sender/filesendersession.cpp \
         utils/androidutils.cpp \
         utils/common.cpp \
@@ -47,11 +51,15 @@ HEADERS += \
     broadcast/broadcaster.h \
     broadcast/broadcastreceiver.h \
     guicontroller.h \
+    include/sslserver.h \
+    include/sslsocket.h \
     models/onlinedevicesmodel.h \
     transfer/filetransferpeer.h \
     transfer/receiver/filereceiver.h \
+    transfer/receiver/filereceiversecure.h \
     transfer/receiver/filereceiveserver.h \
     transfer/sender/filesender.h \
+    transfer/sender/filesendersecure.h \
     transfer/sender/filesendersession.h \
     utils/androidutils.h \
     utils/common.h \

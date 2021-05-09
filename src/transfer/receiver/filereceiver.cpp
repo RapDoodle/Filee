@@ -5,6 +5,17 @@ FileReceiver::FileReceiver(QTcpSocket *tcpSocket, QObject *parent)
 {
     socket = tcpSocket;
 
+    connectSlots();
+}
+
+FileReceiver::FileReceiver(QObject *parent)
+    : FileTransferPeer(parent)
+{
+
+}
+
+void FileReceiver::connectSlots()
+{
     connect(socket, &QTcpSocket::disconnected, this, &FileReceiver::socketConnected);
     connect(socket, &QTcpSocket::readyRead, this, &FileReceiver::readPacket);
 }

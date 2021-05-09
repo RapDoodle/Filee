@@ -66,6 +66,8 @@ protected:
     void sendPacket(PacketType type);
     void sendPacket(PacketType type, const QByteArray& payload);
 
+    void setSocket(QTcpSocket*);
+
 private:
     qint64 lastSizeTransferred = 0;
     int interval = 1000;  // In ms

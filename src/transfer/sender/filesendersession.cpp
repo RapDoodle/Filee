@@ -1,7 +1,7 @@
 #include "filesendersession.h"
 
-FileSenderSession::FileSenderSession(QString filePath, QHostAddress receiverAddress, QObject *parent) :
-    QObject(parent), fileDir(filePath), address(receiverAddress)
+FileSenderSession::FileSenderSession(QString filePath, QHostAddress receiverAddress, bool useSecure, QObject *parent) :
+    QObject(parent), fileDir(filePath), address(receiverAddress), secure(useSecure)
 {
     bufferSize = 1024 * 8192;
 
@@ -14,20 +14,38 @@ FileSenderSession::FileSenderSession(QString filePath, QHostAddress receiverAddr
 
 void FileSenderSession::transfer()
 {
-    sender = new FileSender(fileDir, address, bufferSize);
-    connect(sender, &FileSender::restartRequest, this, &FileSenderSession::overloadedHandler);
-    connect(sender, &FileSender::senderBegin, this, [&]() {
-        emit senderBegin();
-    });
-    connect(sender, &FileSender::senderEnded, this, [&]() {
-        emit senderEnded();
-    });
-    connect(sender, QOverload<int>::of(&FileSender::senderStatusUpdate), this, [&](int status) {
-        emit senderStatusUpdate(status);
-    });
-    connect(sender, QOverload<QString>::of(&FileSender::rateUpdate), this, [&](QString rate) {
-        emit rateUpdate(rate);
-    });
+    if (secure) {
+        sender = new FileSenderSecure(fileDir, address, bufferSize);
+        connect(sender, &FileSenderSecure::restartRequest, this, &FileSenderSession::overloadedHandler);
+        connect(sender, &FileSenderSecure::senderBegin, this, [&]() {
+            emit senderBegin();
+        });
+        connect(sender, &FileSenderSecure::senderEnded, this, [&]() {
+            emit senderEnded();
+        });
+        connect(sender, QOverload<int>::of(&FileSenderSecure::senderStatusUpdate), this, [&](int status) {
+            emit senderStatusUpdate(status);
+        });
+        connect(sender, QOverload<QString>::of(&FileSenderSecure::rateUpdate), this, [&](QString rate) {
+            emit rateUpdate(rate);
+        });
+    } else {
+        sender = new FileSender(fileDir, address, bufferSize);
+        connect(sender, &FileSender::restartRequest, this, &FileSenderSession::overloadedHandler);
+        connect(sender, &FileSender::senderBegin, this, [&]() {
+            emit senderBegin();
+        });
+        connect(sender, &FileSender::senderEnded, this, [&]() {
+            emit senderEnded();
+        });
+        connect(sender, QOverload<int>::of(&FileSender::senderStatusUpdate), this, [&](int status) {
+            emit senderStatusUpdate(status);
+        });
+        connect(sender, QOverload<QString>::of(&FileSender::rateUpdate), this, [&](QString rate) {
+            emit rateUpdate(rate);
+        });
+    }
+
 }
 
 void FileSenderSession::deleteConnection()

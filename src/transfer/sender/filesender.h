@@ -18,6 +18,7 @@ class FileSender : public FileTransferPeer
 {
     Q_OBJECT
 public:
+    explicit FileSender(QObject *parent = nullptr);
     explicit FileSender(QString filePath, QHostAddress receiverAddress,
                         qint64 bufferSize, QObject *parent = nullptr);
     ~FileSender();
@@ -27,7 +28,7 @@ public:
     void cancel() override;
     void getFileName();
 
-private:
+protected:
     QByteArray fileBuffer;
     qint64 fileBufferSize = -1;
     QString fileDir;
@@ -37,6 +38,8 @@ private:
     void sendRequest();
     void sendData();
 
+    void connectSlots();
+
 signals:
     void senderBegin();
     void senderEnded();
@@ -44,7 +47,7 @@ signals:
 
     void restartRequest();
 
-private slots:
+protected slots:
     void socketBytesWritten() override;
     void socketConnected() override;
     void socketDisconnected() override;

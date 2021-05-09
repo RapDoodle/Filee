@@ -172,7 +172,7 @@ Page{
                     family: "Verdana"
                 }
                 color: "#f4eeeb"
-                text: "Encrypt   "
+                text: "Encrypt with TLS"
                 persistentSelection: false
                 selectByMouse: true
                 readOnly: true

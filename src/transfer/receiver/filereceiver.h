@@ -23,12 +23,13 @@ class FileReceiver : public FileTransferPeer
     Q_OBJECT
 public:
     explicit FileReceiver(QTcpSocket *tcpSocket, QObject *parent = nullptr);
+    explicit FileReceiver(QObject *parent = nullptr);
 
     void pause() override;
     void resume() override;
     void cancel() override;
 
-private:
+protected:
     void sendData();
     void sendMeta();
     void writeData(QByteArray& data);
@@ -36,6 +37,7 @@ private:
     bool metaProcessed = false;
     void error();
     void overloaded();
+    void connectSlots();
 
 signals:
     void receiverBegin(QString sender, QString fileName, QString filePath);
@@ -43,7 +45,7 @@ signals:
     void receiverTerminated();
     void receiverStatusUpdate(int);
 
-private slots:
+protected slots:
     void socketConnected() override;
     void socketDisconnected() override;
     void readPacket();

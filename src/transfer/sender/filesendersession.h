@@ -5,13 +5,14 @@
 #include <QHostAddress>
 
 #include "filesender.h"
+#include "filesendersecure.h"
 
 class FileSenderSession : public QObject
 {
     Q_OBJECT
 
 public:
-    explicit FileSenderSession(QString filePath, QHostAddress receiverAddress, QObject *parent = nullptr);
+    explicit FileSenderSession(QString filePath, QHostAddress receiverAddress, bool secure, QObject *parent = nullptr);
 
     void endSession();
     void pause();
@@ -33,6 +34,7 @@ private:
     FileSender *sender = nullptr;
     int attempt = 0;
     bool restart = false;
+    bool secure = false;
 
     void transfer();
     void deleteConnection();

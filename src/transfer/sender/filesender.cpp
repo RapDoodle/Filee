@@ -23,10 +23,12 @@ FileSender::FileSender(QString filePath, QHostAddress receiverAddress, qint64 bu
     socket->setProxy(QNetworkProxy::NoProxy);
     socket->connectToHost(receiverAddress, 3800, QAbstractSocket::ReadWrite);
 
-    connect(socket, &QTcpSocket::bytesWritten, this, &FileSender::socketBytesWritten);
-    connect(socket, &QTcpSocket::connected, this, &FileSender::socketConnected);
-    connect(socket, &QTcpSocket::disconnected, this, &FileSender::socketDisconnected);
-    connect(socket, &QTcpSocket::readyRead, this, &FileSender::readPacket);
+    connectSlots();
+}
+
+FileSender::FileSender(QObject *parent)
+    : FileTransferPeer(parent)
+{
 
 }
 
@@ -36,6 +38,14 @@ FileSender::~FileSender()
     disconnect(socket, &QTcpSocket::connected, this, &FileSender::socketConnected);
     disconnect(socket, &QTcpSocket::disconnected, this, &FileSender::socketDisconnected);
     disconnect(socket, &QTcpSocket::readyRead, this, &FileSender::readPacket);
+}
+
+void FileSender::connectSlots()
+{
+    connect(socket, &QTcpSocket::bytesWritten, this, &FileSender::socketBytesWritten);
+    connect(socket, &QTcpSocket::connected, this, &FileSender::socketConnected);
+    connect(socket, &QTcpSocket::disconnected, this, &FileSender::socketDisconnected);
+    connect(socket, &QTcpSocket::readyRead, this, &FileSender::readPacket);
 }
 
 

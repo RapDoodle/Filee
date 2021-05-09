@@ -3,8 +3,18 @@
 
 #include <QObject>
 #include <QTcpServer>
+#include <QSslSocket>
+#include <QFile>
 
 #include "filereceiver.h"
+#include "filereceiversecure.h"
+#include "../include/sslserver.h"
+#include "../include/sslsocket.h"
+
+#include "../utils/messagebox.h"
+
+#define CERTNAME "cert.pem"
+#define PRIVATEKEYNAME "private.key"
 
 class FileReceiveServer : public QObject
 {
@@ -18,6 +28,7 @@ public:
 private:
     QVector<FileReceiver*> receivers;
     QTcpServer *tcpServer = nullptr;
+    SslServer *sslServer = nullptr;
 
 signals:
     void receiverBegin(QString sender, QString filename, QString filePath);
@@ -28,6 +39,7 @@ signals:
 
 private slots:
     void newConnection();
+    void newSecureConnection();
 
 };
 

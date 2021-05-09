@@ -27,6 +27,11 @@ void FileTransferPeer::sendPacket(PacketType type, const QByteArray &payload)
     socket->write(payload);
 }
 
+void FileTransferPeer::setSocket(QTcpSocket* newSocket)
+{
+    socket = newSocket;
+}
+
 void FileTransferPeer::startRateMeter() { rateMeter.start(interval); }
 
 void FileTransferPeer::stopRateMeter() { rateMeter.stop(); }
