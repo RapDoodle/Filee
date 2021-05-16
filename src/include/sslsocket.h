@@ -3,6 +3,10 @@
 
 #include <QSslSocket>
 #include <QObject>
+#include <QFile>
+#include <QSsl>
+#include <QSslKey>
+#include <QFileInfo>
 
 class SslSocket : public QSslSocket
 {

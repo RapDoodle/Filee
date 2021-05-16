@@ -64,3 +64,9 @@ HEADERS += \
     utils/androidutils.h \
     utils/common.h \
     utils/messagebox.h
+
+
+LIBS += -L"C:/Program Files/OpenSSL-Win64/lib" -llibssl
+LIBS += -L"C:/Program Files/OpenSSL-Win64/lib" -llibcrypto
+
+INCLUDEPATH += $$quote(C:/Program Files/OpenSSL-Win64/include)

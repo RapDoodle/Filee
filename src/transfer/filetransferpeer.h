@@ -14,6 +14,7 @@
 
 #include "./utils/common.h"
 #include "./utils/messagebox.h"
+#include "../include/sslsocket.h"
 
 #if defined (Q_OS_ANDROID)
 #include "./utils/androidutils.h"
@@ -51,7 +52,6 @@ public:
     void stopRateMeter();
 
 protected:
-    QTcpSocket* socket = nullptr;
     QTimer rateMeter;
     QFile* file = nullptr;
 
@@ -66,11 +66,15 @@ protected:
     void sendPacket(PacketType type);
     void sendPacket(PacketType type, const QByteArray& payload);
 
-    void setSocket(QTcpSocket*);
+    QTcpSocket* getSocket();
+    SslSocket* getSecureSocket();
+    QHostAddress getPeerAddress();
+    QByteArray readSocketBuffer();
+    qint64 getBytesAvailable();
 
-private:
-    qint64 lastSizeTransferred = 0;
-    int interval = 1000;  // In ms
+    void setSocket(QTcpSocket*);
+    void setSecureSocket(SslSocket*);
+    void closeSocket();
 
 signals:
     void rateUpdate(QString);
@@ -79,6 +83,15 @@ protected slots:
     virtual void socketBytesWritten();
     virtual void socketConnected();
     virtual void socketDisconnected();
+
+private:
+    QTcpSocket* socket = nullptr;
+    SslSocket* secureSocket = nullptr;
+
+    bool useSecure = false;
+
+    qint64 lastSizeTransferred = 0;
+    int interval = 1000;  // In ms
 
 };
 

@@ -16,7 +16,7 @@ FileReceiveServer::FileReceiveServer(QObject *parent) : QObject(parent)
         sslServer->setSslLocalCertificate("cert.pem");
         sslServer->setSslPrivateKey("private.pem");
         sslServer->setSslProtocol(QSsl::TlsV1_2);
-        sslServer->listen(QHostAddress::AnyIPv4, 3801);
+        qDebug() << "SSL server status:" << sslServer->listen(QHostAddress::AnyIPv4, 3801);
         connect(sslServer, &SslServer::newConnection, this, &FileReceiveServer::newSecureConnection);
     } else {
         MessageBox::messageBoxWarning("Certificate for TLS not found. TLS service is not running.");
@@ -52,6 +52,7 @@ void FileReceiveServer::newConnection()
 void FileReceiveServer::newSecureConnection()
 {
     SslSocket* socket = (SslSocket*) sslServer->nextPendingConnection();
+    socket->ignoreSslErrors();
     if (socket) {
         FileReceiverSecure* receiver = new FileReceiverSecure(socket);
         receivers.push_back(receiver);

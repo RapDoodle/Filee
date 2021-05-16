@@ -9,6 +9,8 @@
 #include <QSslSocket>
 #include <QFile>
 
+#include "sslsocket.h"
+
 class SslServer : public QTcpServer
 {
     Q_OBJECT
@@ -31,11 +33,13 @@ public:
 protected:
     void incomingConnection(qintptr socketDescriptor) override final;
 
-
 private:
     QSslCertificate userSslLocalCertificate;
     QSslKey userSslPrivateKey;
     QSsl::SslProtocol userSslProtocol;
+
+private slots:
+    void onSslErrors(const QList<QSslError>&);
 };
 
 #endif // SSLSERVER_H

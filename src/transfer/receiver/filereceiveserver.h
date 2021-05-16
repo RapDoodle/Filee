@@ -8,13 +8,13 @@
 
 #include "filereceiver.h"
 #include "filereceiversecure.h"
-#include "../include/sslserver.h"
-#include "../include/sslsocket.h"
+#include "../../include/sslserver.h"
+#include "../../include/sslsocket.h"
 
-#include "../utils/messagebox.h"
+#include "../../utils/messagebox.h"
 
 #define CERTNAME "cert.pem"
-#define PRIVATEKEYNAME "private.key"
+#define PRIVATEKEYNAME "private.pem"
 
 class FileReceiveServer : public QObject
 {

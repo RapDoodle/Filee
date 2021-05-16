@@ -10,27 +10,89 @@ FileTransferPeer::FileTransferPeer(QObject *parent) : QObject(parent)
 
 void FileTransferPeer::sendPacket(PacketType type)
 {
-    if (!socket)
-        return;
 
-    socket->write(reinterpret_cast<const char*>(&type), sizeof(type));
+    if (useSecure) {
+        if (secureSocket)
+            secureSocket->write(reinterpret_cast<const char*>(&type), sizeof(type));
+    } else {
+        if(socket)
+            socket->write(reinterpret_cast<const char*>(&type), sizeof(type));
+    }
 }
 
 void FileTransferPeer::sendPacket(PacketType type, const QByteArray &payload)
 {
-    if (!socket)
-        return;
-
     qint32 payloadSize = payload.size();
-    socket->write(reinterpret_cast<const char*>(&type), sizeof(type));
-    socket->write(reinterpret_cast<const char*>(&payloadSize), sizeof(payloadSize));
-    socket->write(payload);
+
+    if (useSecure) {
+        if (secureSocket) {
+            secureSocket->write(reinterpret_cast<const char*>(&type), sizeof(type));
+            secureSocket->write(reinterpret_cast<const char*>(&payloadSize), sizeof(payloadSize));
+            secureSocket->write(payload);
+        }
+    } else {
+        if (socket) {
+            socket->write(reinterpret_cast<const char*>(&type), sizeof(type));
+            socket->write(reinterpret_cast<const char*>(&payloadSize), sizeof(payloadSize));
+            socket->write(payload);
+        }
+    }
 }
 
-void FileTransferPeer::setSocket(QTcpSocket* newSocket)
-{
-    socket = newSocket;
+void FileTransferPeer::closeSocket() {
+    if (useSecure) {
+        if (secureSocket) {
+            secureSocket->close();
+            secureSocket = nullptr;
+        }
+    } else {
+        if (socket) {
+            socket->close();
+            socket = nullptr;
+        }
+    }
 }
+
+QHostAddress FileTransferPeer::getPeerAddress() {
+    if (useSecure) {
+        if (secureSocket)
+            return secureSocket->peerAddress();
+    } else {
+        if (socket)
+            return socket->peerAddress();
+    }
+    return QHostAddress::Null;
+}
+
+qint64 FileTransferPeer::getBytesAvailable() {
+    if (useSecure) {
+        if (secureSocket)
+            return secureSocket->bytesAvailable();
+    } else {
+        if (socket)
+            return socket->bytesAvailable();
+    }
+    return 0;
+}
+
+QByteArray FileTransferPeer::readSocketBuffer() {
+    if (useSecure) {
+        if (secureSocket)
+            return secureSocket->readAll();
+    } else {
+        if (socket)
+            return socket->readAll();
+    }
+    return QByteArray();
+}
+
+QTcpSocket* FileTransferPeer::getSocket() { return socket; }
+
+SslSocket* FileTransferPeer::getSecureSocket() { return secureSocket; }
+
+void FileTransferPeer::setSocket(QTcpSocket* newSocket) { socket = newSocket; useSecure = false; }
+
+void FileTransferPeer::setSecureSocket(SslSocket* newSocket) { secureSocket = newSocket; useSecure = true; }
 
 void FileTransferPeer::startRateMeter() { rateMeter.start(interval); }
 

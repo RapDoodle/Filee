@@ -9,10 +9,13 @@ class FileReceiverSecure : public FileReceiver
 {
     Q_OBJECT
 public:
-    explicit FileReceiverSecure(QSslSocket *tcpSocket, QObject *parent = nullptr);
+    explicit FileReceiverSecure(SslSocket *tcpSocket, QObject *parent = nullptr);
 
-protected:
-    QSslSocket* socket = nullptr;
+private:
+    void connectSlots();
+
+private slots:
+    void onEncrypted();
 };
 
 #endif // FILERECEIVERSECURE_H

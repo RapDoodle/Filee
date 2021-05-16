@@ -19,9 +19,10 @@ FileSender::FileSender(QString filePath, QHostAddress receiverAddress, qint64 bu
     fileSize = file->size();
     sizeProcessed = 0;
 
-    socket = new QTcpSocket(this);
+    QTcpSocket* socket = new QTcpSocket(this);
     socket->setProxy(QNetworkProxy::NoProxy);
     socket->connectToHost(receiverAddress, 3800, QAbstractSocket::ReadWrite);
+    setSocket(socket);
 
     connectSlots();
 }
@@ -34,18 +35,18 @@ FileSender::FileSender(QObject *parent)
 
 FileSender::~FileSender()
 {
-    disconnect(socket, &QTcpSocket::bytesWritten, this, &FileSender::socketBytesWritten);
-    disconnect(socket, &QTcpSocket::connected, this, &FileSender::socketConnected);
-    disconnect(socket, &QTcpSocket::disconnected, this, &FileSender::socketDisconnected);
-    disconnect(socket, &QTcpSocket::readyRead, this, &FileSender::readPacket);
+    disconnect(getSocket(), &QTcpSocket::bytesWritten, this, &FileSender::socketBytesWritten);
+    disconnect(getSocket(), &QTcpSocket::connected, this, &FileSender::socketConnected);
+    disconnect(getSocket(), &QTcpSocket::disconnected, this, &FileSender::socketDisconnected);
+    disconnect(getSocket(), &QTcpSocket::readyRead, this, &FileSender::readPacket);
 }
 
 void FileSender::connectSlots()
 {
-    connect(socket, &QTcpSocket::bytesWritten, this, &FileSender::socketBytesWritten);
-    connect(socket, &QTcpSocket::connected, this, &FileSender::socketConnected);
-    connect(socket, &QTcpSocket::disconnected, this, &FileSender::socketDisconnected);
-    connect(socket, &QTcpSocket::readyRead, this, &FileSender::readPacket);
+    connect(getSocket(), &QTcpSocket::bytesWritten, this, &FileSender::socketBytesWritten);
+    connect(getSocket(), &QTcpSocket::connected, this, &FileSender::socketConnected);
+    connect(getSocket(), &QTcpSocket::disconnected, this, &FileSender::socketDisconnected);
+    connect(getSocket(), &QTcpSocket::readyRead, this, &FileSender::readPacket);
 }
 
 
@@ -100,7 +101,7 @@ void FileSender::sendData()
 
 void FileSender::readPacket()
 {
-    socketBuffer.append(socket->readAll());
+    socketBuffer.append(readSocketBuffer());
 
     while (socketBuffer.size() > 0) {
         PacketType type = static_cast<PacketType>(socketBuffer.at(0));
@@ -119,7 +120,7 @@ void FileSender::readPacket()
             }
             case PacketType::Deny: {
                 // Denied by receiver
-                socket->close();
+                closeSocket();
                 file->close();
                 MessageBox::messageBoxCritical("The transfer was rejected by the remote peer.");
                 break;
@@ -144,7 +145,7 @@ void FileSender::readPacket()
                 break;
             }
             case PacketType::Error: {
-                socket->close();
+                closeSocket();
                 file->close();
                 emit restartRequest();
                 stopRateMeter();

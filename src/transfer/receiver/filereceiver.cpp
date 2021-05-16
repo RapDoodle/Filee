@@ -3,7 +3,7 @@
 FileReceiver::FileReceiver(QTcpSocket *tcpSocket, QObject *parent)
     : FileTransferPeer(parent)
 {
-    socket = tcpSocket;
+    setSocket(tcpSocket);
 
     connectSlots();
 }
@@ -16,8 +16,8 @@ FileReceiver::FileReceiver(QObject *parent)
 
 void FileReceiver::connectSlots()
 {
-    connect(socket, &QTcpSocket::disconnected, this, &FileReceiver::socketConnected);
-    connect(socket, &QTcpSocket::readyRead, this, &FileReceiver::readPacket);
+    connect(getSocket(), &QTcpSocket::disconnected, this, &FileReceiver::socketConnected);
+    connect(getSocket(), &QTcpSocket::readyRead, this, &FileReceiver::readPacket);
 }
 
 void FileReceiver::socketConnected()
@@ -27,14 +27,14 @@ void FileReceiver::socketConnected()
 
 void FileReceiver::socketDisconnected()
 {
-    if (socket)
-        socket->close();
+    closeSocket();
 }
 
 void FileReceiver::readPacket()
 {
-    sizeTransferred += socket->bytesAvailable();
-    socketBuffer.append(socket->readAll());
+    sizeTransferred += getBytesAvailable();
+    socketBuffer.append(readSocketBuffer());
+    qDebug() << "[SB]" << socketBuffer;
 
     while (socketBuffer.size() > 0) {
         PacketType type = static_cast<PacketType>(socketBuffer.at(0));
@@ -69,7 +69,7 @@ void FileReceiver::readPacket()
                 filename = obj.value("name").toString();
 
                 QMessageBox msgBox;
-                msgBox.setText(socket->peerAddress().toString() + " wants to transfer a file to you.");
+                msgBox.setText(getPeerAddress().toString() + " wants to transfer a file to you.");
                 msgBox.setInformativeText("File name: " + filename + "\n"
                                           + "File size: " + Common::humanReadableSize(fileSize) + "\n"
                                           + "Do you want to accept the file?");
@@ -79,7 +79,7 @@ void FileReceiver::readPacket()
 
                 if (ret != QMessageBox::Ok) {
                     sendPacket(PacketType::Deny);
-                    socket->close();
+                    closeSocket();
                     return;
                 }
 
@@ -122,7 +122,7 @@ void FileReceiver::readPacket()
                     metaProcessed = true;
                     sendPacket(PacketType::Accept);
                     sendPacket(PacketType::RequestData);
-                    emit receiverBegin(socket->peerAddress().toString(),
+                    emit receiverBegin(getPeerAddress().toString(),
                                        filename, file->fileName());
                 } else {
                     MessageBox::messageBoxCritical("Unable to open to write.");
@@ -134,7 +134,7 @@ void FileReceiver::readPacket()
             case PacketType::Complete: {
                 emit receiverStatusUpdate(10000);
                 file->close();
-                socket->close();
+                closeSocket();
                 emit receiverEnded();
                 stopRateMeter();
                 break;
@@ -219,7 +219,7 @@ void FileReceiver::error()
     emit receiverStatusUpdate(0);
     if (file)
         file->close();
-    file->remove();
+    // file->remove();
     stopRateMeter();
 }
 
@@ -239,7 +239,7 @@ void FileReceiver::cancel()
     status = ReceiverStatus::Canceled;
     file->close();
     file->remove();
-    socket->close();
+    closeSocket();
     emit receiverStatusUpdate(0);
     stopRateMeter();
 }

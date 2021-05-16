@@ -31,6 +31,7 @@ private:
     QString fileDir;
     QHostAddress address;
     qint64 bufferSize;
+    bool useSecure = false;
     FileSender *sender = nullptr;
     int attempt = 0;
     bool restart = false;

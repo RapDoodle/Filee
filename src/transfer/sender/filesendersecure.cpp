@@ -21,11 +21,34 @@ FileSenderSecure::FileSenderSecure(QString filePath, QHostAddress receiverAddres
     fileSize = file->size();
     sizeProcessed = 0;
 
-    socket = new QSslSocket(this);
-    socket->setProxy(QNetworkProxy::NoProxy);
+    socket = new SslSocket(this);
+    // socket->setProxy(QNetworkProxy::NoProxy);
+    qDebug() << "p1";
     socket->connectToHostEncrypted(receiverAddress.toString(), 3801);
+    qDebug() << "p2";
+//    if (!socket->waitForEncrypted()) {
+//        qDebug() << socket->errorString();
+//        return;
+//    }
+    qDebug() << "p3";
 
-    FileTransferPeer::setSocket(socket);
+    setSecureSocket(socket);
 
     connectSlots();
+}
+
+FileSenderSecure::~FileSenderSecure()
+{
+    disconnect(getSecureSocket(), &SslSocket::bytesWritten, this, &FileSenderSecure::socketBytesWritten);
+    disconnect(getSecureSocket(), &SslSocket::connected, this, &FileSenderSecure::socketConnected);
+    disconnect(getSecureSocket(), &SslSocket::disconnected, this, &FileSenderSecure::socketDisconnected);
+    disconnect(getSecureSocket(), &SslSocket::readyRead, this, &FileSenderSecure::readPacket);
+}
+
+void FileSenderSecure::connectSlots()
+{
+    connect(getSecureSocket(), &SslSocket::bytesWritten, this, &FileSenderSecure::socketBytesWritten);
+    connect(getSecureSocket(), &SslSocket::connected, this, &FileSenderSecure::socketConnected);
+    connect(getSecureSocket(), &SslSocket::disconnected, this, &FileSenderSecure::socketDisconnected);
+    connect(getSecureSocket(), &SslSocket::readyRead, this, &FileSenderSecure::readPacket);
 }

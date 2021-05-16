@@ -1,11 +1,21 @@
 #include "filereceiversecure.h"
 
-FileReceiverSecure::FileReceiverSecure(QSslSocket *sslSocket, QObject *parent)
+FileReceiverSecure::FileReceiverSecure(SslSocket *sslSocket, QObject *parent)
     : FileReceiver(parent)
 {
-    socket = sslSocket;
-
-    FileTransferPeer::setSocket(socket);
+    setSecureSocket(sslSocket);
 
     connectSlots();
+}
+
+void FileReceiverSecure::connectSlots()
+{
+    connect(getSecureSocket(), &QTcpSocket::disconnected, this, &FileReceiverSecure::socketConnected);
+    connect(getSecureSocket(), &QTcpSocket::readyRead, this, &FileReceiverSecure::readPacket);
+    connect(getSecureSocket(), &QSslSocket::encrypted, this, &FileReceiverSecure::onEncrypted);
+}
+
+void FileReceiverSecure::onEncrypted()
+{
+    qDebug() << "EEEEE";
 }
