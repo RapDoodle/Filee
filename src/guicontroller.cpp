@@ -99,7 +99,7 @@ void GuiController::senderSend()
         MessageBox::messageBoxWarning("Please select or type in a file receiver.");
         return;
     }
-    session = new FileSenderSession(senderFilePath, QHostAddress(receiverIp), true);
+    session = new FileSenderSession(senderFilePath, QHostAddress(receiverIp), useTls);
     connect(session, &FileSenderSession::senderBegin, this, [&]() {
         emit senderBegin();
     });
@@ -145,3 +145,5 @@ void GuiController::stopBroadcast() { broadcaster->stopBroadcaster(); }
 QString GuiController::getReceiverPeerIp() { return receiverPeerIp; }
 
 QString GuiController::getReceiverFilename() { return receiverFilename; }
+
+void GuiController::toggleTls() { useTls = !useTls; }

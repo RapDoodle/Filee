@@ -10,23 +10,26 @@ SslServer::SslServer(QObject *parent) : QTcpServer(parent),
 
 void SslServer::incomingConnection(qintptr socketDescriptor)
 {
-    qDebug() << "Step 0";
     SslSocket *sslSocket = new SslSocket(this);
 
     QList<QSslError> expectedErrors;
     expectedErrors.push_back(QSslError::SelfSignedCertificate);
     expectedErrors.push_back(QSslError::HostNameMismatch);
     sslSocket->ignoreSslErrors(expectedErrors);
+    // The default behavior for servers
+    sslSocket->setPeerVerifyMode(QSslSocket::QueryPeer);
 
     if (sslSocket->setSocketDescriptor(socketDescriptor, QSslSocket::ConnectedState, QSslSocket::ReadWrite)) {
         sslSocket->setLocalCertificate(userSslLocalCertificate);
         sslSocket->setPrivateKey(userSslPrivateKey);
         sslSocket->setProtocol(userSslProtocol);
+        sslSocket->setPeerVerifyMode(QSslSocket::QueryPeer);
         // sslSocket->setPeerVerifyMode(QSslSocket::VerifyPeer);
         sslSocket->startServerEncryption();
         this->addPendingConnection(sslSocket);
     } else {
-        qDebug("Error with TLS connection.");
+        MessageBox::messageBoxCritical("Failed to set file descriptor for TLS socket. Please check your"
+            " OpenSSL build supports TLSv1.2.");
     }
 
 }
@@ -51,7 +54,6 @@ bool SslServer::setSslPrivateKey(const QString &fileName, QSsl::KeyAlgorithm alg
         return false;
 
     userSslPrivateKey = QSslKey(keyFile.readAll(), algorithm, format, QSsl::PrivateKey, passPhrase);
-    qDebug() << keyFile.readAll();
     keyFile.close();
     return true;
 }

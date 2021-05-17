@@ -15,6 +15,13 @@ FileSenderSession::FileSenderSession(QString filePath, QHostAddress receiverAddr
 void FileSenderSession::transfer()
 {
     if (secure) {
+        // Check for whether the app is built with OpenSSL
+        if (!QSslSocket::supportsSsl()) {
+            MessageBox::messageBoxWarning("TLS is not supported in the current build. "
+                "Please check your build configurations. For more information, please refer "
+                "to the README.md included.");
+            return;
+        }
         sender = new FileSenderSecure(fileDir, address, bufferSize);
         connect(sender, &FileSenderSecure::restartRequest, this, &FileSenderSession::overloadedHandler);
         connect(sender, &FileSenderSecure::senderBegin, this, [&]() {

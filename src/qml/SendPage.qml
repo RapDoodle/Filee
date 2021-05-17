@@ -195,7 +195,7 @@ Page{
                 //property color checkedColor: "#0ACF97"
 
                 onCheckedChanged: {
-
+                    _guiController.toggleTls()
                 }
                 indicator: Rectangle {
                     width: 2*height

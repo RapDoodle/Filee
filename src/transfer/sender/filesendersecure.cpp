@@ -21,17 +21,31 @@ FileSenderSecure::FileSenderSecure(QString filePath, QHostAddress receiverAddres
     fileSize = file->size();
     sizeProcessed = 0;
 
+    // Setup the SslSocket
     socket = new SslSocket(this);
-    // socket->setProxy(QNetworkProxy::NoProxy);
-    qDebug() << "p1";
-    socket->connectToHostEncrypted(receiverAddress.toString(), 3801);
-    qDebug() << "p2";
-//    if (!socket->waitForEncrypted()) {
-//        qDebug() << socket->errorString();
-//        return;
-//    }
-    qDebug() << "p3";
+    socket->setProxy(QNetworkProxy::NoProxy);
+    // The default behavior clients
+    socket->setPeerVerifyMode(QSslSocket::VerifyPeer);
 
+    // Trust the server certificate
+    QList<QSslCertificate> trustedCas;
+    QFile serverCertFile("servercert.pem");
+    if (!serverCertFile.open(QIODevice::ReadOnly)) {
+        MessageBox::messageBoxCritical("You need the receiver's certificate installed before the transmission "
+            "to ensure the security since the certificate is self-signed. TLS connection aborted.");
+        return;
+    }
+    QSslCertificate serverCert(serverCertFile.readAll(), QSsl::Pem);
+    trustedCas.push_back(serverCert);
+    socket->setCaCertificates(trustedCas);
+    serverCertFile.close();
+
+    socket->connectToHostEncrypted(receiverAddress.toString(), 3801);
+    if (!socket->waitForEncrypted()) {
+        MessageBox::messageBoxCritical("Unable to establish secure connection with the receiver. "
+            "Please make sure the receiver has correctly setup TLS.");
+        return;
+    }
     setSecureSocket(socket);
 
     connectSlots();

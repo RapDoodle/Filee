@@ -8,6 +8,8 @@
 #include <QSslKey>
 #include <QFileInfo>
 
+#include "../utils/messagebox.h"
+
 class SslSocket : public QSslSocket
 {
     Q_OBJECT

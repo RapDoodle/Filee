@@ -8,18 +8,23 @@ FileReceiveServer::FileReceiveServer(QObject *parent) : QObject(parent)
     tcpServer->listen(QHostAddress::AnyIPv4, 3800);
     connect(tcpServer, &QTcpServer::newConnection, this, &FileReceiveServer::newConnection);
 
-    qDebug() << QDir::currentPath();
-
-    if (QFile::exists("cert.pem") && QFile::exists("private.pem")) {
-        // Server with TLS
-        sslServer = new SslServer(this);
-        sslServer->setSslLocalCertificate("cert.pem");
-        sslServer->setSslPrivateKey("private.pem");
-        sslServer->setSslProtocol(QSsl::TlsV1_2);
-        qDebug() << "SSL server status:" << sslServer->listen(QHostAddress::AnyIPv4, 3801);
-        connect(sslServer, &SslServer::newConnection, this, &FileReceiveServer::newSecureConnection);
+    // Start a server with TLS
+    // Check whether the build supports TLS
+    if (QSslSocket::supportsSsl()) {
+        if (QFile::exists("cert.pem") && QFile::exists("private.pem")) {
+            sslServer = new SslServer(this);
+            sslServer->setSslLocalCertificate("cert.pem");
+            sslServer->setSslPrivateKey("private.pem");
+            sslServer->setSslProtocol(QSsl::TlsV1_2);
+            sslServer->listen(QHostAddress::AnyIPv4, 3801);
+            connect(sslServer, &SslServer::newConnection, this, &FileReceiveServer::newSecureConnection);
+        } else {
+            MessageBox::messageBoxWarning("Certificate for TLS not found. TLS service is not running.");
+        }
     } else {
-        MessageBox::messageBoxWarning("Certificate for TLS not found. TLS service is not running.");
+        MessageBox::messageBoxWarning("TLS is not supported in the current build. "
+            "Please check your build configurations. For more information, please refer "
+            "to the README.md included.");
     }
 }
 
@@ -53,6 +58,7 @@ void FileReceiveServer::newSecureConnection()
 {
     SslSocket* socket = (SslSocket*) sslServer->nextPendingConnection();
     socket->ignoreSslErrors();
+
     if (socket) {
         FileReceiverSecure* receiver = new FileReceiverSecure(socket);
         receivers.push_back(receiver);

@@ -66,10 +66,10 @@ ApplicationWindow {
     }
 
     //change here-------------------------------------------
-    function pauseAndCancelShow(){
+    function pauseAndCancelShow() {
         pauseAndCancelVisibility = true
     }
-    function pauseAndCancelHide(){
+    function pauseAndCancelHide() {
         pauseAndCancelVisibility = false
     }
     //------------------------------------------------------

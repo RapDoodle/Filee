@@ -10,6 +10,7 @@
 #include <QFile>
 
 #include "sslsocket.h"
+#include "../utils/messagebox.h"
 
 class SslServer : public QTcpServer
 {

@@ -17,5 +17,7 @@ void FileReceiverSecure::connectSlots()
 
 void FileReceiverSecure::onEncrypted()
 {
-    qDebug() << "EEEEE";
+    // Code removed since in Qt5, all send requests are queued.
+    // Any message "send" while the handshake is not complete
+    // will be stored in the buffer.
 }

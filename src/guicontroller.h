@@ -56,6 +56,8 @@ public:
 
     Q_INVOKABLE void openReceivedFile();
 
+    Q_INVOKABLE void toggleTls();
+
 private:
     QQmlContext *context;
     QApplication *app;
@@ -77,6 +79,8 @@ private:
 
     FileReceiveServer *fileReceiveServer;
     FileSenderSession *session = nullptr;
+
+    bool useTls = true;
 
 signals:
     void qmlReceiverStatusUpdate(int);
@@ -101,6 +105,7 @@ signals:
     void receiverFilenameChanged();
 
     void rateUpdate(QString rate);
+    void tlsStatusUpdate();
 
 };
 

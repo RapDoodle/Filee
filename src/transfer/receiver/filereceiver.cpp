@@ -34,7 +34,6 @@ void FileReceiver::readPacket()
 {
     sizeTransferred += getBytesAvailable();
     socketBuffer.append(readSocketBuffer());
-    qDebug() << "[SB]" << socketBuffer;
 
     while (socketBuffer.size() > 0) {
         PacketType type = static_cast<PacketType>(socketBuffer.at(0));
